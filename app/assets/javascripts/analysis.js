@@ -8,6 +8,10 @@ $(function() {
     initialize: function() {
       this.mechanism = new Chess;
       this.i = 0;
+      this.set({
+        moves: [],
+        positions: []
+      });
     },
 
     setFen: function(fen) {
@@ -19,16 +23,30 @@ $(function() {
     },
 
     move: function(move) {
-      this.mechanism.move(move);
-      this.setFen(this.mechanism.fen());
-      this.updatePositions();
+      var moves = this.get('moves').slice(0, this.i + 1);
+      var c = new Chess;
+      var positions = [];
+      _.each(moves, function(move) {
+        c.move(move);
+        positions.push(c.fen());
+      });
+      var nextMove = c.move(move);
+      if (!nextMove) {
+        return;
+      }
+      moves.push(nextMove.san);
+      this.mechanism = c;
+      this.setFen(c.fen());
+      this.updatePositions(c.history());
       this.i++;
     },
 
-    updatePositions: function() {
-      var moves = this.mechanism.history();
-      var positions = [];
+    // TODO DRY usage of new chess instance to generate a
+    // different state and position set
+    //
+    updatePositions: function(moves) {
       var c = new Chess;
+      var positions = [];
       _.each(moves, function(move) {
         c.move(move);
         positions.push(c.fen());
@@ -43,7 +61,7 @@ $(function() {
       if (!this.mechanism.load_pgn(pgn)) {
         return false;
       }
-      this.updatePositions();
+      this.updatePositions(this.mechanism.history());
       this.firstMove();
       return true;
     },
