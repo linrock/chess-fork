@@ -3,4 +3,5 @@
 //= require underscore
 //= require backbone
 //= require chess
+//= require analysis
 //= require_tree .
