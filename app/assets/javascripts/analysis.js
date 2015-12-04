@@ -10,14 +10,22 @@ $(function() {
       this.i = 0;
     },
 
-    start: function() {
-      this.set({ fen: this.mechanism.fen() });
+    setFen: function(fen) {
+      this.set({ fen: fen });
     },
 
-    loadPgn: function(pgn) {
-      if (!this.mechanism.load_pgn(pgn)) {
-        return false;
-      }
+    start: function() {
+      this.setFen(this.mechanism.fen());
+    },
+
+    move: function(move) {
+      this.mechanism.move(move);
+      this.setFen(this.mechanism.fen());
+      this.updatePositions();
+      this.i++;
+    },
+
+    updatePositions: function() {
       var moves = this.mechanism.history();
       var positions = [];
       var c = new Chess;
@@ -29,6 +37,13 @@ $(function() {
         moves: moves,
         positions: positions
       });
+    },
+
+    loadPgn: function(pgn) {
+      if (!this.mechanism.load_pgn(pgn)) {
+        return false;
+      }
+      this.updatePositions();
       this.firstMove();
       return true;
     },
@@ -58,7 +73,7 @@ $(function() {
     },
 
     _loadPosition: function(i) {
-      this.set({ fen: this.get("positions")[this.i] });
+      this.setFen(this.get("positions")[this.i]);
     }
 
   });
@@ -107,6 +122,7 @@ $(function() {
         fen += "0 1";
       }
       this.renderFen(fen);
+      this.initDragDrop();
     },
 
     renderFen: function(fen) {
@@ -127,7 +143,26 @@ $(function() {
 
     $getSquare: function(id) {
       return $("#" + id);
-    }
+    },
+
+    initDragDrop: _.once(function() {
+      this.$(".piece").draggable({
+        stack: ".piece",
+        revert: true,
+        revertDuration: 0
+      });
+      this.$(".square").droppable({
+        accept: ".piece",
+        tolerance: "pointer",
+        drop: function(event, ui) {
+          var move = {
+            from: $(ui.draggable).parents(".square").attr("id"),
+            to: $(event.target).attr("id")
+          };
+          chess.move(move);
+        }
+      });
+    })
 
   });
 
