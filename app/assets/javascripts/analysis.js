@@ -7,8 +7,8 @@ $(function() {
 
     initialize: function() {
       this.mechanism = new Chess;
-      this.i = 0;
       this.set({
+        i: 0,
         moves: [],
         positions: [this.mechanism.fen()]
       });
@@ -23,7 +23,7 @@ $(function() {
     },
 
     move: function(move) {
-      var moves = this.get('moves').slice(0, this.i);
+      var moves = this.get('moves').slice(0, this.get("i"));
       var c = new Chess;
       var positions = [c.fen()];
       _.each(moves, function(move) {
@@ -38,7 +38,7 @@ $(function() {
       this.mechanism = c;
       this.setFen(c.fen());
       this.updatePositions(c.history());
-      this.i++;
+      this.set({ i: this.get("i") + 1 });
     },
 
     // TODO DRY usage of new chess instance to generate a
@@ -58,7 +58,7 @@ $(function() {
     },
 
     getMovePrefix: function() {
-      var nMoves = this.i;
+      var nMoves = this.get("i");
       var moveNum = 1 + ~~(nMoves / 2);
       return moveNum + (nMoves % 2 == 0 ? "." : "...");
     },
@@ -73,32 +73,27 @@ $(function() {
     },
 
     firstMove: function() {
-      this.i = 0;
-      this._loadPosition(this.i);
+      this.setPositionIndex(0);
     },
 
     prevMove: function() {
-      if (this.i > 0) {
-        this.i--;
-      }
-      this._loadPosition(this.i);
+      this.setPositionIndex(this.get("i") - 1);
     },
 
     nextMove: function() {
-      if (this.i < this.get("positions").length - 1) {
-        this.i++;
-      }
-      this._loadPosition(this.i);
+      this.setPositionIndex(this.get("i") + 1);
     },
 
     lastMove: function() {
-      this.i = this.get("positions").length - 1;
-      this._loadPosition(this.i);
+      this.setPositionIndex(this.get("positions").length - 1);
     },
 
-    _loadPosition: function(i) {
-      console.log(i);
+    setPositionIndex: function(i) {
+      if (i < 0 || i >= this.get("positions").length) {
+        return;
+      }
       this.setFen(this.get("positions")[i]);
+      this.set({ i: i });
     }
 
   });
@@ -241,15 +236,23 @@ $(function() {
       this.listenTo(chess, "change:moves", function(model, moves) {
         this.render(moves);
       });
+      this.listenTo(chess, "change:i", function(model, i) {
+        console.log(i);
+        this.$(".move").removeClass("current");
+        if (i == 0) {
+          return;
+        }
+        this.$('[data-ply="' + i + '"]').addClass("current");
+      });
     },
 
     render: function(moves) {
       this.$el.empty();
       var moveNum = 1;
-      var plyNum = 0;
+      var plyNum = 1;
       var html = '';
       _.each(moves, function(move) {
-        if (plyNum % 2 === 0) {
+        if (plyNum % 2 === 1) {
           html += '<div class="move-num">' + moveNum + '.</div>';
           moveNum++;
         }
@@ -294,6 +297,8 @@ $(function() {
   });
 
 
+  // Handles fetching analysis from remote server + rendering it
+  //
   var AnalysisHandler = function() {
 
     var $suggested = $(".suggested-moves");

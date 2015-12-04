@@ -1,6 +1,7 @@
 module Stockfish
 
   # Converts raw analysis output into a hash
+  #
   class AnalysisParser
 
     attr_accessor :raw_analysis, :analysis
