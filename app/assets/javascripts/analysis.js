@@ -7,6 +7,7 @@ $(function() {
 
     initialize: function() {
       this.mechanism = new Chess;
+      this.i = 0;
     },
 
     start: function() {
@@ -14,11 +15,50 @@ $(function() {
     },
 
     loadPgn: function(pgn) {
-      return this.mechanism.load_pgn(pgn);
+      if (!this.mechanism.load_pgn(pgn)) {
+        return false;
+      }
+      var moves = this.mechanism.history();
+      var positions = [];
+      var c = new Chess;
+      _.each(moves, function(move) {
+        c.move(move);
+        positions.push(c.fen());
+      });
+      this.set({
+        moves: moves,
+        positions: positions
+      });
+      this.firstMove();
+      return true;
     },
 
-    getPieceAt: function(id) {
-      return this.mechanism.get(id);
+    firstMove: function() {
+      this.i = 0;
+      this._loadPosition(this.i);
+    },
+
+    prevMove: function() {
+      if (this.i > 0) {
+        this.i--;
+      }
+      this._loadPosition(this.i);
+    },
+
+    nextMove: function() {
+      if (this.i < this.get("positions").length - 1) {
+        this.i++;
+      }
+      this._loadPosition(this.i);
+    },
+
+    lastMove: function() {
+      this.i = this.get("positions").length - 1;
+      this._loadPosition(this.i);
+    },
+
+    _loadPosition: function(i) {
+      this.set({ fen: this.get("positions")[this.i] });
     }
 
   });
@@ -72,11 +112,12 @@ $(function() {
     renderFen: function(fen) {
       var id, piece, $square;
       var columns = ['a','b','c','d','e','f','g','h'];
+      var position = new Chess(fen);
       this.pieces.reset();
       for (var row = 8; row > 0; row--) {
         for (var j = 0; j < 8; j++) {
           id = columns[j] + row;
-          piece = chess.getPieceAt(id);
+          piece = position.get(id);
           if (piece) {
             this.pieces.$getPiece(piece).appendTo(this.$getSquare(id));
           }
@@ -129,9 +170,34 @@ $(function() {
   });
 
 
+  // Clickable list of moves that represent the state
+  // of the game
+  //
   var MoveList = Backbone.View.extend({
 
     el: ".move-list",
+
+    initialize: function() {
+      this.listenTo(chess, "change:moves", function(model, moves) {
+        this.render(moves);
+      });
+    },
+
+    render: function(moves) {
+      this.$el.empty();
+      var moveNum = 1;
+      var plyNum = 0;
+      var html = '';
+      _.each(moves, function(move) {
+        if (plyNum % 2 === 0) {
+          html += '<div class="move-num">' + moveNum + '.</div>';
+          moveNum++;
+        }
+        html += '<div class="move" data-ply="' + plyNum + '">' + move + '</div>';
+        plyNum++;
+      });
+      this.$el.html(html);
+    }
 
   });
 
@@ -148,19 +214,19 @@ $(function() {
     },
 
     _firstMove: function() {
-
+      chess.firstMove();
     },
 
     _prevMove: function() {
-
+      chess.prevMove();
     },
 
     _nextMove: function() {
-
+      chess.nextMove();
     },
 
     _lastMove: function() {
-
+      chess.lastMove();
     }
 
   });
@@ -171,6 +237,7 @@ $(function() {
   chess.start();
 
   new PgnImporter;
+  new MoveList;
   new ActionButtons;
 
 });
