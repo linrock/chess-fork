@@ -1,0 +1,59 @@
+<div class="analysis-board">
+
+  <div class="chessboard">
+    <% polarity = %w( light dark ).cycle %>
+    <% (1..8).to_a.reverse.each do |row| %>
+      <% ('a'..'h').to_a.each do |col| %>
+        <div class="square <%= polarity.next %>" id="<%= col %><%= row %>"></div>
+      <% end %>
+      <% polarity.next %>
+    <% end %>
+  </div>
+
+  <div class="moves-and-actions">
+
+    <div class="move-list">
+      <textarea class="empty"
+                placeholder="Enter or paste a PGN here to import your game
+                
+1. e4 e5 2. ...
+
+
+                - OR -
+
+
+Move the pieces on the
+board to get started"></textarea>
+    </div>
+
+    <div class="actions">
+      <div class="action flip-board"><%= fa_icon "repeat" %></div>
+      <div class="action first-move"><%= fa_icon "chevron-left" %></div>
+      <div class="action prev-move"><%= fa_icon "chevron-left" %></div>
+      <div class="action next-move"><%= fa_icon "chevron-right" %></div>
+      <div class="action last-move"><%= fa_icon "chevron-right" %></div>
+    </div>
+
+  </div>
+
+  <div class="bottom-area">
+
+    <div class="suggested-moves">
+
+      <div class="titles">
+        <div class="move-title">Move</div>
+        <div class="evaluation-title">Evaluation</div>
+        <div class="evaluation-source">Source</div>
+      </div>
+
+      <div class="moves">
+        <div class="move">3. Nxc4</div>
+        <div class="evaluation">+1.27</div>
+        <div class="source">Stockfish 6 &mdash; depth 20</div>
+      </div>
+    
+    </div>
+
+  </div>
+
+</div>
