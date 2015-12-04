@@ -233,14 +233,17 @@ $(function() {
 
     el: ".move-list",
 
+    events: {
+      "click .move" : "_gotoMove"
+    },
+
     initialize: function() {
       this.listenTo(chess, "change:moves", function(model, moves) {
         this.render(moves);
       });
       this.listenTo(chess, "change:i", function(model, i) {
-        console.log(i);
         this.$(".move").removeClass("current");
-        if (i == 0) {
+        if (i === 0) {
           return;
         }
         this.$('[data-ply="' + i + '"]').addClass("current");
@@ -261,6 +264,11 @@ $(function() {
         plyNum++;
       });
       this.$el.html(html);
+    },
+
+    _gotoMove: function(e) {
+      var i = $(e.currentTarget).data("ply");
+      chess.setPositionIndex(i);
     }
 
   });
