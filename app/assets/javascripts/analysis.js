@@ -202,6 +202,9 @@ $(function() {
       this.$textarea = this.$("textarea");
       this.$button = this.$(".load-pgn");
       this.validator = new Chess;
+      this.listenTo(chess, "change:moves", function() {
+        this.$el.hide();
+      });
     },
 
     pgn: function() {
@@ -217,9 +220,7 @@ $(function() {
     },
 
     _loadPgn: function() {
-      if (chess.loadPgn(this.pgn())) {
-        this.$el.hide();
-      }
+      chess.loadPgn(this.pgn());
     }
 
   });
