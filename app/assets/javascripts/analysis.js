@@ -1,7 +1,9 @@
 $(function() {
 
 
-  var ChessState = Backbone.Model.extend({
+  // Handling the internal state of chess positions/history
+  //
+  var ChessMechanism = Backbone.Model.extend({
 
     initialize: function() {
       this.mechanism = new Chess;
@@ -11,15 +13,19 @@ $(function() {
       this.set({ fen: this.mechanism.fen() });
     },
 
+    loadPgn: function(pgn) {
+      return this.mechanism.load_pgn(pgn);
+    },
+
     getPieceAt: function(id) {
       return this.mechanism.get(id);
     }
 
   });
 
-  var chess = window.chess = new ChessState();
 
-
+  // For handling the DOM elements of the pieces on the board
+  //
   var Pieces = function(board) {
     this.board = board;
     this.$buffer = $("<div>").addClass("piece-buffer");
@@ -42,6 +48,9 @@ $(function() {
   };
 
 
+  // The chessboard, which reflects the current state of the
+  // chess mechanism
+  //
   var Chessboard = Backbone.View.extend({
 
     el: ".chessboard",
@@ -82,7 +91,86 @@ $(function() {
   });
 
 
-  new Chessboard;
+  // For handling the manual import of a chess game
+  //
+  var PgnImporter = Backbone.View.extend({
+
+    el: ".pgn-importer",
+
+    events: {
+      "keyup textarea"   : "_validatePgn",
+      "click .load-pgn"  : "_loadPgn"
+    },
+
+    initialize: function() {
+      this.$textarea = this.$("textarea");
+      this.$button = this.$(".load-pgn");
+      this.validator = new Chess;
+    },
+
+    pgn: function() {
+      return this.$textarea.val();
+    },
+
+    _validatePgn: function() {
+      if (this.validator.load_pgn(this.pgn())) {
+        this.$button.removeClass("invisible");
+      } else {
+        this.$button.addClass("invisible");
+      }
+    },
+
+    _loadPgn: function() {
+      if (chess.loadPgn(this.pgn())) {
+        this.$el.hide();
+      }
+    }
+
+  });
+
+
+  var MoveList = Backbone.View.extend({
+
+    el: ".move-list",
+
+  });
+
+
+  var ActionButtons = Backbone.View.extend({
+
+    el: ".actions",
+
+    events: {
+      "click .first-move" : "_firstMove",
+      "click .prev-move"  : "_prevMove",
+      "click .next-move"  : "_nextMove",
+      "click .last-move"  : "_lastMove",
+    },
+
+    _firstMove: function() {
+
+    },
+
+    _prevMove: function() {
+
+    },
+
+    _nextMove: function() {
+
+    },
+
+    _lastMove: function() {
+
+    }
+
+  });
+
+
+  var chess = window.chess = new ChessMechanism;
+  var chessboard = window.chessboard = new Chessboard;
   chess.start();
+
+  new PgnImporter;
+  new ActionButtons;
 
 });

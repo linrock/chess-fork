@@ -13,9 +13,9 @@
   <div class="moves-and-actions">
 
     <div class="move-list">
-      <textarea class="empty"
-                placeholder="Enter or paste a PGN here to import your game
-                
+      <div class="pgn-importer">
+        <textarea placeholder="Enter or paste a PGN here to import your game
+
 1. e4 e5 2. ...
 
 
@@ -24,10 +24,12 @@
 
 Move the pieces on the
 board to get started"></textarea>
+        <button class="load-pgn invisible">Load PGN</button>
+      </div>
     </div>
 
     <div class="actions">
-      <div class="action flip-board"><%= fa_icon "repeat" %></div>
+      <div class="action flip-board"><%= fa_icon "retweet" %></div>
       <div class="action first-move"><%= fa_icon "chevron-left" %></div>
       <div class="action prev-move"><%= fa_icon "chevron-left" %></div>
       <div class="action next-move"><%= fa_icon "chevron-right" %></div>
