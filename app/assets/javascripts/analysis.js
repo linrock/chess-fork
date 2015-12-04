@@ -10,7 +10,7 @@ $(function() {
       this.i = 0;
       this.set({
         moves: [],
-        positions: []
+        positions: [this.mechanism.fen()]
       });
     },
 
@@ -23,9 +23,9 @@ $(function() {
     },
 
     move: function(move) {
-      var moves = this.get('moves').slice(0, this.i + 1);
+      var moves = this.get('moves').slice(0, this.i);
       var c = new Chess;
-      var positions = [];
+      var positions = [c.fen()];
       _.each(moves, function(move) {
         c.move(move);
         positions.push(c.fen());
@@ -46,7 +46,7 @@ $(function() {
     //
     updatePositions: function(moves) {
       var c = new Chess;
-      var positions = [];
+      var positions = [c.fen()];
       _.each(moves, function(move) {
         c.move(move);
         positions.push(c.fen());
@@ -55,6 +55,12 @@ $(function() {
         moves: moves,
         positions: positions
       });
+    },
+
+    getMovePrefix: function() {
+      var nMoves = this.i;
+      var moveNum = 1 + ~~(nMoves / 2);
+      return moveNum + (nMoves % 2 == 0 ? "." : "...");
     },
 
     loadPgn: function(pgn) {
@@ -91,7 +97,8 @@ $(function() {
     },
 
     _loadPosition: function(i) {
-      this.setFen(this.get("positions")[this.i]);
+      console.log(i);
+      this.setFen(this.get("positions")[i]);
     }
 
   });
@@ -255,6 +262,8 @@ $(function() {
   });
 
 
+  // The set of action buttons under the move list
+  //
   var ActionButtons = Backbone.View.extend({
 
     el: ".actions",
@@ -285,6 +294,40 @@ $(function() {
   });
 
 
+  var AnalysisHandler = function() {
+
+    var $suggested = $(".suggested-moves");
+
+    var renderAnalysis = function(analysis) {
+      var sourceStr = analysis.engine + " - depth " + analysis.depth;
+      $suggested.removeClass("invisible");
+      $suggested.find(".move").text(chess.getMovePrefix() + " " + analysis.san);
+      $suggested.find(".evaluation").text(analysis.evaluation);
+      $suggested.find(".source").text(sourceStr);
+    };
+
+    var observer = _.clone(Backbone.Events);
+
+    observer.listenTo(chess, "change:fen", function(model, fen) {
+      $.post("/analysis", { fen: fen }, function(response) {
+        var c = new Chess;
+        c.load(fen);
+        var bestmove = response.bestmove;
+        var move = c.move({ from: bestmove.slice(0,2), to: bestmove.slice(2,5) });
+        var analysis = {
+          engine: "Stockfish 6",
+          san: move.san,
+          evaluation: response.score,
+          depth: response.depth
+        }
+        renderAnalysis(analysis);
+        console.log(move.san);
+      });
+    });
+
+  };
+
+
   var chess = window.chess = new ChessMechanism;
   var chessboard = window.chessboard = new Chessboard;
   chess.start();
@@ -292,5 +335,6 @@ $(function() {
   new PgnImporter;
   new MoveList;
   new ActionButtons;
+  new AnalysisHandler;
 
 });

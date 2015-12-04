@@ -132,6 +132,11 @@ button {
 }
 
 .suggested-moves {
+  transition: opacity 0.2s ease;
+
+  &.invisible {
+    opacity: 0;
+  }
 
   .titles {
     font-size: 14px;

@@ -18,7 +18,7 @@ module Stockfish
 
       if @raw_analysis[/info depth 0 score mate 0/]
         @analysis = {
-          :best_move => nil,
+          :bestmove => nil,
           :score => "mate 0"
         }
         return @analysis
@@ -46,7 +46,7 @@ module Stockfish
         end
         if best_score && best_sequence && depth
           @analysis = {
-            :best_move => best_move_uci,
+            :bestmove => best_move_uci,
             :sequence => best_sequence,
             :score => best_score,
             :depth => depth,
