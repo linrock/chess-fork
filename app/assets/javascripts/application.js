@@ -6,5 +6,22 @@
 //= require backbone
 //= require chess
 //= require mousetrap
-//= require analysis
-//= require_tree .
+//= require_self
+//= require_tree ./components
+
+
+window.Components = {};
+
+$(function() {
+
+  var chess = window.chess = new Components.ChessMechanism;
+  var chessboard = window.chessboard = new Components.Chessboard;
+  chess.start();
+
+  new Components.PgnImporter;
+  new Components.MoveList;
+  new Components.ActionButtons;
+  new Components.HotKeys;
+  new Components.AnalysisHandler;
+
+});
