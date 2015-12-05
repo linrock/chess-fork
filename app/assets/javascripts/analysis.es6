@@ -314,7 +314,16 @@ $(function() {
 
     var $suggested = $(".suggested-moves");
 
-    var getAnalysis = function(fen) {
+    var analysisCache = {};
+
+    var getCachedAnalysis = function(fen) {
+      return new Promise(function(resolve, reject) {
+        var analysis = analysisCache[fen];
+        analysis && resolve(analysis) || reject(fen);
+      });
+    };
+
+    var getRemoteAnalysis = function(fen) {
       return new Promise(function(resolve, reject) {
         $.post("/analysis", { fen: fen }, function(response) {
           var c = new Chess;
@@ -327,6 +336,7 @@ $(function() {
             evaluation: response.score,
             depth: response.depth
           };
+          analysisCache[fen] = analysis;
           resolve(analysis);
         });
       });
@@ -341,7 +351,7 @@ $(function() {
     };
 
     _.clone(Backbone.Events).listenTo(chess, "change:fen", function(model, fen) {
-      getAnalysis(fen).then(renderAnalysis);
+      getCachedAnalysis(fen).catch(getRemoteAnalysis).then(renderAnalysis);
     });
 
   };
