@@ -5,5 +5,6 @@
 //= require underscore
 //= require backbone
 //= require chess
+//= require mousetrap
 //= require analysis
 //= require_tree .

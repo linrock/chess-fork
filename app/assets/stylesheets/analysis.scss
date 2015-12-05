@@ -163,6 +163,11 @@ button {
     padding: 7px 11px 7px;
     background: #eee;
     border-radius: 2px;
+
+    &:hover {
+      background: #e5e5e5;
+    }
+
   }
 
   .flip-board {

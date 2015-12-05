@@ -125,6 +125,16 @@ $(function() {
   }
 
 
+  class HotKeys {
+
+    constructor() {
+      Mousetrap.bind(["left"], () => { chess.prevMove() });
+      Mousetrap.bind(["right"], () => { chess.nextMove() });
+    }
+
+  }
+
+
   // The chessboard, which reflects the current state of the
   // chess mechanism
   //
@@ -137,6 +147,7 @@ $(function() {
       this.listenTo(chess, "change:fen", function(model, fen) {
         this.render(fen);
       });
+      this.listenTo(chess, "board:flip", this.flip);
     },
 
     render: function(fen) {
@@ -184,7 +195,12 @@ $(function() {
           chess.move(move);
         }
       });
-    })
+    }),
+
+    flip: function() {
+      let topLeft = this.$(".square")[0].id;
+      this.$el.find(".square").each((i,sq) => { this.$el.prepend(sq); });
+    }
 
   });
 
@@ -283,11 +299,14 @@ $(function() {
     el: ".actions",
 
     events: {
+      "click .flip-board" : "_flipBoard",
       "click .first-move" : "_firstMove",
       "click .prev-move"  : "_prevMove",
       "click .next-move"  : "_nextMove",
       "click .last-move"  : "_lastMove",
     },
+
+    _flipBoard: () => { chess.trigger("board:flip"); },
 
     _firstMove: () => { chess.firstMove(); },
 
@@ -356,6 +375,7 @@ $(function() {
   new PgnImporter;
   new MoveList;
   new ActionButtons;
+  new HotKeys;
   new AnalysisHandler;
 
 });
