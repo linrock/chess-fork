@@ -30,6 +30,8 @@
   }
 
 
+  // For handling animation of pieces on the board
+  //
   class PieceAnimator {
 
     constructor(board) {
@@ -68,16 +70,11 @@
     animatePositions(...positions) {
       let fen0 = positions[0];
       let fen1 = positions[1];
-
-      console.log("fen0: " + fen0);
-      console.log("fen1: " + fen1);
-
       let moves = this.positionDiffs(fen0, fen1);
       let pieces = [];
 
       for (let move of moves) {
-        let from = move[0];
-        let to = move[1];
+        let [from, to] = move;
         let o0 = this.board.$getSquare(from).offset();
         let o1 = this.board.$getSquare(to).offset();
         let top = o1.top - o0.top;
@@ -86,8 +83,8 @@
           left: (left > 0) ? `+=${left}px` : `-=${-left}px`,
           top: (top > 0) ? `+=${top}px` : `-=${-top}px`
         };
-        console.log(movement);
         let $piece = this.board.$getSquare(from).find(".piece");
+        // $piece.css({ transform: `translate3d(${left}px, ${top}px, 0)` });
         pieces.push($piece);
         $piece.animate(movement, 120);
       }
@@ -106,8 +103,6 @@
 
   }
 
-
-  window.PieceAnimator = PieceAnimator;
 
   Components.Chessboard = Backbone.View.extend({
 
@@ -149,12 +144,12 @@
     },
 
     renderFen: function(fen) {
-      var id, piece, $square;
-      var columns = ['a','b','c','d','e','f','g','h'];
-      var position = new Chess(fen);
+      let id, piece, $square;
+      let columns = ['a','b','c','d','e','f','g','h'];
+      let position = new Chess(fen);
       this.pieces.reset();
-      for (var row = 8; row > 0; row--) {
-        for (var j = 0; j < 8; j++) {
+      for (let row = 8; row > 0; row--) {
+        for (let j = 0; j < 8; j++) {
           id = columns[j] + row;
           piece = position.get(id);
           if (piece) {

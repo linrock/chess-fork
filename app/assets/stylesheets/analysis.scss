@@ -31,7 +31,7 @@ button {
 
 .analysis-board {
   margin: 100px auto;
-  width: 480px + 6px + 200px;
+  width: 480px + 6px + 200px + 14px;
   @include clearfix;
 }
 
@@ -59,6 +59,7 @@ button {
       width: 100%;
       height: 100%;
       position: relative;
+      transition: transform 0.12s ease-in-out;
     }
 
   }
@@ -68,7 +69,7 @@ button {
 .moves-and-importer {
   float: left;
   margin-left: 20px;
-  width: 180px;
+  width: 194px;
   height: 445px;
   position: relative;
 }
@@ -83,6 +84,7 @@ button {
   width: 100%;
   height: 100%;
   padding: 10px 0;
+  overflow-y: scroll;
 
   .move-num {
     float: left;
@@ -92,7 +94,7 @@ button {
 
   .move {
     float: left;
-    width: 55px;
+    width: 65px;
     padding: 7px 0 7px 12px;
 
     &:hover {
@@ -123,8 +125,8 @@ button {
     border: 0;
     resize: none;
     padding: 12px 16px;
-    font-size: 12px;
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 22px;
   }
 
   .load-pgn {
@@ -161,7 +163,7 @@ button {
     color: #ccc;
     font-size: 14px;
     float: left;
-    padding: 7px 11px 7px;
+    padding: 7px 12px;
     background: #eee;
     border-radius: 2px;
 
@@ -173,7 +175,8 @@ button {
 
   .flip-board {
     width: 40px;
-    margin-right: 5px;
+    font-size: 15px;
+    margin-right: 11px;
     padding: 7px 11px;
   }
 
@@ -193,7 +196,7 @@ button {
   .titles {
     font-size: 13px;
     margin: 24px 0 12px;
-    overflow: hidden;
+    @include clearfix;
 
     > div {
       float: left;
@@ -214,8 +217,8 @@ button {
   }
 
   .moves {
-    overflow: hidden;
     font-weight: 600;
+    @include clearfix;
 
     .move {
       float: left;
