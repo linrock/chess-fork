@@ -5,6 +5,14 @@ module Stockfish
   class InvalidCommand < StandardError; end
   class InvalidOption < StandardError; end
 
+  # Example invocations
+  #
+  # > engine = Stockfish::Engine.new
+  # > position = "rqb2rk1/1p3p2/p1nb1n1p/2pp4/2P4Q/N2P1N2/PP2BPPP/R4RK1 w - - 1 15"
+  # > puts engine.analyze position, { :nodes => 100000 }
+  # > puts engine.analyze position, { :movetime => 2000 }
+  # > puts engine.analyze position, { :depth => 10 }
+  #
   class Engine
     attr_reader :stdin, :stdout, :stderr, :wait_threads, :version, :pid
 
@@ -61,11 +69,3 @@ module Stockfish
 
   end
 end
-
-
-# Example invocations
-engine = Stockfish::Engine.new
-position = "rqb2rk1/1p3p2/p1nb1n1p/2pp4/2P4Q/N2P1N2/PP2BPPP/R4RK1 w - - 1 15"
-puts engine.analyze position, { :nodes => 100000 }
-puts engine.analyze position, { :movetime => 2000 }
-puts engine.analyze position, { :depth => 10 }
