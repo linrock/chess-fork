@@ -38,18 +38,17 @@ module Stockfish
       @raw_analysis.strip.split("\n").reverse.each do |row|
         sequence = row.match(/ pv (?<moves>.*)/)
         next if sequence.nil? || sequence[:moves].split(" ")[0] != best_move_uci
-        best_sequence = sequence[:moves]
         analysis = row.match(ROW_SCANNER)
-        best_score = case analysis[:score_type]
-                     when "cp" then analysis[:score].to_f/100
-                     when "mate" then "mate #{analysis[:score]}"
-                     end
+        score = case analysis[:score_type]
+                when "cp" then analysis[:score].to_f/100
+                when "mate" then "mate #{analysis[:score]}"
+                end
         depth = analysis[:depth].to_i
-        if best_score && best_sequence && depth
+        if score && sequence[:moves] && depth
           @analysis = {
             :bestmove => best_move_uci,
-            :sequence => best_sequence,
-            :score => best_score,
+            :sequence => sequence[:moves],
+            :score => score,
             :depth => depth,
           }
           return @analysis
