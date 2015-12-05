@@ -22,3 +22,13 @@ body {
   font-family: "Open Sans", Helvetica, sans-serif;
   color: #222;
 }
+
+button {
+  border: none;
+  outline: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+}
