@@ -1,6 +1,5 @@
 $(function() {
 
-
   // Handling the internal state of chess positions/history
   //
   var ChessMechanism = Backbone.Model.extend({
@@ -101,15 +100,18 @@ $(function() {
 
   // For handling the DOM elements of the pieces on the board
   //
-  var Pieces = function(board) {
-    this.board = board;
-    this.$buffer = $("<div>").addClass("piece-buffer");
+  class Pieces {
+ 
+    constructor(board) {
+      this.board = board;
+      this.$buffer = $("<div>").addClass("piece-buffer");
+    }
 
-    this.reset = function() {
+    reset() {
       this.board.$(".piece").appendTo(this.$buffer);
-    };
-
-    this.$getPiece = function(piece) {
+    }
+    
+    $getPiece(piece) {
       var className = piece.color + piece.type;
       var $piece = this.$buffer.find("." + className).first();
       if ($piece.length) {
@@ -118,9 +120,9 @@ $(function() {
       return $("<img>").
         attr("src", "/assets/pieces/" + className + ".png").
         addClass("piece " + className);
-    };
+    }
 
-  };
+  }
 
 
   // The chessboard, which reflects the current state of the
@@ -312,6 +314,24 @@ $(function() {
 
     var $suggested = $(".suggested-moves");
 
+    var getAnalysis = function(fen) {
+      return new Promise(function(resolve, reject) {
+        $.post("/analysis", { fen: fen }, function(response) {
+          var c = new Chess;
+          c.load(fen);
+          var bestmove = response.bestmove;
+          var move = c.move({ from: bestmove.slice(0,2), to: bestmove.slice(2,5) });
+          var analysis = {
+            engine: "Stockfish 6",
+            san: move.san,
+            evaluation: response.score,
+            depth: response.depth
+          };
+          resolve(analysis);
+        });
+      });
+    };
+
     var renderAnalysis = function(analysis) {
       var sourceStr = analysis.engine + " - depth " + analysis.depth;
       $suggested.removeClass("invisible");
@@ -320,23 +340,8 @@ $(function() {
       $suggested.find(".source").text(sourceStr);
     };
 
-    var observer = _.clone(Backbone.Events);
-
-    observer.listenTo(chess, "change:fen", function(model, fen) {
-      $.post("/analysis", { fen: fen }, function(response) {
-        var c = new Chess;
-        c.load(fen);
-        var bestmove = response.bestmove;
-        var move = c.move({ from: bestmove.slice(0,2), to: bestmove.slice(2,5) });
-        var analysis = {
-          engine: "Stockfish 6",
-          san: move.san,
-          evaluation: response.score,
-          depth: response.depth
-        }
-        renderAnalysis(analysis);
-        console.log(move.san);
-      });
+    _.clone(Backbone.Events).listenTo(chess, "change:fen", function(model, fen) {
+      getAnalysis(fen).then(renderAnalysis);
     });
 
   };
