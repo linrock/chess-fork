@@ -35,7 +35,7 @@ module Stockfish
         return @analysis
       end
       best_move_uci = @raw_analysis[/bestmove (\w+) /, 1]
-      @raw_analysis.strip.split("\n").each do |row|
+      @raw_analysis.strip.split("\n").reverse.each do |row|
         sequence = row.match(/ pv (?<moves>.*)/)
         next if sequence.nil? || sequence[:moves].split(" ")[0] != best_move_uci
         best_sequence = sequence[:moves]
