@@ -118,8 +118,8 @@ $(function() {
         return $piece;
       }
       return $("<img>").
-        attr("src", "/assets/pieces/" + className + ".png").
-        addClass("piece " + className);
+        attr("src", `/assets/pieces/${className}.png`).
+        addClass(`piece ${className}`);
     }
 
   }
@@ -248,7 +248,7 @@ $(function() {
         if (i === 0) {
           return;
         }
-        this.$('[data-ply="' + i + '"]').addClass("current");
+        this.$(`[data-ply="${i}"]`).addClass("current");
       });
     },
 
@@ -259,10 +259,10 @@ $(function() {
       var html = '';
       _.each(moves, function(move) {
         if (plyNum % 2 === 1) {
-          html += '<div class="move-num">' + moveNum + '.</div>';
+          html += `<div class="move-num">${moveNum}.</div>`;
           moveNum++;
         }
-        html += '<div class="move" data-ply="' + plyNum + '">' + move + '</div>';
+        html += `<div class="move" data-ply="${plyNum}">${move}</div>`;
         plyNum++;
       });
       this.$el.html(html);
@@ -289,21 +289,13 @@ $(function() {
       "click .last-move"  : "_lastMove",
     },
 
-    _firstMove: function() {
-      chess.firstMove();
-    },
+    _firstMove: () => { chess.firstMove(); },
 
-    _prevMove: function() {
-      chess.prevMove();
-    },
+    _prevMove: () => { chess.prevMove(); },
 
-    _nextMove: function() {
-      chess.nextMove();
-    },
+    _nextMove: () => { chess.nextMove(); },
 
-    _lastMove: function() {
-      chess.lastMove();
-    }
+    _lastMove: () => { chess.lastMove(); }
 
   });
 
