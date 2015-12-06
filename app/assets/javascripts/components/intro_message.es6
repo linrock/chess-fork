@@ -1,7 +1,7 @@
+// The analysis view under the board
+
 {
 
-  // The analysis view under the board
-  //
   class IntroMessage extends Backbone.View {
 
     get el() {

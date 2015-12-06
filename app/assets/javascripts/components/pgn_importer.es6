@@ -10,28 +10,34 @@ Components.PgnImporter = Backbone.View.extend({
   },
 
   initialize: function() {
-    this.$textarea = this.$("textarea");
-    this.$button = this.$(".load-pgn");
-    this.validator = new Chess;
+    this.$textarea = this.$("textarea")
+    this.$button = this.$(".load-pgn")
+    this.$error = this.$(".invalid-pgn")
+    this.validator = new Chess
+    this.pgnIsValid = false
     this.listenTo(chess, "change:moves", function() {
-      this.$el.hide();
+      this.$el.hide()
     });
   },
 
   pgn: function() {
-    return this.$textarea.val();
+    return this.$textarea.val()
   },
 
   _validatePgn: function() {
     if (this.validator.load_pgn(this.pgn())) {
-      this.$button.removeClass("invisible");
+      this.pgnIsValid = true;
+      this.$button.removeClass("invisible")
+      this.$error.addClass("invisible")
     } else {
-      this.$button.addClass("invisible");
+      this.pgnIsValid = false;
     }
   },
 
   _loadPgn: function() {
-    chess.loadPgn(this.pgn());
+    if (!chess.loadPgn(this.pgn())) {
+      this.$error.removeClass("invisible")
+    }
   }
 
 });

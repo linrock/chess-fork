@@ -7,7 +7,7 @@
     initialize() {
       this.mechanism = new Chess
       this.set({
-        i: 0,
+        i: -1,
         moves: [],
         positions: [this.mechanism.fen()]
       })
@@ -68,7 +68,7 @@
         return false
       }
       this.updatePositions(this.mechanism.history())
-      this.firstMove()
+      this.setPositionIndex(1)
       return true
     }
 
