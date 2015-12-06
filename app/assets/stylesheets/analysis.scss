@@ -279,10 +279,24 @@
 
 .bottom-area {
   float: left;
+  position: relative;
+  clear: left;
+  width: 100%;
+}
+
+.intro-message {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  z-index: 1;
+  color: rgba(0,0,0,0.6);
 }
 
 .suggested-moves {
   transition: opacity 0.2s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   &.invisible {
     opacity: 0;
