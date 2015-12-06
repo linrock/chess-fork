@@ -21,6 +21,7 @@ $(function() {
 
   new Components.PgnImporter;
   new Components.MoveList;
+  new Components.ModalMoveList;
   new Components.ActionButtons;
   new Components.HotKeys;
   new Components.AnalysisHandler;

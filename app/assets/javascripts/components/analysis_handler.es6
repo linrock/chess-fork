@@ -23,7 +23,7 @@
 
     _enterAnalysisMode(event) {
       let fen = $(event.currentTarget).data("fen")
-      console.log("Analysis mode - " + fen)
+      chess.analyzePosition(fen)
     }
 
     listenToEvents() {

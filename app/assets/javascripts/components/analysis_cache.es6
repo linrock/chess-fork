@@ -28,6 +28,7 @@
             reject(fen)
           },
           success: (data, status, xhr) => {
+            data.fen = fen
             data.san = (new Chess(fen)).move(this.uciToMove(data.bestmove)).san
             this.set(fen, data)
             resolve(data)

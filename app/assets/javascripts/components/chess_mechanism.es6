@@ -36,9 +36,6 @@
       this.set({ i: this.get("i") + 1 })
     }
 
-    // TODO DRY usage of new chess instance to generate a
-    // different state and position set
-    //
     updatePositions(moves) {
       let c = new Chess
       let positions = [c.fen()]
@@ -50,6 +47,14 @@
         moves: moves,
         positions: positions
       })
+    }
+
+    analyzePosition(fen) {
+      if (!analysisCache.get(fen)) {
+        return;
+      }
+      this.set({ j: 0 })
+      this.trigger("mode:analysis", this)
     }
 
     getMovePrefix() {
