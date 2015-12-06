@@ -40,16 +40,9 @@
             reject(fen)
           },
           success: (data, status, xhr) => {
-            var move = (new Chess(fen)).move(uciToMove(data.bestmove))
-            var analysis = {
-              engine: "Stockfish 6",
-              san: move.san,
-              evaluation: data.score,
-              depth: data.depth,
-              sequence: data.sequence
-            }
-            this.set(fen, analysis)
-            resolve(analysis)
+            data.san = (new Chess(fen)).move(uciToMove(data.bestmove)).san
+            this.set(fen, data)
+            resolve(data)
           }
         })
       })
@@ -108,7 +101,7 @@
       this.$move.
         text(chess.getMovePrefix() + " " + analysis.san).
         data("fen", analysis.fen)
-      this.$evaluation.text(analysis.evaluation)
+      this.$evaluation.text(analysis.score)
       this.$source.text(analysis.engine + " - depth " + analysis.depth)
     }
 

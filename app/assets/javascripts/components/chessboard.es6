@@ -245,6 +245,7 @@
     initDragDrop() {
       this.$(".piece").draggable({
         stack: ".piece",
+        distance: 5,
         revert: true,
         revertDuration: 0
       })
