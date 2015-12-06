@@ -17,8 +17,8 @@
     }
     
     $getPiece(piece) {
-      var className = piece.color + piece.type
-      var $piece = this.$buffer.find("." + className).first()
+      let className = piece.color + piece.type
+      let $piece = this.$buffer.find("." + className).first()
       if ($piece.length) {
         return $piece
       }
@@ -193,7 +193,7 @@
   class Chessboard extends Backbone.View {
 
     get el() {
-      return ".chessboard";
+      return ".chessboard"
     }
 
     initialize() {
@@ -269,6 +269,6 @@
   }
 
 
-  Components.Chessboard = Chessboard;
+  Components.Chessboard = Chessboard
 
 }

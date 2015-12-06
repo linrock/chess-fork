@@ -1,47 +1,120 @@
 // Handles fetching analysis from remote server + rendering it
-//
-Components.AnalysisHandler = function() {
 
-  var $suggested = $(".suggested-moves");
+{
 
-  var analysisCache = {};
+  var uciToMove = function(uciMove) {
+    var move = {
+      from: uciMove.slice(0,2),
+      to: uciMove.slice(2,4)
+    }
+    if (uciMove.length === 5) {
+      move.promotion = uciMove[4]
+    }
+    return move
+  }
 
-  var getCachedAnalysis = function(fen) {
-    return new Promise(function(resolve, reject) {
-      var analysis = analysisCache[fen];
-      analysis && resolve(analysis) || reject(fen);
-    });
-  };
 
-  var getRemoteAnalysis = function(fen) {
-    return new Promise(function(resolve, reject) {
-      $.post("/analysis", { fen: fen }, function(response) {
-        var c = new Chess;
-        c.load(fen);
-        var bestmove = response.bestmove;
-        var move = c.move({ from: bestmove.slice(0,2), to: bestmove.slice(2,5) });
-        var analysis = {
-          engine: "Stockfish 6",
-          san: move.san,
-          evaluation: response.score,
-          depth: response.depth
-        };
-        analysisCache[fen] = analysis;
-        resolve(analysis);
-      });
-    });
-  };
+  class AnalysisCache {
 
-  var renderAnalysis = function(analysis) {
-    var sourceStr = analysis.engine + " - depth " + analysis.depth;
-    $suggested.removeClass("invisible");
-    $suggested.find(".move").text(chess.getMovePrefix() + " " + analysis.san);
-    $suggested.find(".evaluation").text(analysis.evaluation);
-    $suggested.find(".source").text(sourceStr);
-  };
+    constructor() {
+      this.analysis = {}
+    }
 
-  _.clone(Backbone.Events).listenTo(chess, "change:fen", function(model, fen) {
-    getCachedAnalysis(fen).catch(getRemoteAnalysis).then(renderAnalysis);
-  });
+    get(fen) {
+      return this.analysis[fen]
+    }
 
-};
+    set(fen, analysis) {
+      this.analysis[fen] = analysis
+    }
+
+    getRemote(fen) {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          url: "/analysis",
+          type: "POST",
+          data: { fen: fen },
+          dataType: "json",
+          context: this,
+          error: (xhr, status, error) => {
+            reject(fen)
+          },
+          success: (data, status, xhr) => {
+            var move = (new Chess(fen)).move(uciToMove(data.bestmove))
+            var analysis = {
+              engine: "Stockfish 6",
+              san: move.san,
+              evaluation: data.score,
+              depth: data.depth,
+              sequence: data.sequence
+            }
+            this.set(fen, analysis)
+            resolve(analysis)
+          }
+        })
+      })
+    }
+
+    getAnalysis(fen) {
+      return new Promise((resolve, reject) => {
+        let analysis = analysisCache.get(fen)
+        if (analysis) {
+          resolve(analysis)
+        } else {
+          this.getRemote(fen).then(resolve)
+        }
+      })
+    }
+
+  }
+
+
+  var analysisCache = new AnalysisCache
+
+  // The analysis view under the board
+  //
+  class AnalysisHandler extends Backbone.View {
+
+    get el() {
+      return ".suggested-moves"
+    }
+
+    get events() {
+      return {
+        "click .move" : "_enterAnalysisMode"
+      }
+    }
+
+    initialize() {
+      this.$move = this.$(".move")
+      this.$evaluation = this.$(".evaluation")
+      this.$source = this.$(".source")
+      this.listenToEvents()
+    }
+
+    _enterAnalysisMode(event) {
+      let fen = $(event.currentTarget).data("fen")
+      console.log("Analysis mode - " + fen)
+    }
+
+    listenToEvents() {
+      this.listenTo(chess, "change:fen", (model, fen) => {
+        analysisCache.getAnalysis(fen).then(_.bind(this.render, this))
+      })
+    }
+
+    render(analysis) {
+      this.$el.removeClass("invisible")
+      this.$move.
+        text(chess.getMovePrefix() + " " + analysis.san).
+        data("fen", analysis.fen)
+      this.$evaluation.text(analysis.evaluation)
+      this.$source.text(analysis.engine + " - depth " + analysis.depth)
+    }
+
+  }
+
+
+  Components.AnalysisHandler = AnalysisHandler
+
+}

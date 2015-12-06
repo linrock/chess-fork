@@ -1,6 +1,7 @@
 // Handling the internal state of chess positions/history
 
 {
+
   class ChessMechanism extends Backbone.Model {
 
     initialize() {
@@ -90,6 +91,7 @@
     }
 
   }
+
 
   Components.ChessMechanism = ChessMechanism
 

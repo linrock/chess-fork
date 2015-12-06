@@ -11,36 +11,36 @@ Components.MoveList = Backbone.View.extend({
 
   initialize: function() {
     this.listenTo(chess, "change:moves", function(model, moves) {
-      this.render(moves);
-    });
+      this.render(moves)
+    })
     this.listenTo(chess, "change:i", function(model, i) {
-      this.$(".move").removeClass("current");
+      this.$(".move").removeClass("current")
       if (i === 0) {
-        return;
+        return
       }
-      this.$(`[data-ply="${i}"]`).addClass("current");
-    });
+      this.$(`[data-ply="${i}"]`).addClass("current")
+    })
   },
 
   render: function(moves) {
-    this.$el.empty();
-    var moveNum = 1;
-    var plyNum = 1;
-    var html = '';
+    this.$el.empty()
+    var moveNum = 1
+    var plyNum = 1
+    var html = ''
     _.each(moves, function(move) {
       if (plyNum % 2 === 1) {
-        html += `<div class="move-num">${moveNum}.</div>`;
-        moveNum++;
+        html += `<div class="move-num">${moveNum}.</div>`
+        moveNum++
       }
-      html += `<div class="move" data-ply="${plyNum}">${move}</div>`;
-      plyNum++;
-    });
-    this.$el.html(html);
+      html += `<div class="move" data-ply="${plyNum}">${move}</div>`
+      plyNum++
+    })
+    this.$el.html(html)
   },
 
   _gotoMove: function(e) {
-    var i = $(e.currentTarget).data("ply");
-    chess.setPositionIndex(i);
+    var i = $(e.currentTarget).data("ply")
+    chess.setPositionIndex(i)
   }
 
-});
+})
