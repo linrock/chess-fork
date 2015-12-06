@@ -132,20 +132,19 @@
       this.board.listenTo(chess, "change:i", (model, i) => {
         this.clearHighlights()
         if (i === 0) {
-          return;
+          return
         }
         let fen = model.get("positions")[i - 1]
         let c = new Chess(fen)
         let move = c.move(model.get("moves")[i - 1])
         this.highlightMove(move)
-      });
+      })
     }
 
     clearHighlights() {
       this.board.$(".square[style]").removeAttr("style")
     }
 
-    // move - from, to
     highlightMove(move) {
       this.board.$getSquare(move.from).css({ background: "#ffffcc" })
       this.board.$getSquare(move.to).css({ background: "#ffff66" })
@@ -154,29 +153,37 @@
   }
 
 
-  Components.Chessboard = Backbone.View.extend({
+  // Base chessboard class with position rendering behavior
+  // and more behaviors built through composition
+  //
+  class Chessboard extends Backbone.View {
 
-    el: ".chessboard",
+    get el() {
+      return ".chessboard";
+    }
 
-    initialize: function() {
+    initialize() {
       this.pieces = new Pieces(this)
       this.animator = new PieceAnimator(this)
       this.highlighter = new SquareHighlighter(this)
       this.listenTo(chess, "change:fen", (model, fen) => {
         this.render(fen)
-      });
+      })
       this.listenTo(chess, "board:flip", this.flip)
-    },
+    }
 
-    render: function(fen) {
+    render(fen) {
       if (fen.split(" ").length === 4) {
-        fen += "0 1"
+        fen += " 0 1"
       }
       this.renderFen(fen)
-      this.initDragDrop()
-    },
+      if (!this.dragDrop) {
+        this.initDragDrop()
+        this.dragDrop = true
+      }
+    }
 
-    renderFen: function(fen) {
+    renderFen(fen) {
       let id, piece, $square
       let columns = ['a','b','c','d','e','f','g','h']
       let position = new Chess(fen)
@@ -190,36 +197,39 @@
           }
         }
       }
-    },
+    }
 
-    $getSquare: function(id) {
+    $getSquare(id) {
       return $("#" + id)
-    },
+    }
 
-    initDragDrop: _.once(function() {
+    initDragDrop() {
       this.$(".piece").draggable({
         stack: ".piece",
         revert: true,
         revertDuration: 0
-      });
+      })
       this.$(".square").droppable({
         accept: ".piece",
         tolerance: "pointer",
-        drop: function(event, ui) {
-          var move = {
+        drop: (event, ui) => {
+          let move = {
             from: $(ui.draggable).parents(".square").attr("id"),
             to: $(event.target).attr("id")
-          };
+          }
           chess.move(move)
         }
-      });
-    }),
+      })
+    }
 
-    flip: function() {
+    flip() {
       let topLeft = this.$(".square")[0].id
-      this.$el.find(".square").each((i,sq) => { this.$el.prepend(sq); })
-    },
+      this.$el.find(".square").each((i,sq) => { this.$el.prepend(sq) })
+    }
 
-  });
+  }
+
+
+  Components.Chessboard = Chessboard;
 
 }
