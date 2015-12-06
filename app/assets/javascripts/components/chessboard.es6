@@ -51,6 +51,19 @@
           chess.setFen(newFen)
         }
       })
+      this.board.listenTo(chess, "change:j", (model, j) => {
+        if (j === -1) {
+          return
+        }
+        let jPrev = chess.previous("j")
+        let prevFen = chess.mechanism.fen()
+        let newFen = chess.get("analysis").positions[j + 1]
+        if (j === 0) {
+          this.animatePositions(prevFen, newFen)
+        } else {
+          chess.setFen(newFen)
+        }
+      })
     }
 
     // For figuring out what pieces on squares to move
@@ -125,19 +138,29 @@
 
     constructor(board) {
       this.board = board
+      this.colors = {
+        "yellow":  ["#ffffcc", "#ffff66"],     // game moves
+        "blue":    ["#eeffff", "#bbffff"]      // analysis moves
+      }
       this.listenForEvents()
     }
 
     listenForEvents() {
       this.board.listenTo(chess, "change:i", (model, i) => {
-        this.clearHighlights()
-        if (i === 0) {
+        this.highlightGameMoveIndex(i)
+      })
+      this.board.listenTo(chess, "change:j", (model, j) => {
+        if (j === -1) {
           return
         }
-        let fen = model.get("positions")[i - 1]
+        this.clearHighlights()
+        let fen = chess.get("analysis").positions[j]
         let c = new Chess(fen)
-        let move = c.move(model.get("moves")[i - 1])
-        this.highlightMove(move)
+        let move = c.move(chess.get("analysis").moves[j])
+        this.highlightMove(move, "blue")
+      })
+      this.board.listenTo(chess, "mode:normal", () => {
+        this.highlightGameMoveIndex(chess.get("i"))
       })
     }
 
@@ -145,9 +168,21 @@
       this.board.$(".square[style]").removeAttr("style")
     }
 
-    highlightMove(move) {
-      this.board.$getSquare(move.from).css({ background: "#ffffcc" })
-      this.board.$getSquare(move.to).css({ background: "#ffff66" })
+    highlightMove(move, color) {
+      let colorCodes = this.colors[color]
+      this.board.$getSquare(move.from).css({ background: colorCodes[0] })
+      this.board.$getSquare(move.to).css({ background: colorCodes[1] })
+    }
+
+    highlightGameMoveIndex(i) {
+      this.clearHighlights()
+      if (i === 0) {
+        return
+      }
+      let fen = chess.get("positions")[i - 1]
+      let c = new Chess(fen)
+      let move = c.move(chess.get("moves")[i - 1])
+      this.highlightMove(move, "yellow")
     }
 
   }
@@ -285,7 +320,7 @@
     }
 
     flip() {
-      let topLeft = this.$(".square")[0].id
+      // let topLeft = this.$(".square")[0].id
       this.$el.find(".square").each((i,sq) => { this.$el.prepend(sq) })
     }
 

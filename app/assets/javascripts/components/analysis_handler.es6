@@ -1,7 +1,7 @@
+// The analysis info view under the board
+
 {
 
-  // The analysis view under the board
-  //
   class AnalysisHandler extends Backbone.View {
 
     get el() {
@@ -27,7 +27,8 @@
     }
 
     listenToEvents() {
-      this.listenTo(chess, "change:fen", (model, fen) => {
+      this.listenTo(chess, "change:i", (model, i) => {
+        let fen = chess.get("positions")[i]
         analysisCache.getAnalysis(fen).then(_.bind(this.render, this))
       })
     }

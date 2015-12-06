@@ -21,24 +21,32 @@
     }
 
     listenToEvents() {
+      this.listenTo(chess, "mode:normal", () => {
+        this.$el.addClass("invisible")
+      })
       this.listenTo(chess, "mode:analysis", () => {
         this.render()
       })
-      this.listenTo(chess, "change:i", () => {
-        this._closeModal()
+      this.listenTo(chess, "change:j", (model, j) => {
+        if (j === -1) {
+          return
+        }
+        this.$(".move").removeClass("current")
+        $(this.$(".move[data-ply]")[j]).addClass("current")
       })
     }
 
     render() {
       this.$moveList.empty()
+      let j = 0
       let plyNum = chess.get("i")
       let moveNum = ~~ (plyNum / 2)
       let analysis = analysisCache.get(chess.get("positions")[plyNum])
       let html = ''
       if (plyNum % 2 === 1) {
         moveNum += 1
-        html += `<div class="move-num">${moveNum}.</div>`
-        html += `<div class="move">...</div>`
+        html += `<div class="move-num">${moveNum}.</div>
+                 <div class="move">...</div>`
       }
       moveNum += 1
       for (let move of analysis.moves) {
@@ -46,19 +54,22 @@
           html += `<div class="move-num">${moveNum}.</div>`
           moveNum += 1
         }
-        html += `<div class="move" data-ply="${plyNum}">${move}</div>`
-        plyNum++
+        html += `<div class="move" data-ply="${plyNum}" data-j="${j}">${move}</div>`
+        plyNum += 1
+        j += 1
       }
       this.$moveList.html(html)
+      this.$(".move[data-ply]").first().addClass("current")
       this.$el.removeClass("invisible")
     }
 
     _closeModal() {
-      this.$el.addClass("invisible")
+      chess.trigger("mode:normal")
     }
 
     _gotoMove(e) {
-      let j = $(e.currentTarget).data("ply")
+      let j = $(e.currentTarget).data("j")
+      chess.set({ j: j })
     }
 
   }

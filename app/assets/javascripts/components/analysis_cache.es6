@@ -27,7 +27,7 @@
           success: (data, status, xhr) => {
             data.fen = fen
             data.san = (new Chess(fen)).move(this.uciToMove(data.bestmove)).san
-            data.moves = this.sequenceToSanList(fen, data.sequence)
+            data = _.extend(data, this.calcMovesAndPositions(fen, data.sequence))
             this.set(fen, data)
             resolve(data)
           },
@@ -58,6 +58,24 @@
         move.promotion = uciMove[4]
       }
       return move
+    }
+
+    // TODO lazy calculate this using a generator
+    //
+    calcMovesAndPositions(fen, sequence) {
+      let c = new Chess(fen)
+      let moves = []
+      let positions = [fen]
+      for (let uciMove of sequence.split(/\s+/)) {
+        let move = c.move(this.uciToMove(uciMove))
+        moves.push(move.san)
+        positions.push(c.fen())
+      }
+      return {
+        moves: moves,
+        positions: positions,
+        n: moves.length
+      }
     }
 
     sequenceToSanList(fen, sequence) {

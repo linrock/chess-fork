@@ -9,8 +9,23 @@
       this.mechanism = new Chess
       this.set({
         i: -1,
+        j: -1,
         moves: [],
+        mode: "normal",
         positions: [this.mechanism.fen()]
+      })
+      this.listenToEvents()
+    }
+
+    listenToEvents() {
+      this.listenTo(this, "change:i", function() {
+        if (this.get("j") >= 0) {
+          this.trigger("mode:normal")
+        }
+      })
+      this.listenTo(this, "mode:normal", function() {
+        this.setFen(this.get("positions")[this.get("i")])
+        this.set({ j: -1 })
       })
     }
 
@@ -56,10 +71,11 @@
     }
 
     analyzePosition(fen) {
-      if (!analysisCache.get(fen)) {
+      let analysis = analysisCache.get(fen)
+      if (!analysis) {
         return;
       }
-      this.set({ j: 0 })
+      this.set({ j: 0, analysis: analysis })
       this.trigger("mode:analysis", this)
     }
 
@@ -99,6 +115,21 @@
         return
       }
       this.set({ i: i })
+    }
+
+    prevEngineMove() {
+      this.setEnginePositionIndex(this.get("j") - 1)
+    }
+
+    nextEngineMove() {
+      this.setEnginePositionIndex(this.get("j") + 1)
+    }
+
+    setEnginePositionIndex(j) {
+      if (j < 0 || j >= this.get("analysis").n) {
+        return
+      }
+      this.set({ j: j })
     }
 
   }
