@@ -25,7 +25,7 @@
     <% polarity = %w( light dark ).cycle %>
     <% (1..8).to_a.reverse.each do |row| %>
       <% ('a'..'h').to_a.each do |col| %>
-        <div class="square <%= polarity.next %>" id="<%= col %><%= row %>"></div>
+        <div class="square <%= polarity.next %>" id="<%= "#{col}#{row}" %>"></div>
       <% end %>
       <% polarity.next %>
     <% end %>
@@ -36,7 +36,7 @@
     <div class="move-list">
     </div>
 
-    <div class="modal-move-list">
+    <div class="modal-move-list invisible">
       <div class="modal-bg"></div>
       <div class="moves"></div>
     </div>

@@ -19,8 +19,8 @@ Components.ModalMoveList = Backbone.View.extend({
       let i = model.get("i")
       let moveNum = 1
       let analysis = analysisCache.get(model.get("positions")[i])
-      console.dir(analysis)
-      this.$el.fadeIn()
+      console.log("WTF")
+      this.$el.removeClass("invisible")
     })
   },
 
@@ -29,7 +29,7 @@ Components.ModalMoveList = Backbone.View.extend({
   },
 
   _closeModal: function() {
-    this.$el.fadeOut()
+    this.$el.addClass("invisible")
   },
 
   _gotoMove: function(e) {
