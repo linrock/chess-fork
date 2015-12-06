@@ -1,6 +1,6 @@
 // The chessboard, which reflects the current state of the
 // chess mechanism
-//
+
 {
 
   // For handling the DOM elements of the pieces on the board
@@ -153,6 +153,40 @@
   }
 
 
+  // Point and click pieces to select and move them
+  //
+  class PointAndClick {
+
+    constructor(board) {
+      this.board = board
+      this.selectedSquare = false;
+      this.listenForEvents();
+    }
+
+    listenForEvents() {
+      this.board.$el.on("click", ".square", (event) => {
+        let square = $(event.currentTarget)[0].id
+        this.selectSquare(square)
+      })
+      this.board.listenTo(chess, "change:i", () => { this.clearSelected() })
+    }
+
+    selectSquare(square) {
+      if (this.selectedSquare && square != this.selectedSquare) {
+        chess.move({ from: this.selectedSquare, to: square })
+        this.clearSelected()
+      } else {
+        this.selectedSquare = square;
+      }
+    }
+
+    clearSelected() {
+      this.selectedSquare = false;
+    }
+
+  }
+
+
   // Base chessboard class with position rendering behavior
   // and more behaviors built through composition
   //
@@ -166,6 +200,11 @@
       this.pieces = new Pieces(this)
       this.animator = new PieceAnimator(this)
       this.highlighter = new SquareHighlighter(this)
+      this.pointAndClick = new PointAndClick(this)
+      this.listenForEvents()
+    }
+
+    listenForEvents() {
       this.listenTo(chess, "change:fen", (model, fen) => {
         this.render(fen)
       })
