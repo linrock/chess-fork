@@ -10,12 +10,14 @@
 
     get events() {
       return {
-        "click .modal-bg" : "_closeModal",
-        "click .move"     : "_gotoMove"
+        "click .modal-bg"    : "_closeModal",
+        "click .close-modal" : "_closeModal",
+        "click .move"        : "_gotoMove"
       }
     }
 
     initialize() {
+      this.$engine = this.$(".engine-name")
       this.$moveList = this.$(".move-list")
       this.listenToEvents()
     }
@@ -60,6 +62,7 @@
       }
       this.$moveList.html(html)
       this.$(".move[data-ply]").first().addClass("current")
+      this.$engine.text(analysis.engine)
       this.$el.removeClass("invisible")
     }
 
