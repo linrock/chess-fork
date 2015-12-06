@@ -1,21 +1,5 @@
-@mixin clearfix {
+@import "bourbon";
 
-  &:before, &:after {
-    display: table;
-    content: " ";
-  }
-
-  &:after {
-    clear: both;
-  }
-
-}
-
-@mixin user-select($type) {
-  -moz-user-select: $type;
-  -webkit-user-select: $type;
-  -ms-user-select: $type;
-}
 
 @mixin simple-scrollbar {
 
@@ -160,13 +144,13 @@
 
   .move-num {
     float: left;
-    width: 40px;
+    width: 45px;
     padding: 7px 0 7px 15px;
   }
 
   .move {
     float: left;
-    width: 65px;
+    width: 70px;
     padding: 7px 0 7px 12px;
     transition: background 0.12s ease;
 

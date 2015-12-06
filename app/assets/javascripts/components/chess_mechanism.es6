@@ -1,4 +1,5 @@
-// Handling the internal state of chess positions/history
+// Handles the internal state of chess positions/history
+// Also functions as an event dispatcher
 
 {
 
@@ -33,7 +34,12 @@
       this.mechanism = c
       this.setFen(c.fen())
       this.updatePositions(c.history())
-      this.set({ i: this.get("i") + 1 })
+      let i = this.get("i")
+      if (i < 0) {
+        this.set({ i: 1 })
+      } else {
+        this.set({ i: i + 1 })
+      }
     }
 
     updatePositions(moves) {
@@ -73,7 +79,7 @@
     }
 
     firstMove() {
-      this.setPositionIndex(0)
+      this.setPositionIndex(1)
     }
 
     prevMove() {
