@@ -1,46 +1,62 @@
 // Clickable list of moves that represent the state
 // of the game
-//
-Components.MoveList = Backbone.View.extend({
 
-  el: ".move-list",
+{
 
-  events: {
-    "click .move" : "_gotoMove"
-  },
+  class MoveList extends Backbone.View {
 
-  initialize: function() {
-    this.listenTo(chess, "change:moves", function(model, moves) {
-      this.render(moves)
-    })
-    this.listenTo(chess, "change:i", function(model, i) {
-      this.$(".move").removeClass("current")
-      if (i === 0) {
-        return
+    get el() {
+      return ".game-move-list"
+    }
+
+    get events() {
+      return {
+        "click .move" : "_gotoMove"
       }
-      this.$(`[data-ply="${i}"]`).addClass("current")
-    })
-  },
+    }
 
-  render: function(moves) {
-    this.$el.empty()
-    var moveNum = 1
-    var plyNum = 1
-    var html = ''
-    _.each(moves, function(move) {
-      if (plyNum % 2 === 1) {
-        html += `<div class="move-num">${moveNum}.</div>`
-        moveNum++
+    initialize() {
+      this.$moveList = this.$(".move-list")
+      this.listenToEvents()
+    }
+
+    listenToEvents() {
+      this.listenTo(chess, "change:moves", (model, moves) => {
+        this.render(moves)
+      })
+      this.listenTo(chess, "change:i", (model, i) => {
+        this.$(".move").removeClass("current")
+        if (i === 0) {
+          return
+        }
+        this.$(`[data-ply="${i}"]`).addClass("current")
+      })
+    }
+
+    render(moves) {
+      this.$moveList.empty()
+      let moveNum = 1
+      let plyNum = 1
+      let html = ''
+      for (let move of moves) {
+        if (plyNum % 2 === 1) {
+          html += `<div class="move-num">${moveNum}.</div>`
+          moveNum++
+        }
+        html += `<div class="move" data-ply="${plyNum}">${move}</div>`
+        plyNum++
       }
-      html += `<div class="move" data-ply="${plyNum}">${move}</div>`
-      plyNum++
-    })
-    this.$el.html(html)
-  },
+      this.$moveList.html(html)
+    }
 
-  _gotoMove: function(e) {
-    var i = $(e.currentTarget).data("ply")
-    chess.setPositionIndex(i)
+    _gotoMove(e) {
+      let i = $(e.currentTarget).data("ply")
+      chess.setPositionIndex(i)
+    }
+
   }
 
-})
+
+  Components.MoveList = MoveList
+
+}

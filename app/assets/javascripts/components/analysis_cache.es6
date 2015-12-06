@@ -24,14 +24,15 @@
           data: { fen: fen },
           dataType: "json",
           context: this,
-          error: (xhr, status, error) => {
-            reject(fen)
-          },
           success: (data, status, xhr) => {
             data.fen = fen
             data.san = (new Chess(fen)).move(this.uciToMove(data.bestmove)).san
+            data.moves = this.sequenceToSanList(fen, data.sequence)
             this.set(fen, data)
             resolve(data)
+          },
+          error: (xhr, status, error) => {
+            reject(fen)
           }
         })
       })
@@ -57,6 +58,16 @@
         move.promotion = uciMove[4]
       }
       return move
+    }
+
+    sequenceToSanList(fen, sequence) {
+      let c = new Chess(fen)
+      let moves = []
+      for (let uciMove of sequence.split(/\s+/)) {
+        let move = c.move(this.uciToMove(uciMove))
+        moves.push(move.san)
+      }
+      return moves
     }
 
   }

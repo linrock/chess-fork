@@ -187,6 +187,50 @@
   }
 
 
+  // Drag and drop pieces to move them
+  //
+  class DragAndDrop {
+
+    constructor(board) {
+      this.board = board
+      this.initialized = false
+    }
+
+    init() {
+      if (this.initialized) {
+        return
+      }
+      this.initDraggable()
+      this.initDroppable()
+      this.initialized = true
+    }
+
+    initDraggable() {
+      this.board.$(".piece").draggable({
+        stack: ".piece",
+        distance: 5,
+        revert: true,
+        revertDuration: 0
+      })
+    }
+
+    initDroppable() {
+      this.board.$(".square").droppable({
+        accept: ".piece",
+        tolerance: "pointer",
+        drop: (event, ui) => {
+          let move = {
+            from: $(ui.draggable).parents(".square").attr("id"),
+            to: $(event.target).attr("id")
+          }
+          chess.move(move)
+        }
+      })
+    }
+
+  }
+
+
   // Base chessboard class with position rendering behavior
   // and more behaviors built through composition
   //
@@ -200,6 +244,7 @@
       this.pieces = new Pieces(this)
       this.animator = new PieceAnimator(this)
       this.highlighter = new SquareHighlighter(this)
+      this.dragAndDrop = new DragAndDrop(this)
       this.pointAndClick = new PointAndClick(this)
       this.listenForEvents()
     }
@@ -216,10 +261,7 @@
         fen += " 0 1"
       }
       this.renderFen(fen)
-      if (!this.dragDrop) {
-        this.initDragDrop()
-        this.dragDrop = true
-      }
+      this.dragAndDrop.init()     // TODO init board with pieces
     }
 
     renderFen(fen) {
@@ -240,26 +282,6 @@
 
     $getSquare(id) {
       return $("#" + id)
-    }
-
-    initDragDrop() {
-      this.$(".piece").draggable({
-        stack: ".piece",
-        distance: 5,
-        revert: true,
-        revertDuration: 0
-      })
-      this.$(".square").droppable({
-        accept: ".piece",
-        tolerance: "pointer",
-        drop: (event, ui) => {
-          let move = {
-            from: $(ui.draggable).parents(".square").attr("id"),
-            to: $(event.target).attr("id")
-          }
-          chess.move(move)
-        }
-      })
     }
 
     flip() {
