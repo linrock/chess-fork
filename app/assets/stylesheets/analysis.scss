@@ -80,6 +80,7 @@
     width: 60px;
     height: 60px;
     float: left;
+    transition: background 0.1s ease-in-out;
     @include user-select(none);
 
     &.light {

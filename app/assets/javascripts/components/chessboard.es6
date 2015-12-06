@@ -36,6 +36,21 @@
 
     constructor(board) {
       this.board = board;
+      this.listenForEvents();
+    }
+
+    listenForEvents() {
+      this.board.listenTo(chess, "change:i", (model, i) => {
+        let positions = model.get("positions");
+        let iPrev = model.previous("i");
+        let prevFen = positions[iPrev];
+        let newFen = positions[i];
+        if (Math.abs(iPrev - i) === 1) {
+          this.animatePositions(prevFen, newFen);
+        } else {
+          chess.setFen(newFen);
+        }
+      });
     }
 
     // For figuring out what pieces on squares to move
@@ -104,6 +119,41 @@
   }
 
 
+  // Handles highlighting square on the board when positions change
+  //
+  class SquareHighlighter {
+
+    constructor(board) {
+      this.board = board;
+      this.listenForEvents();
+    }
+
+    listenForEvents() {
+      this.board.listenTo(chess, "change:i", (model, i) => {
+        this.clearHighlights();
+        if (i === 0) {
+          return;
+        }
+        let fen = model.get("positions")[i - 1];
+        let c = new Chess(fen);
+        let move = c.move(model.get("moves")[i - 1]);
+        this.highlightMove(move);
+      });
+    }
+
+    clearHighlights() {
+      this.board.$(".square[style]").removeAttr("style");
+    }
+
+    // move - from, to
+    highlightMove(move) {
+      this.board.$getSquare(move.from).css({ background: "#ffffcc" });
+      this.board.$getSquare(move.to).css({ background: "#ffff66" });
+    }
+
+  }
+
+
   Components.Chessboard = Backbone.View.extend({
 
     el: ".chessboard",
@@ -111,27 +161,10 @@
     initialize: function() {
       this.pieces = new Pieces(this);
       this.animator = new PieceAnimator(this);
-      this.listenTo(chess, "change:fen", function(model, fen) {
+      this.highlighter = new SquareHighlighter(this);
+      this.listenTo(chess, "change:fen", (model, fen) => {
         this.render(fen);
       });
-
-      this.listenTo(chess, "change:i", function(model, i) {
-        let positions = model.get("positions");
-        let iPrev = model.previous("i");
-        let prevFen = positions[iPrev];
-        let newFen = positions[i];
-
-        // let fen = positions[i - 1];
-        // let c = new Chess(fen);
-        // let move = c.move(model.get("moves")[i]);
-
-        if (Math.abs(iPrev - i) === 1) {
-          this.animatePositions(prevFen, newFen);
-        } else {
-          chess.setFen(newFen);
-        }
-      });
-
       this.listenTo(chess, "board:flip", this.flip);
     },
 
@@ -186,10 +219,6 @@
       let topLeft = this.$(".square")[0].id;
       this.$el.find(".square").each((i,sq) => { this.$el.prepend(sq); });
     },
-
-    animatePositions: function(...positions) {
-      this.animator.animatePositions(...positions);
-    }
 
   });
 
