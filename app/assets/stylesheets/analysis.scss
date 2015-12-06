@@ -62,10 +62,22 @@
 }
 
 
+// Header right under the main header
+//
+.sub-header {
+  font-size: 13px;
+  color: #9C9C9C;
+  background: #F7F7F7;
+  border-bottom: 1px solid #EFEFEF;
+  height: 45px;
+  line-height: 46px;
+}
+
+
 // Main analysis board area
 //
 .analysis-board {
-  margin: 70px auto;
+  margin: 55px auto;
   width: 480px + 6px + 200px + 14px;
   @include clearfix;
 }
