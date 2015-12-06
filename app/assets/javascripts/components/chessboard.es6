@@ -159,8 +159,8 @@
 
     constructor(board) {
       this.board = board
-      this.selectedSquare = false;
-      this.listenForEvents();
+      this.selectedSquare = false
+      this.listenForEvents()
     }
 
     listenForEvents() {
@@ -176,12 +176,12 @@
         chess.move({ from: this.selectedSquare, to: square })
         this.clearSelected()
       } else {
-        this.selectedSquare = square;
+        this.selectedSquare = square
       }
     }
 
     clearSelected() {
-      this.selectedSquare = false;
+      this.selectedSquare = false
     }
 
   }
