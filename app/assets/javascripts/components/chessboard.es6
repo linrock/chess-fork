@@ -159,8 +159,10 @@
         let move = c.move(chess.get("analysis").moves[j])
         this.highlightMove(move, "blue")
       })
-      this.board.listenTo(chess, "mode:normal", () => {
-        this.highlightGameMoveIndex(chess.get("i"))
+      this.board.listenTo(chess, "change:mode", (model, mode) => {
+        if (mode === "normal") {
+          this.highlightGameMoveIndex(chess.get("i"))
+        }
       })
     }
 

@@ -10,8 +10,8 @@
       this.set({
         i: -1,
         j: -1,
-        moves: [],
         mode: "normal",
+        moves: [],
         positions: [this.mechanism.fen()]
       })
       this.listenToEvents()
@@ -20,12 +20,14 @@
     listenToEvents() {
       this.listenTo(this, "change:i", function() {
         if (this.get("j") >= 0) {
-          this.trigger("mode:normal")
+          this.set({ mode: "normal" })
         }
       })
-      this.listenTo(this, "mode:normal", function() {
-        this.setFen(this.get("positions")[this.get("i")])
-        this.set({ j: -1 })
+      this.listenTo(this, "change:mode", (model, mode) => {
+        if (mode === "normal") {
+          this.setFen(this.get("positions")[this.get("i")])
+          this.set({ j: -1 })
+        }
       })
     }
 
@@ -75,8 +77,7 @@
       if (!analysis) {
         return;
       }
-      this.set({ j: 0, analysis: analysis })
-      this.trigger("mode:analysis", this)
+      this.set({ j: 0, analysis: analysis, mode: "analysis" })
     }
 
     getMovePrefix() {

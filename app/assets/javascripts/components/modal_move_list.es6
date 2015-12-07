@@ -23,11 +23,15 @@
     }
 
     listenToEvents() {
-      this.listenTo(chess, "mode:normal", () => {
-        this.$el.addClass("invisible")
-      })
-      this.listenTo(chess, "mode:analysis", () => {
-        this.render()
+      this.listenTo(chess, "change:mode", (model, mode) => {
+        switch(mode) {
+          case "normal":
+            this.$el.addClass("invisible")
+            break
+          case "analysis":
+            this.render()
+            break
+        }
       })
       this.listenTo(chess, "change:j", (model, j) => {
         if (j === -1) {
@@ -67,7 +71,7 @@
     }
 
     _closeModal() {
-      chess.trigger("mode:normal")
+      chess.set({ mode: "normal" })
     }
 
     _gotoMove(e) {
