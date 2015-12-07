@@ -27,6 +27,8 @@
         if (mode === "normal") {
           this.setFen(this.get("positions")[this.get("i")])
           this.set({ j: -1 })
+        } else if (mode === "analysis") {
+          this.set({ j: 0 })
         }
       })
     }
@@ -112,6 +114,10 @@
     }
 
     setPositionIndex(i) {
+      if (this.get("mode") === "analysis") {
+        this.set({ mode: "normal" })
+        return
+      }
       if (i < 0 || i >= this.get("positions").length) {
         return
       }
@@ -127,8 +133,15 @@
     }
 
     setEnginePositionIndex(j) {
-      if (j < 0 || j >= this.get("analysis").n) {
+      if (this.get("mode") === "normal" && j >= 0) {
+        this.analyzePosition(this.get("positions")[this.get("i")])
         return
+      }
+      if (j >= this.get("analysis").n) {
+        return
+      }
+      if (j < 0) {
+        this.set({ mode: "normal" })
       }
       this.set({ j: j })
     }
