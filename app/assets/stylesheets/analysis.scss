@@ -402,7 +402,7 @@
     }
 
     .move-title {
-      width: 100px;
+      width: 115px;
     }
 
     .evaluation-title {
@@ -421,10 +421,19 @@
 
     .move {
       float: left;
-      width: 100px;
+      width: 115px;
 
       &:hover {
         cursor: pointer;
+      }
+
+    }
+
+    .engine-move {
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: #0bf;
       }
 
     }
