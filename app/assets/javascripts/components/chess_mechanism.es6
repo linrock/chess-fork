@@ -18,7 +18,7 @@
     }
 
     listenToEvents() {
-      this.listenTo(this, "change:i", function() {
+      this.listenTo(this, "change:i", () => {
         if (this.get("j") >= 0) {
           this.set({ mode: "normal" })
         }
@@ -142,6 +142,7 @@
       }
       if (j < 0) {
         this.set({ mode: "normal" })
+        return
       }
       this.set({ j: j })
     }

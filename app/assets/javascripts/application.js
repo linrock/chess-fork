@@ -6,6 +6,8 @@
 //= require backbone
 //= require chess
 //= require mousetrap
+//= require d3
+//= require rickshaw
 //= require_self
 //= require_tree ./components
 
@@ -26,5 +28,6 @@ $(function() {
   new Components.HotKeys;
   new Components.AnalysisHandler;
   new Components.IntroMessage;
+  new Components.EvaluationGraph;
 
 });
