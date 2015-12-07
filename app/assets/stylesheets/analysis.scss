@@ -84,7 +84,7 @@
 // Main analysis board area
 //
 .analysis-board {
-  margin: 55px auto;
+  margin: 55px auto 25px;
   width: 480px + 6px + 200px + 14px + 10px;
   @include clearfix;
 }
@@ -324,7 +324,6 @@
 }
 
 .actions {
-  height: 40px;
   margin-top: 10px;
   margin-left: 20px;
   float: left;
@@ -372,6 +371,7 @@
   position: relative;
   clear: left;
   width: 100%;
+  margin-top: 15px;
 }
 
 .intro-message {
@@ -457,5 +457,28 @@
   float: right;
   width: 204px;
   height: 100px;
-}
+  position: relative;
 
+  .bar {
+    width: 1px;
+    height: 100%;
+    background: #333;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    // @include transition(left 0.1s ease-in-out);
+
+    &.hover {
+      display: none;
+      background: #ddd;
+      z-index: -1;
+    }
+
+    &.click {
+      background: orange;
+    }
+
+  }
+
+}

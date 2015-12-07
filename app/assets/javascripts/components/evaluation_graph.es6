@@ -8,6 +8,7 @@
 
     constructor($el) {
       this.$el = $el
+      this.maxWidth = parseInt(this.$el.css("width"))
       this.color = "rgba(70, 130, 180, 1)"
     }
 
@@ -20,19 +21,23 @@
     }
 
     width(points) {
+      return this.maxWidth
+
+      // TODO minimum number of points before hitting max width?
       if (points.length >= 20) {
-        return 200
+        return this.maxWidth
       } else {
         return points.length * 10
       }
     }
 
     render(points) {
+      let series = this.prepareSeries(points)
       let graph = new Rickshaw.Graph({
         element: $("<div>").appendTo(this.$el)[0],
         width: this.width(points),
         height: 100,
-        series: this.prepareSeries(points),
+        series: series,
         min: -10,
         max: 10,
         renderer: "area",
@@ -41,6 +46,57 @@
         interpolation: "linear"
       })
       graph.render()
+      this.n = series.length
+    }
+
+  }
+
+
+  // Abstract Bar class
+  //
+  class Bar extends Backbone.View {
+
+    initialize(graph) {
+      this.$el = $("<div>").addClass("bar")
+      this.graph = graph
+      this.listenToEvents()
+      this.render()
+    }
+
+    listenToEvents() {}
+
+    render() {
+      this.remove()
+    }
+
+    reposition(i) {
+      let n = this.graph.points.length
+      this.$el.css({
+        left: Math.round(i * this.graph.width / (n - 1))
+      })
+    }
+
+  }
+
+
+  // Use a bar to denote the current mouseover position
+  //
+  class HoverBar extends Bar {
+
+    listenToEvents() {
+      this.listenTo(this.graph, "mouseenter", () => { this.$el.fadeIn(75)  })
+      this.listenTo(this.graph, "mouseleave", () => { this.$el.fadeOut(75) })
+      this.listenTo(this.graph, "mousemove", (e) => {
+        let i = this.graph.getIFromMousePosition(e)
+        if (i) {
+          this.reposition(i)
+        }
+      })
+    }
+
+    render() {
+      this.$el.addClass("hover")
+      this.$el.appendTo(this.graph.$el)
     }
 
   }
@@ -123,7 +179,9 @@
     }
 
     initialize(options = {}) {
-      this.graph = new AreaGraph(this.$el)
+      this.$areaGraph = this.$(".area-graph")
+      this.width = parseInt(this.$el.css("width"))
+      this.graph = new AreaGraph(this.$areaGraph)
       this.normalizer = new PointsNormalizer
       this.listenToEvents()
     }
@@ -137,17 +195,27 @@
     }
 
     render(points) {
-      this.$el.empty()
+      this.$areaGraph.empty()
       this.graph.render(points)
+      this.addHoverBar()
+    }
+
+    addHoverBar() {
+      if (!this.hoverBar) {
+        this.hoverBar = new HoverBar(this)
+      }
     }
 
     getIFromMousePosition(event) {
+      if (!this.points) {
+        return
+      }
       let mouseOffset = $(event.target).offset().left
       let offX = event.offsetX || event.clientX - mouseOffset
       if (offX < 0) {
         return
       }
-      return ~~( offX / 960 * this.points.length )
+      return ~~( offX / this.width * this.points.length )
     }
 
     _click(event) {
@@ -155,6 +223,7 @@
       if (!i) {
         return
       }
+      console.log(i)
       this.trigger("change:i" , i)
     }
 
