@@ -42,7 +42,7 @@ module Stockfish
           break if line =~ /^bestmove/
         end
       when "setoption"
-        sleep 0.1
+        sleep 0.05
         raise InvalidOption.new(@stdout.readline.strip) if @stdout.ready?
       when "isready"
         output << @stdout.readline
