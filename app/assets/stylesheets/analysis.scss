@@ -385,12 +385,17 @@
   z-index: 1;
   color: rgba(0,0,0,0.6);
   font-size: 16px;
+  transition: opacity 0.5s ease-in-out 0.4s;
 
   em {
     font-style: italic;
     position: relative;
     left: -1px;
     margin: 0 3px;
+  }
+
+  &.invisible {
+    opacity: 0;
   }
 
 }
