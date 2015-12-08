@@ -18,7 +18,7 @@
       this.$move = this.$(".move")
       this.$evaluation = this.$(".evaluation")
       this.$source = this.$(".source")
-      this.listenToEvents()
+      this.listenForEvents()
     }
 
     _enterAnalysisMode(event) {
@@ -26,8 +26,12 @@
       chess.analyzePosition(fen)
     }
 
-    listenToEvents() {
+    listenForEvents() {
       this.listenTo(chess, "change:i", (model, i) => {
+        if (i === 0) {
+          this.$el.addClass("invisible")
+          return
+        }
         let fen = chess.get("positions")[i]
         analysisCache.getAnalysis(fen).then(_.bind(this.render, this))
       })
@@ -36,7 +40,7 @@
     render(analysis) {
       this.$el.removeClass("invisible")
       this.$move.
-        text(chess.getMovePrefix() + " " + analysis.san).
+        text(chess.getMovePrefix(chess.get("i")) + " " + analysis.san).
         data("fen", analysis.fen)
       this.$evaluation.text(analysis.score)
       this.$source.text(analysis.engine + " - depth " + analysis.depth)

@@ -84,7 +84,7 @@
 // Main analysis board area
 //
 .analysis-board {
-  margin: 55px auto 25px;
+  margin: 40px auto 25px;
   width: 480px + 6px + 200px + 14px + 10px;
   @include clearfix;
 }
@@ -386,10 +386,47 @@
   color: rgba(0,0,0,0.6);
 }
 
+.position-info {
+  float: left;
+  transition: opacity 0.2s ease;
+  @include clearfix;
+
+  &.invisible {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .show-position-actions {
+    color: #bcbcbc;
+    background: #F5F5F5;
+    border-radius: 2px;
+    font-size: 16px;
+    float: left;
+    width: 42px;
+    height: 26px;
+    padding-top: 4px;
+
+    &:hover {
+      cursor: pointer;
+      background: #efefef;
+    }
+
+  }
+
+  .position-description {
+    float: left;
+    font-weight: bold;
+    margin-left: 20px;
+    line-height: 26px;
+    font-size: 14px;
+  }
+
+}
+
 .suggested-moves {
   transition: opacity 0.2s ease;
   position: absolute;
-  top: 0;
+  top: 55px;
   left: 0;
 
   &.invisible {
@@ -398,7 +435,7 @@
 
   .titles {
     font-size: 13px;
-    margin: 24px 0 12px;
+    margin-bottom: 12px;
     @include clearfix;
 
     > div {

@@ -30,5 +30,6 @@ $(function() {
   new Components.IntroMessage;
   new Components.EvaluationGraph;
   new Components.MiniHoverBoard;
+  new Components.PositionInfo;
 
 });

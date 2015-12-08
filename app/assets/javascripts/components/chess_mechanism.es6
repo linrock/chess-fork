@@ -82,10 +82,9 @@
       this.set({ j: 0, analysis: analysis, mode: "analysis" })
     }
 
-    getMovePrefix() {
-      let nMoves = this.get("i")
-      let moveNum = 1 + ~~(nMoves / 2)
-      return moveNum + (nMoves % 2 == 0 ? "." : "...")
+    getMovePrefix(i) {
+      let moveNum = 1 + ~~(i / 2)
+      return moveNum + (i % 2 == 0 ? "." : "...")
     }
 
     loadPgn(pgn) {

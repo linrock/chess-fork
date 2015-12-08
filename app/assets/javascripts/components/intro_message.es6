@@ -10,7 +10,7 @@
 
     initialize() {
       this.listenTo(chess, "change:i", (model, i) => {
-        this.$el.fadeOut()
+        this.$el.fadeOut(50)
       })
     }
 
