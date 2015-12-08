@@ -3,33 +3,6 @@
 
 {
 
-  // For handling the DOM elements of the pieces on the board
-  //
-  class Pieces {
-
-    constructor(board) {
-      this.board = board
-      this.$buffer = $("<div>").addClass("piece-buffer").appendTo(board.$el)
-    }
-
-    reset() {
-      this.board.$(".piece").appendTo(this.$buffer)
-    }
-    
-    $getPiece(piece) {
-      let className = piece.color + piece.type
-      let $piece = this.$buffer.find("." + className).first()
-      if ($piece.length) {
-        return $piece
-      }
-      return $("<img>").
-        attr("src", `/assets/pieces/${className}.png`).
-        addClass(`piece ${className}`)
-    }
-
-  }
-
-
   // For handling animation of pieces on the board
   //
   class PieceAnimator {
@@ -270,19 +243,27 @@
   // Base chessboard class with position rendering behavior
   // and more behaviors built through composition
   //
-  class MainBoard extends Backbone.View {
+  class MainBoard extends Components.Chessboard {
 
     get el() {
       return ".main-board"
     }
 
+    get sqPrefix() {
+      return "sq"
+    }
+
     initialize() {
-      this.pieces = new Pieces(this)
+      super.initialize()
       this.animator = new PieceAnimator(this)
       this.highlighter = new SquareHighlighter(this)
-      this.dragAndDrop = new DragAndDrop(this)
       this.pointAndClick = new PointAndClick(this)
+      this.dragAndDrop = new DragAndDrop(this)
       this.listenForEvents()
+    }
+
+    afterRender() {
+      this.dragAndDrop.init()
     }
 
     listenForEvents() {
@@ -292,38 +273,9 @@
       this.listenTo(chess, "board:flip", this.flip)
     }
 
-    render(fen) {
-      if (fen.split(" ").length === 4) {
-        fen += " 0 1"
-      }
-      this.renderFen(fen)
-      this.dragAndDrop.init()     // TODO init board with pieces
-    }
-
-    renderFen(fen) {
-      let id, piece
-      let columns = ['a','b','c','d','e','f','g','h']
-      let position = new Chess(fen)
-      this.pieces.reset()
-      for (let row = 8; row > 0; row--) {
-        for (let j = 0; j < 8; j++) {
-          id = columns[j] + row
-          piece = position.get(id)
-          if (piece) {
-            this.pieces.$getPiece(piece).appendTo(this.$getSquare(id))
-          }
-        }
-      }
-    }
-
     move(move) {
-      console.dir(move)
       move.promotion = move.promotion || "q"
       chess.move(move)
-    }
-
-    $getSquare(id) {
-      return $("#sq-" + id)
     }
 
     flip() {
