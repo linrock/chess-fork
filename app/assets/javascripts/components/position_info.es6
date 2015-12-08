@@ -1,5 +1,53 @@
 {
 
+  class PositionMenu extends Backbone.View {
+
+    get el() {
+      return ".position-actions-menu"
+    }
+
+    get events() {
+      return {
+        "click .multi-pv" : "_multiPv",
+        "click .depth-20" : "_depth20",
+        "click .show-fen" : "_showFen"
+      }
+    }
+
+    initialize() {
+      this.listenForEvents()
+    }
+
+    listenForEvents() {
+      this.listenTo(chess, "change:i", () => {
+        this.hide()
+      })
+    }
+
+    hide() {
+      this.$el.addClass("invisible")
+    }
+
+    toggle() {
+      this.$el.toggleClass("invisible")
+    }
+
+    _multiPv() {
+      this.hide()
+    }
+
+    _depth20() {
+      this.hide()
+    }
+
+    _showFen() {
+      this.hide()
+    }
+
+  }
+
+
+
   class PositionInfo extends Backbone.View {
 
     get el() {
@@ -8,12 +56,13 @@
 
     get events() {
       return {
-        "click .show-position-actions" : "_showPositionActions"
+        "click .show-position-actions" : "_toggleMenu"
       }
     }
 
     initialize() {
       this.$positionDescription = this.$(".position-description")
+      this.menu = new PositionMenu
       this.listenForEvents()
     }
 
@@ -28,6 +77,10 @@
         this.$el.removeClass("invisible")
         this.$positionDescription.text(moveStr)
       })
+    }
+
+    _toggleMenu() {
+      this.menu.toggle()
     }
 
   }
