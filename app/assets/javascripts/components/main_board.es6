@@ -9,7 +9,7 @@
 
     constructor(board) {
       this.board = board
-      this.$buffer = $("<div>").addClass("piece-buffer")
+      this.$buffer = $("<div>").addClass("piece-buffer").appendTo(board.$el)
     }
 
     reset() {
@@ -270,7 +270,7 @@
   // Base chessboard class with position rendering behavior
   // and more behaviors built through composition
   //
-  class Chessboard extends Backbone.View {
+  class MainBoard extends Backbone.View {
 
     get el() {
       return ".main-board"
@@ -301,7 +301,7 @@
     }
 
     renderFen(fen) {
-      let id, piece, $square
+      let id, piece
       let columns = ['a','b','c','d','e','f','g','h']
       let position = new Chess(fen)
       this.pieces.reset()
@@ -334,6 +334,6 @@
   }
 
 
-  Components.Chessboard = Chessboard
+  Components.MainBoard = MainBoard
 
 }

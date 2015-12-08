@@ -119,6 +119,10 @@
 
   }
 
+  .piece-buffer {
+    display: none;
+  }
+
 }
 
 .moves-and-importer {
@@ -470,21 +474,53 @@
     left: 3px;
     top: -216px;
     z-index: 3;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
 
     &.invisible {
       opacity: 0;
-      transform: translate3d(0,4px,0);
+      transform: translate3d(0,2px,0);
       pointer-events: none;
     }
 
   }
 
-  .board {
-    width: 186px;
-    height: 186px;
+  .chessboard {
+    $square-size: 23px;
+
+    width: 8 * $square-size + 2px;
+    height: 8 * $square-size + 2px;
     margin: 12px;
     background: #ddd;
+    border: 1px solid #938172;
+
+    .square {
+      width: $square-size;
+      height: $square-size;
+      float: left;
+      transition: background 0.1s ease-in-out;
+      @include user-select(none);
+
+      &.light {
+        background: #f3e4cf;
+      }
+
+      &.dark {
+        background: #ceb3a2;
+      }
+
+      .piece {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transition: transform 0.12s ease-in-out;
+      }
+
+    }
+
+    .piece-buffer {
+      display: none;
+    }
+
   }
 
 }
