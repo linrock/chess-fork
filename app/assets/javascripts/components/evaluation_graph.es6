@@ -208,10 +208,11 @@
 
     listenToEvents() {
       this.listenTo(chess, "change:positions", (model, positions) => {
-        this.renderPositionEvaluations(positions.slice(0, positions.length - 1))
+        this.plotPositionEvaluations(positions.slice(0, positions.length - 1))
+        this.show()
       })
       this.listenTo(chess, "change:analysis", (analysis) => {
-        this.renderPositionEvaluations(chess.get("positions"))
+        this.plotPositionEvaluations(chess.get("positions"))
       })
     }
 
@@ -220,6 +221,10 @@
       this.graph.render(points)
       this.addHoverBar()
       this.addStaticBar()
+    }
+
+    show() {
+      this.$el.removeClass("invisible")
     }
 
     addHoverBar() {
@@ -246,7 +251,7 @@
       return ~~( offX / this.width * this.points.length )
     }
 
-    renderPositionEvaluations(positions) {
+    plotPositionEvaluations(positions) {
       this.points = this.normalizer.getNormalizedScores(positions)
       this.render(this.points)
     }

@@ -381,9 +381,18 @@
 .intro-message {
   position: absolute;
   top: 25px;
-  left: 0;
+  left: 17px;
   z-index: 1;
   color: rgba(0,0,0,0.6);
+  font-size: 16px;
+
+  em {
+    font-style: italic;
+    position: relative;
+    left: -1px;
+    margin: 0 3px;
+  }
+
 }
 
 .position-info {
@@ -434,7 +443,7 @@
     width: 184px;
     padding: 6px 0;
     transition: all 0.2s ease;
-    z-index: 50;
+    z-index: 9999;
 
     &.invisible {
       opacity: 0;
@@ -461,6 +470,7 @@
 
       .name {
         float: left;
+        margin-left: 3px;
       }
 
     }
@@ -614,6 +624,11 @@
   height: 100px;
   position: relative;
   margin-top: 10px;
+
+  &.invisible {
+    opacity: 0;
+    pointer-events: none;
+  }
 
   &:hover {
     cursor: pointer;
