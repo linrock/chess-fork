@@ -42,18 +42,17 @@
     }
 
     move(move) {
-      let moves = this.get("moves").slice(0, this.get("i"))
-      let c = new Chess
-      for (let m of moves) {
-        c.move(m)
-      }
-      if (!c.move(move)) {
+      let i = this.get("i")
+      let moves = this.get("moves").slice(0, i)
+      let c = new Chess(this.get("positions")[i])
+      let moveAttempt = c.move(move)
+      if (!moveAttempt) {
         return
       }
+      moves.push(moveAttempt.san)
       this.mechanism = c
       this.setFen(c.fen())
-      this.updatePositions(c.history())
-      let i = this.get("i")
+      this.updatePositions(moves)
       if (i < 0) {
         this.set({ i: 1 })
       } else {
