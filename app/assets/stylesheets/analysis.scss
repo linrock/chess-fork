@@ -460,6 +460,7 @@
   position: relative;
 
   .bar {
+    display: none;
     width: 1px;
     height: 100%;
     background: #333;
@@ -467,16 +468,16 @@
     left: 0;
     top: 0;
     z-index: 100;
-    // @include transition(left 0.1s ease-in-out);
 
     &.hover {
-      display: none;
       background: #ddd;
       z-index: -1;
     }
 
-    &.click {
+    &.static {
       background: orange;
+      z-index: 1;
+      transition: left 0.1s ease-in-out;
     }
 
   }

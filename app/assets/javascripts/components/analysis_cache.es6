@@ -38,13 +38,18 @@
       })
     }
 
+    notifyAnalysis(analysis) {
+      chess.trigger("change:analysis", analysis)
+      return analysis
+    }
+
     getAnalysis(fen) {
       return new Promise((resolve, reject) => {
         let analysis = analysisCache.get(fen)
         if (analysis) {
           resolve(analysis)
         } else {
-          this.remoteGet(fen).then(resolve)
+          this.remoteGet(fen).then(this.notifyAnalysis).then(resolve)
         }
       })
     }

@@ -71,8 +71,12 @@
 
     reposition(i) {
       let n = this.graph.points.length
+      let sc = i / (n - 1)
+      if (sc < 0 || sc > 1) {
+        return
+      }
       this.$el.css({
-        left: Math.round(i * this.graph.width / (n - 1))
+        left: Math.round(sc * this.graph.width)
       })
     }
 
@@ -86,17 +90,33 @@
     listenToEvents() {
       this.listenTo(this.graph, "mouseenter", () => { this.$el.fadeIn(75)  })
       this.listenTo(this.graph, "mouseleave", () => { this.$el.fadeOut(75) })
-      this.listenTo(this.graph, "mousemove", (e) => {
-        let i = this.graph.getIFromMousePosition(e)
-        if (i) {
-          this.reposition(i)
-        }
+      this.listenTo(this.graph, "hover:i", (i) => {
+        this.reposition(i)
       })
     }
 
     render() {
-      this.$el.addClass("hover")
-      this.$el.appendTo(this.graph.$el)
+      this.$el.addClass("hover").appendTo(this.graph.$el)
+    }
+
+  }
+
+
+  // Use a bar to denote the current position of the board
+  //
+  class StaticBar extends Bar {
+
+    listenToEvents() {
+      this.listenTo(this.graph, "click", (event) => {
+        this.$el.show()
+      })
+      this.listenTo(chess, "change:i", (model, i) => {
+        this.reposition(i)
+      })
+    }
+
+    render() {
+      this.$el.addClass("static").appendTo(this.graph.$el)
     }
 
   }
@@ -172,9 +192,9 @@
     get events() {
       return {
         "mousedown"   : "_click",
+        "mousemove"   : "_mouseMove",
         "mouseenter"  : "_mouseEnter",
-        "mouseleave"  : "_mouseLeave",
-        "mousemove"   : "_mouseMove"
+        "mouseleave"  : "_mouseLeave"
       }
     }
 
@@ -188,9 +208,10 @@
 
     listenToEvents() {
       this.listenTo(chess, "change:positions", (model, positions) => {
-        let fenArray = positions.slice(1, positions.length - 1)
-        this.points = this.normalizer.getNormalizedScores(fenArray)
-        this.render(this.points)
+        this.renderPositionEvaluations(positions.slice(0, positions.length - 1))
+      })
+      this.listenTo(chess, "change:analysis", (analysis) => {
+        this.renderPositionEvaluations(chess.get("positions"))
       })
     }
 
@@ -198,11 +219,18 @@
       this.$areaGraph.empty()
       this.graph.render(points)
       this.addHoverBar()
+      this.addStaticBar()
     }
 
     addHoverBar() {
       if (!this.hoverBar) {
         this.hoverBar = new HoverBar(this)
+      }
+    }
+
+    addStaticBar() {
+      if (!this.staticBar) {
+        this.staticBar = new StaticBar(this)
       }
     }
 
@@ -218,13 +246,29 @@
       return ~~( offX / this.width * this.points.length )
     }
 
+    renderPositionEvaluations(positions) {
+      this.points = this.normalizer.getNormalizedScores(positions)
+      this.render(this.points)
+    }
+
     _click(event) {
       let i = this.getIFromMousePosition(event)
-      if (!i) {
+      if (!_.isNumber(i)) {
         return
       }
-      console.log(i)
-      this.trigger("change:i" , i)
+      this.trigger("click", event)
+      chess.setPositionIndex(i)
+    }
+
+    _mouseMove(event) {
+      let i = this.getIFromMousePosition(event)
+      if (!_.isNumber(i)) {
+        return
+      }
+      if (i != this.hoverI) {
+        this.hoverI = i
+        this.trigger("hover:i", i)
+      }
     }
 
     _mouseEnter(event) {
@@ -233,10 +277,6 @@
 
     _mouseLeave(event) {
       this.trigger("mouseleave", event)
-    }
-
-    _mouseMove(event) {
-      this.trigger("mousemove", event)
     }
 
   }
