@@ -210,7 +210,7 @@
 
     selectSquare(square) {
       if (this.selectedSquare && square != this.selectedSquare) {
-        chess.move({ from: this.selectedSquare, to: square })
+        this.board.move({ from: this.selectedSquare, to: square  })
         this.clearSelected()
       } else {
         this.selectedSquare = square
@@ -256,11 +256,10 @@
         accept: ".piece",
         tolerance: "pointer",
         drop: (event, ui) => {
-          let move = {
+          this.board.move({
             from: $(ui.draggable).parents(".square").attr("id"),
-            to: $(event.target).attr("id")
-          }
-          chess.move(move)
+            to: $(event.target).attr("id"),
+          })
         }
       })
     }
@@ -315,6 +314,11 @@
           }
         }
       }
+    }
+
+    move(move) {
+      move.promotion = move.promotion || "q"
+      chess.move(move)
     }
 
     $getSquare(id) {
