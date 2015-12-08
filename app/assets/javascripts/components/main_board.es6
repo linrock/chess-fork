@@ -80,14 +80,9 @@
         let o1 = this.board.$getSquare(to).offset()
         let top = o1.top - o0.top
         let left = o1.left - o0.left
-        let movement = {
-          left: (left > 0) ? `+=${left}px` : `-=${-left}px`,
-          top: (top > 0) ? `+=${top}px` : `-=${-top}px`
-        }
         let $piece = this.board.$getSquare(from).find(".piece")
-        // $piece.css({ transform: `translate3d(${left}px, ${top}px, 0)` })
+        this.animatePiece($piece, { left: left, top: top })
         pieces.push($piece)
-        $piece.animate(movement, 120)
       }
       this.board.$(".piece:animated").promise().done(() => {
         for (let $piece of pieces) {
@@ -99,6 +94,20 @@
         } else {
           chess.setFen(fen1)
         }
+      })
+    }
+
+    animatePiece($piece, position) {
+      let movement = {
+        left: (position.left > 0) ? `+=${position.left}px` : `-=${-position.left}px`,
+        top: (position.top > 0) ? `+=${position.top}px` : `-=${-position.top}px`
+      }
+      $piece.animate(movement, 120)
+    }
+
+    animatePieceCss3($piece, position) {
+      $piece.css({
+        transform: `translate3d(${position.left}px, ${position.top}px, 0)`
       })
     }
 
