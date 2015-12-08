@@ -38,12 +38,29 @@
     }
 
     render(analysis) {
-      this.$el.removeClass("invisible")
+      if (!analysis.san) {
+        this.renderGameOver()
+        return
+      }
+      this.show()
       this.$move.
         text(chess.getMovePrefix(chess.get("i")) + " " + analysis.san).
         data("fen", analysis.fen)
       this.$evaluation.text(analysis.score)
       this.$source.text(analysis.engine + " - depth " + analysis.depth)
+    }
+
+    // TODO render a message saying the state of the game if it's over
+    renderGameOver() {
+      this.hide()
+    }
+
+    show() {
+      this.$el.removeClass("invisible")
+    }
+
+    hide() {
+      this.$el.addClass("invisible")
     }
 
   }

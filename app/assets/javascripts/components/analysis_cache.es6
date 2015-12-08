@@ -26,8 +26,10 @@
           context: this,
           success: (data, status, xhr) => {
             data.fen = fen
-            data.san = (new Chess(fen)).move(this.uciToMove(data.bestmove)).san
-            data = _.extend(data, this.calcMovesAndPositions(fen, data.sequence))
+            if (data.bestmove) {
+              data.san = (new Chess(fen)).move(this.uciToMove(data.bestmove)).san
+              data = _.extend(data, this.calcMovesAndPositions(fen, data.sequence))
+            }
             this.set(fen, data)
             resolve(data)
           },
