@@ -56,6 +56,7 @@
           }
         }
       }
+      this.fen = fen
     }
 
     afterRender() {}

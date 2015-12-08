@@ -26,7 +26,7 @@
 
 
 .container {
-  width: 700px;
+  width: 710px;
   margin: 0 auto;
 }
 
@@ -78,6 +78,24 @@
   border-bottom: 1px solid #EFEFEF;
   height: 45px;
   line-height: 46px;
+  @include clearfix;
+
+  .header-actions {
+    float: right;
+
+    a {
+      height: 100%;
+      padding: 10px 1px 10px 10px;
+      color: inherit;
+
+      &:hover {
+        color: #333;
+      }
+
+    }
+
+  }
+
 }
 
 
