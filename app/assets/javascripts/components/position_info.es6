@@ -42,6 +42,8 @@
 
     _showFen() {
       this.hide()
+      // TODO better way of showing the FEN string
+      $(".position-description").addClass("small").text(chessboard.fen)
     }
 
   }
@@ -75,7 +77,7 @@
         }
         let moveStr = `${chess.getMovePrefix(prevI)} ${chess.get("moves")[prevI]}`
         this.$el.removeClass("invisible")
-        this.$positionDescription.text(moveStr)
+        this.$positionDescription.removeClass("small").text(moveStr)
       })
     }
 

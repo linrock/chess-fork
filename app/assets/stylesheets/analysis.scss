@@ -452,6 +452,11 @@
     margin-left: 20px;
     line-height: 26px;
     font-size: 14px;
+
+    &.small {
+      font-size: 11px;
+    }
+
   }
 
   .position-actions-menu {
