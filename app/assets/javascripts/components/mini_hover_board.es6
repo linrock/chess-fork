@@ -3,10 +3,58 @@
 
 {
 
+  // TODO DRY with the MainBoard version
+  // Handles highlighting square on the board when positions change
+  //
+  class SquareHighlighter {
+
+    constructor(board) {
+      this.board = board
+      this.colors = {
+        "yellow":  ["#ffffcc", "#ffff66"]
+      }
+      this.listenForEvents()
+    }
+
+    listenForEvents() {
+      this.board.listenTo(chess, "preview:i", (i) => {
+        this.highlightGameMoveIndex(i)
+      })
+    }
+
+    clearHighlights() {
+      this.board.$(".square[style]").removeAttr("style")
+    }
+
+    highlightMove(move, color) {
+      let colorCodes = this.colors[color]
+      this.board.$getSquare(move.from).css({ background: colorCodes[0] })
+      this.board.$getSquare(move.to).css({ background: colorCodes[1] })
+    }
+
+    highlightGameMoveIndex(i) {
+      this.clearHighlights()
+      if (i === 0) {
+        return
+      }
+      let fen = chess.get("positions")[i - 1]
+      let c = new Chess(fen)
+      let move = c.move(chess.get("moves")[i - 1])
+      this.highlightMove(move, "yellow")
+    }
+
+  }
+
+
   class MiniBoard extends Components.Chessboard {
 
     get sqPrefix() {
       return "msq"
+    }
+
+    initialize() {
+      super.initialize()
+      this.highlighter = new SquareHighlighter(this)
     }
 
   }

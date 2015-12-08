@@ -501,11 +501,11 @@
       @include user-select(none);
 
       &.light {
-        background: #f3e4cf;
+        background: rgb(243, 228, 207);
       }
 
       &.dark {
-        background: #ceb3a2;
+        background: rgb(206, 179, 162);
       }
 
       .piece {
