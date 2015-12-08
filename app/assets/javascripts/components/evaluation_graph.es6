@@ -268,15 +268,18 @@
       if (i != this.hoverI) {
         this.hoverI = i
         this.trigger("hover:i", i)
+        chess.trigger("preview:i", i)
       }
     }
 
     _mouseEnter(event) {
       this.trigger("mouseenter", event)
+      chess.trigger("preview:show")
     }
 
     _mouseLeave(event) {
       this.trigger("mouseleave", event)
+      chess.trigger("preview:hide")
     }
 
   }

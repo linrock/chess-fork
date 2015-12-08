@@ -29,5 +29,6 @@ $(function() {
   new Components.AnalysisHandler;
   new Components.IntroMessage;
   new Components.EvaluationGraph;
+  new Components.MiniHoverBoard;
 
 });

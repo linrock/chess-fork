@@ -89,7 +89,7 @@
   @include clearfix;
 }
 
-.chessboard {
+.main-board {
   float: left;
   border: 3px solid #938172;
   width: 480px + 6px;
@@ -449,6 +449,42 @@
       margin-top: 2px;
     }
 
+  }
+
+}
+
+.mini-hover-board {
+  position: relative;
+  float: right;
+  width: 211px;
+  height: 0;
+
+  .hover-board {
+    width: 211px;
+    height: 211px;
+    border: 1px solid #dfdfdf;
+    border-radius: 2px;
+    background: white;
+    box-shadow: 0 0 10px rgba(100,100,100,0.2);
+    position: absolute;
+    left: 3px;
+    top: -216px;
+    z-index: 3;
+    transition: all 0.25s ease;
+
+    &.invisible {
+      opacity: 0;
+      transform: translate3d(0,4px,0);
+      pointer-events: none;
+    }
+
+  }
+
+  .board {
+    width: 186px;
+    height: 186px;
+    margin: 12px;
+    background: #ddd;
   }
 
 }

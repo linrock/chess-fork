@@ -257,8 +257,8 @@
         tolerance: "pointer",
         drop: (event, ui) => {
           this.board.move({
-            from: $(ui.draggable).parents(".square").attr("id"),
-            to: $(event.target).attr("id"),
+            from: $(ui.draggable).parents(".square").data("square"),
+            to: $(event.target).data("square"),
           })
         }
       })
@@ -273,7 +273,7 @@
   class Chessboard extends Backbone.View {
 
     get el() {
-      return ".chessboard"
+      return ".main-board"
     }
 
     initialize() {
@@ -317,12 +317,13 @@
     }
 
     move(move) {
+      console.dir(move)
       move.promotion = move.promotion || "q"
       chess.move(move)
     }
 
     $getSquare(id) {
-      return $("#" + id)
+      return $("#sq-" + id)
     }
 
     flip() {
