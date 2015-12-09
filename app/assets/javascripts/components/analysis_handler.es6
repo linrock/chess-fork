@@ -8,6 +8,18 @@
       return ".suggested-moves"
     }
 
+    get moveTemplate() {
+      return _.template(`
+        <div class="move-row">
+          <div class="move engine-move" data-fen="<%= fen %>">
+            <%= move %>
+          </div>
+          <div class="evaluation"><%= evaluation %></div>
+          <div class="source"><%= source %></div>
+        </div>
+      `)
+    }
+
     get events() {
       return {
         "click .move" : "_enterAnalysisMode"
@@ -15,9 +27,7 @@
     }
 
     initialize() {
-      this.$move = this.$(".move")
-      this.$evaluation = this.$(".evaluation")
-      this.$source = this.$(".source")
+      this.$moves = this.$(".moves")
       this.listenForEvents()
     }
 
@@ -38,16 +48,21 @@
     }
 
     render(analysis) {
-      if (!analysis.san) {
+      if (!analysis.variations[0].moves[0]) {
         this.renderGameOver()
         return
       }
       this.show()
-      this.$move.
-        text(chess.getMovePrefix(chess.get("i")) + " " + analysis.san).
-        data("fen", analysis.fen)
-      this.$evaluation.text(analysis.score)
-      this.$source.text(analysis.engine + " - depth " + analysis.depth)
+      let html = ''
+      for (let variation of analysis.variations) {
+        html += this.moveTemplate({
+          fen: analysis.fen,
+          move: `${chess.getMovePrefix(chess.get("i"))} ${variation.moves[0]}`,
+          evaluation: variation.score,
+          source: `${analysis.engine} - depth ${variation.depth}`
+        })
+      }
+      this.$moves.html(html)
     }
 
     // TODO render a message saying the state of the game if it's over

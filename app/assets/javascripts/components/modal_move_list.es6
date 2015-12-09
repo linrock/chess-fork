@@ -55,7 +55,7 @@
                  <div class="move">...</div>`
       }
       moveNum += 1
-      for (let move of analysis.moves) {
+      for (let move of analysis.variations[0].moves) {
         if (plyNum % 2 === 0) {
           html += `<div class="move-num">${moveNum}.</div>`
           moveNum += 1

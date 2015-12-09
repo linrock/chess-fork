@@ -544,6 +544,11 @@
     font-weight: 600;
     @include clearfix;
 
+    .move-row {
+      margin-bottom: 12px;
+      @include clearfix;
+    }
+
     .move {
       float: left;
       width: 115px;

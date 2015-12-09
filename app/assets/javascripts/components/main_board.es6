@@ -30,7 +30,7 @@
         }
         let jPrev = chess.previous("j")
         let prevFen = chess.mechanism.fen()
-        let newFen = chess.get("analysis").positions[j + 1]
+        let newFen = chess.get("analysis").variations[0].positions[j + 1]
         if (j === 0) {
           this.animatePositions(prevFen, newFen)
         } else {
@@ -136,9 +136,9 @@
           return
         }
         this.clearHighlights()
-        let fen = chess.get("analysis").positions[j]
+        let fen = chess.get("analysis").variations[0].positions[j]
         let c = new Chess(fen)
-        let move = c.move(chess.get("analysis").moves[j])
+        let move = c.move(chess.get("analysis").variations[0].moves[j])
         this.highlightMove(move, "blue")
       })
       this.board.listenTo(chess, "change:mode", (model, mode) => {

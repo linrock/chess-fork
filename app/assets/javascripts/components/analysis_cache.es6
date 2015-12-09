@@ -26,9 +26,9 @@
           context: this,
           success: (data, status, xhr) => {
             data.fen = fen
-            if (data.bestmove) {
-              data.san = (new Chess(fen)).move(this.uciToMove(data.bestmove)).san
-              data = _.extend(data, this.calcMovesAndPositions(fen, data.sequence))
+            for (let i in data.variations) {
+              let formatted = this.calcMovesAndPositions(fen, data.variations[i].sequence)
+              data.variations[i] = _.extend(data.variations[i], formatted)
             }
             this.set(fen, data)
             resolve(data)
@@ -73,7 +73,7 @@
       let c = new Chess(fen)
       let moves = []
       let positions = [fen]
-      for (let uciMove of sequence.split(/\s+/)) {
+      for (let uciMove of sequence) {
         let move = c.move(this.uciToMove(uciMove))
         moves.push(move.san)
         positions.push(c.fen())
@@ -88,7 +88,7 @@
     sequenceToSanList(fen, sequence) {
       let c = new Chess(fen)
       let moves = []
-      for (let uciMove of sequence.split(/\s+/)) {
+      for (let uciMove of sequence) {
         let move = c.move(this.uciToMove(uciMove))
         moves.push(move.san)
       }
