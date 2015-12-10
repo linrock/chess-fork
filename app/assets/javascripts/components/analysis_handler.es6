@@ -47,7 +47,7 @@
         if (analysis) {
           this.render(analysis)
         } else {
-          analysisCache.getAnalysis(fen)
+          analysisCache.getAndCacheAnalysis(fen)
         }
       })
       this.listenTo(chess, "change:analysis", (analysis) => {
@@ -62,9 +62,11 @@
         this.renderGameOver()
         return
       }
-      this.show()
+      let variations = _.sortBy(analysis.variations, (variation) => {
+        return variation.multipv
+      })
       let html = ''
-      for (let variation of analysis.variations) {
+      for (let variation of variations) {
         html += this.moveTemplate({
           fen: analysis.fen,
           move: `${chess.getMovePrefix(chess.get("i"))} ${variation.moves[0]}`,
@@ -72,6 +74,7 @@
           source: `${analysis.engine} - depth ${variation.depth}`
         })
       }
+      this.show()
       this.$moves.html(html)
     }
 

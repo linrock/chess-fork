@@ -16,21 +16,22 @@
       this.analysis[fen] = analysis
     }
 
-    remoteGet(fen) {
+    remoteGet(fen, options = {}) {
+      options.fen = fen
       return new Promise((resolve, reject) => {
         $.ajax({
           url: "/analysis",
           type: "POST",
-          data: { fen: fen },
+          data: options,
           dataType: "json",
           context: this,
           success: (data, status, xhr) => {
             data.fen = fen
             for (let i in data.variations) {
-              let formatted = this.calcMovesAndPositions(fen, data.variations[i].sequence)
-              data.variations[i] = _.extend(data.variations[i], formatted)
+              let variation = data.variations[i]
+              let formatted = this.calcMovesAndPositions(fen, variation.sequence)
+              data.variations[i] = _.extend(variation, formatted)
             }
-            this.set(fen, data)
             resolve(data)
           },
           error: (xhr, status, error) => {
@@ -53,6 +54,12 @@
         } else {
           this.remoteGet(fen).then(this.notifyAnalysis).then(resolve)
         }
+      })
+    }
+
+    getAndCacheAnalysis(fen) {
+      this.getAnalysis(fen).then((analysis) => {
+        analysisCache.set(fen, analysis)
       })
     }
 

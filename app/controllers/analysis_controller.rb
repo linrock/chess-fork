@@ -6,7 +6,8 @@ class AnalysisController < ApplicationController
   # Endpoint for requesting analysis for a position
   #
   def create
-    render :json => StockfishAnalysis.new(params[:fen]).to_h.to_json
+    options = { :multipv => params[:multipv] }
+    render :json => StockfishAnalysis.new(params[:fen], options).to_h.to_json
   end
 
 end
