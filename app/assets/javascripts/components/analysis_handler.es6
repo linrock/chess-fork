@@ -43,7 +43,17 @@
           return
         }
         let fen = chess.get("positions")[i]
-        analysisCache.getAnalysis(fen).then(_.bind(this.render, this))
+        let analysis = analysisCache.get(fen)
+        if (analysis) {
+          this.render(analysis)
+        } else {
+          analysisCache.getAnalysis(fen)
+        }
+      })
+      this.listenTo(chess, "change:analysis", (analysis) => {
+        if (chessboard.fen == analysis.fen) {
+          this.render(analysis)
+        }
       })
     }
 
