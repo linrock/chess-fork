@@ -31,7 +31,7 @@ $(function() {
   new Components.IntroMessage;
   new Components.EvaluationGraph;
   new Components.PositionInfo;
-  new Components.MiniHoverBoard;
-  // new Components.VirtualDomBoard;
+  // new Components.MiniHoverBoard;
+  new Components.VirtualDomBoard;
 
 });

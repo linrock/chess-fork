@@ -8,8 +8,8 @@
 
     initialize() {
       this.$board = this.$(".hover-board")
-      this.position = new Chess
       this.moveColors = ["#ffffcc", "#ffff66"]
+      this.position = new Chess
       this.listenForEvents()
     }
 
@@ -44,7 +44,7 @@
       })
     }
 
-    squaresFromFen(fen, lastMove) {
+    vSquaresFromFen(fen, lastMove) {
       this.position.load(fen)
       let i = 0
       let squares = []
@@ -74,7 +74,7 @@
     }
 
     render(fen, lastMove) {
-      m.render(this.$board[0], m(".chessboard", this.squaresFromFen(fen, lastMove)))
+      m.render(this.$board[0], m(".chessboard", this.vSquaresFromFen(fen, lastMove)))
     }
 
   }
