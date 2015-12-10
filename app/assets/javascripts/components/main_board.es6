@@ -288,7 +288,6 @@
     }
 
     flip() {
-      // let topLeft = this.$(".square")[0].id
       this.$el.find(".square").each((i,sq) => { this.$el.prepend(sq) })
     }
 

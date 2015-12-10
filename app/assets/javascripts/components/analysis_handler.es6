@@ -15,7 +15,9 @@
             <%= move %>
           </div>
           <div class="evaluation"><%= evaluation %></div>
-          <div class="source"><%= source %></div>
+          <div class="source">
+            <%= engine %> &ndash; depth <%= depth %>
+          </div>
         </div>
       `)
     }
@@ -71,7 +73,8 @@
           fen: analysis.fen,
           move: `${chess.getMovePrefix(chess.get("i"))} ${variation.moves[0]}`,
           evaluation: variation.score,
-          source: `${analysis.engine} - depth ${variation.depth}`
+          engine: analysis.engine,
+          depth: variation.depth
         })
       }
       this.show()
