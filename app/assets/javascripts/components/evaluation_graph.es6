@@ -144,32 +144,31 @@
     getNormalizedScore(fen) {
       let polarity = /\sw\s/.test(fen) ? 1 : -1
       let analysis = analysisCache.get(fen)
-      if (!analysis) {
+      if (!analysis || !analysis.variations[0]) {
         return 0
       }
-      if (analysis.score) {
-        let score = analysis.score
-        if (score < -10) {
-          score = -10
-        } else if (score > 10) {
-          score = 10
-        }
-        if (_.isString(score) && score.match(/^mate/)) {
-          let m = +score.split(" ")[1]
-          if (m === 0) {
-            score = this.getGameOverScore(fen)
-          } else {
-            score = 10
-            score *= (m > 0 ? 1 : -1)
-            score *= polarity
-          }
-        } else {
-          score *= polarity
-        }
-        return score
-      } else {
+      let score = analysis.variations[0].score
+      if (!score) {
         return this.getGameOverScore(fen)
       }
+      if (score < -10) {
+        score = -10
+      } else if (score > 10) {
+        score = 10
+      }
+      if (_.isString(score) && score.match(/^mate/)) {
+        let m = +score.split(" ")[1]
+        if (m === 0) {
+          score = this.getGameOverScore(fen)
+        } else {
+          score = 10
+          score *= (m > 0 ? 1 : -1)
+          score *= polarity
+        }
+      } else {
+        score *= polarity
+      }
+      return score
     }
 
     getNormalizedScores(fenArray) {
