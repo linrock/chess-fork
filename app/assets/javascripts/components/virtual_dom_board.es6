@@ -7,7 +7,10 @@
     }
 
     initialize() {
+      this.ROWS = [8, 7, 6, 5, 4, 3, 2, 1]
+      this.COLS = ['a','b','c','d','e','f','g','h']
       this.$board = this.$(".hover-board")
+      this.board = this.$board[0]
       this.moveColors = ["#ffffcc", "#ffff66"]
       this.position = new Chess
       this.listenForEvents()
@@ -16,6 +19,9 @@
     listenForEvents() {
       this.listenTo(chess, "preview:i", (i) => {
         let fen = chess.get("positions")[i]
+        if (!fen) {
+          return
+        }
         let lastMove = this.getLastMove(i)
         this.render(fen, lastMove)
       })
@@ -28,13 +34,11 @@
     }
 
     getLastMove(i) {
-      if (i === 0 ) {
+      if (i === 0) {
         return
       }
-      let fen = chess.get("positions")[i - 1]
-      this.position.load(fen)
-      let move = this.position.move(chess.get("moves")[i - 1])
-      return move
+      this.position.load(chess.get("positions")[i - 1])
+      return this.position.move(chess.get("moves")[i - 1])
     }
 
     getPiece(piece) {
@@ -44,13 +48,13 @@
       })
     }
 
-    vSquaresFromFen(fen, lastMove) {
+    vSquaresFromFen(fen, highlights) {
       this.position.load(fen)
       let i = 0
       let squares = []
       let polarities = ['light', 'dark']
-      for (let row of [8, 7, 6, 5, 4, 3, 2, 1]) {
-        for (let col of ['a','b','c','d','e','f','g','h']) {
+      for (let row of this.ROWS) {
+        for (let col of this.COLS) {
           let id = col + row
           let pieces = []
           let piece = this.position.get(id)
@@ -58,12 +62,8 @@
             pieces.push(this.getPiece(piece))
           }
           let style = {}
-          if (lastMove) {
-            if (lastMove.from === id) {
-              style = { style: { background: this.moveColors[0] } }
-            } else if (lastMove.to === id) {
-              style = { style: { background: this.moveColors[1] } }
-            }
+          if (highlights[id]) {
+            style.style = { background: highlights[id] }
           }
           squares.push(m(`div.square.${polarities[i % 2]}`, style, pieces))
           i += 1
@@ -74,7 +74,12 @@
     }
 
     render(fen, lastMove) {
-      m.render(this.$board[0], m(".chessboard", this.vSquaresFromFen(fen, lastMove)))
+      let highlights = {}
+      if (lastMove) {
+        highlights[lastMove.from] = this.moveColors[0]
+        highlights[lastMove.to] = this.moveColors[1]
+      }
+      m.render(this.board, m(".chessboard", this.vSquaresFromFen(fen, highlights)))
     }
 
   }
