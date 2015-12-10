@@ -12,7 +12,8 @@
         j: -1,
         mode: "normal",
         moves: [],
-        positions: [this.mechanism.fen()]
+        positions: [this.mechanism.fen()],
+        polarity: 1
       })
       this.listenToEvents()
     }
@@ -30,6 +31,9 @@
         } else if (mode === "analysis") {
           this.set({ j: 0 })
         }
+      })
+      this.listenTo(this, "polarity:flip", () => {
+        this.set({ polarity: -1 * this.get("polarity") })
       })
     }
 

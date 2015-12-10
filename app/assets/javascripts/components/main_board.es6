@@ -279,7 +279,7 @@
       this.listenTo(chess, "change:fen", (model, fen) => {
         this.render(fen)
       })
-      this.listenTo(chess, "board:flip", this.flip)
+      this.listenTo(chess, "polarity:flip", this.flip)
     }
 
     move(move) {

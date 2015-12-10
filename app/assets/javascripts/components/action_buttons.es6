@@ -10,7 +10,7 @@
 
     get events() {
       return {
-        "click .flip-board" : () => { chess.trigger("board:flip") },
+        "click .flip-board" : () => { chess.trigger("polarity:flip") },
         "click .first-move" : () => { chess.firstMove() },
         "click .prev-move"  : () => { chess.prevMove()  },
         "click .next-move"  : () => { chess.nextMove()  },

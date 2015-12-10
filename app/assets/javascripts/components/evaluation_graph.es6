@@ -143,6 +143,7 @@
 
     getNormalizedScore(fen) {
       let polarity = /\sw\s/.test(fen) ? 1 : -1
+      polarity *= chess.get("polarity")
       let analysis = analysisCache.get(fen)
       if (!analysis || !analysis.variations[0]) {
         return 0
@@ -211,6 +212,9 @@
         this.show()
       })
       this.listenTo(chess, "change:analysis", (analysis) => {
+        this.plotPositionEvaluations(chess.get("positions"))
+      })
+      this.listenTo(chess, "polarity:flip", () => {
         this.plotPositionEvaluations(chess.get("positions"))
       })
     }
