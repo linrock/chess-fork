@@ -84,14 +84,16 @@
         return
       }
       let moves = this.getMoves(0, i).push(moveAttempt.san)
+      let newFen = c.fen()
+      let ind = i < 1 ? 1 : i + 1
+      let positions = new Immutable.List(this.getPositions().slice(0, ind))
       this.mechanism = c
-      this.setFen(c.fen())
-      this.updatePositions(moves)
-      if (i < 0) {
-        this.set({ i: 1 })
-      } else {
-        this.set({ i: i + 1 })
-      }
+      this.setFen(newFen)
+      this.set({
+        moves: new Immutable.List(moves),
+        positions: positions.push(newFen),
+        i: (i < 0) ? 1 : i + 1
+      })
       this.trigger("change:state", {
         moves: this.get("moves"),
         positions: this.get("positions"),
