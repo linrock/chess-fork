@@ -22,6 +22,7 @@ $(function() {
   var chess = window.chess = new Components.ChessMechanism;
   var chessboard = window.chessboard = new Components.MainBoard;
   var analysisCache = window.analysisCache = new Components.AnalysisCache;
+  var chronicle = window.chronicle = new Components.Chronicle;
   chess.start();
 
   new Components.PgnImporter;

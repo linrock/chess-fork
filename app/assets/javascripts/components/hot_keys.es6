@@ -10,11 +10,12 @@
       Mousetrap.bind(["esc"],   () => { chess.set({ mode: "normal" }) })
 
       Mousetrap.bind(["command+z", "ctrl+z"], () => {
-        console.log("undo")
+        chronicle.rewind()
       })
     }
 
   }
+
 
   Components.HotKeys = HotKeys
 

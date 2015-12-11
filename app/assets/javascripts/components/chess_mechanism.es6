@@ -3,6 +3,34 @@
 
 {
 
+  // For undo'ing moves and state changes
+  // state - i, fen, moves, position
+  //
+  class Chronicle extends Backbone.Model {
+
+    initialize() {
+      this.states = Immutable.Stack()
+      this.listenForEvents()
+    }
+
+    listenForEvents() {
+      this.listenTo(chess, "change:state", (state) => {
+        this.addState(new Immutable.Map(state))
+      })
+    }
+
+    addState(state) {
+      this.states = this.states.push(new Immutable.Map(state))
+    }
+
+    rewind() {
+      this.states = this.states.pop()
+      chess.trigger("rewind:state", this.states.first())
+    }
+
+  }
+
+
   class ChessMechanism extends Backbone.Model {
 
     initialize() {
@@ -15,14 +43,17 @@
         positions: new Immutable.List([this.mechanism.fen()]),
         polarity: 1
       })
-      this.listenToEvents()
+      this.listenForEvents()
     }
 
-    listenToEvents() {
+    listenForEvents() {
       this.listenTo(this, "change:i", () => {
         if (this.get("j") >= 0) {
           this.set({ mode: "normal" })
         }
+      })
+      this.listenTo(this, "rewind:state", (state) => {
+        this.set(state.toObject())
       })
       this.listenTo(this, "change:mode", (model, mode) => {
         if (mode === "normal") {
@@ -35,10 +66,6 @@
       this.listenTo(this, "polarity:flip", () => {
         this.set({ polarity: -1 * this.get("polarity") })
       })
-    }
-
-    loadState(state) {
-
     }
 
     setFen(fen) {
@@ -65,6 +92,12 @@
       } else {
         this.set({ i: i + 1 })
       }
+      this.trigger("change:state", {
+        moves: this.get("moves"),
+        positions: this.get("positions"),
+        fen: this.get("fen"),
+        i: this.get("i")
+      })
     }
 
     updatePositions(moves) {
@@ -175,6 +208,7 @@
   }
 
 
+  Components.Chronicle = Chronicle
   Components.ChessMechanism = ChessMechanism
 
 }
