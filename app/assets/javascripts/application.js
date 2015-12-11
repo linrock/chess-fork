@@ -10,6 +10,7 @@
 //= require immutable
 //= require d3
 //= require rickshaw
+//= require_tree ../../../vendor/assets/javascripts/polyfills
 //= require_self
 //= require_tree ./components
 

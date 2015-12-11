@@ -79,7 +79,9 @@
         highlights[lastMove.from] = this.moveColors[0]
         highlights[lastMove.to] = this.moveColors[1]
       }
-      m.render(this.board, m(".chessboard", this.vSquaresFromFen(fen, highlights)))
+      requestAnimationFrame(() => {
+        m.render(this.board, m(".chessboard", this.vSquaresFromFen(fen, highlights)))
+      })
     }
 
   }
