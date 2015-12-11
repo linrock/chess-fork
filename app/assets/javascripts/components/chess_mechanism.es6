@@ -71,7 +71,7 @@
         positions.push(c.fen())
       }
       this.set({
-        moves: moves,
+        moves: new Immutable.List(moves),
         positions: positions
       })
     }
