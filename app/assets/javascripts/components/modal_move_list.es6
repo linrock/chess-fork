@@ -47,7 +47,7 @@
       let j = 0
       let plyNum = chess.get("i")
       let moveNum = ~~ (plyNum / 2)
-      let analysis = analysisCache.get(chess.get("positions")[plyNum])
+      let analysis = analysisCache.get(chess.getPosition(plyNum))
       let html = ''
       if (plyNum % 2 === 1) {
         moveNum += 1

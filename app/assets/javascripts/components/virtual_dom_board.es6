@@ -18,7 +18,7 @@
 
     listenForEvents() {
       this.listenTo(chess, "preview:i", (i) => {
-        let fen = chess.get("positions")[i]
+        let fen = chess.getPosition(i)
         if (!fen) {
           return
         }
@@ -37,7 +37,7 @@
       if (i === 0) {
         return
       }
-      this.position.load(chess.get("positions")[i - 1])
+      this.position.load(chess.getPosition(i - 1))
       return this.position.move(chess.getMoves(i - 1))
     }
 

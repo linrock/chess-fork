@@ -44,7 +44,7 @@
           this.$el.addClass("invisible")
           return
         }
-        let fen = chess.get("positions")[i]
+        let fen = chess.getPosition(i)
         let analysis = analysisCache.get(fen)
         if (analysis) {
           this.render(analysis)

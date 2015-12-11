@@ -37,7 +37,7 @@
       if (i === 0) {
         return
       }
-      let fen = chess.get("positions")[i - 1]
+      let fen = chess.getPosition(i - 1)
       let c = new Chess(fen)
       let move = c.move(chess.get("moves")[i - 1])
       this.highlightMove(move, "yellow")
@@ -80,7 +80,7 @@
         this.show()
       })
       this.listenTo(chess, "preview:i", (i) => {
-        this.board.render(chess.get("positions")[i])
+        this.board.render(chess.getPosition(i))
       })
     }
 

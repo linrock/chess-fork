@@ -14,7 +14,7 @@
 
     listenForEvents() {
       this.board.listenTo(chess, "change:i", (model, i) => {
-        let positions = model.get("positions")
+        let positions = model.getPositions()
         let iPrev = model.previous("i")
         let prevFen = positions[iPrev]
         let newFen = positions[i]
@@ -163,7 +163,7 @@
       if (i === 0) {
         return
       }
-      let fen = chess.get("positions")[i - 1]
+      let fen = chess.getPosition(i - 1)
       let c = new Chess(fen)
       let move = c.move(chess.getMoves(i - 1))
       this.highlightMove(move, "yellow")

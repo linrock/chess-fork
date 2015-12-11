@@ -212,10 +212,10 @@
         this.show()
       })
       this.listenTo(chess, "change:analysis", (analysis) => {
-        this.plotPositionEvaluations(chess.get("positions"))
+        this.plotPositionEvaluations(chess.getPositions())
       })
       this.listenTo(chess, "polarity:flip", () => {
-        this.plotPositionEvaluations(chess.get("positions"))
+        this.plotPositionEvaluations(chess.getPositions())
       })
     }
 

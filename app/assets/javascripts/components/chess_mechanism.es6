@@ -26,7 +26,7 @@
       })
       this.listenTo(this, "change:mode", (model, mode) => {
         if (mode === "normal") {
-          this.setFen(this.get("positions")[this.get("i")])
+          this.setFen(this.getPosition(this.get("i")))
           this.set({ j: -1 })
         } else if (mode === "analysis") {
           this.set({ j: 0 })
@@ -35,6 +35,10 @@
       this.listenTo(this, "polarity:flip", () => {
         this.set({ polarity: -1 * this.get("polarity") })
       })
+    }
+
+    loadState(state) {
+
     }
 
     setFen(fen) {
@@ -47,7 +51,7 @@
 
     move(move) {
       let i = this.get("i")
-      let c = new Chess(this.get("positions")[i])
+      let c = new Chess(this.getPosition(i))
       let moveAttempt = c.move(move)
       if (!moveAttempt) {
         return
@@ -74,6 +78,18 @@
         moves: new Immutable.List(moves),
         positions: positions
       })
+    }
+
+    getPosition(i) {
+      return this.get("positions")[i]
+    }
+
+    getPositions() {
+      return this.get("positions")
+    }
+
+    nPositions() {
+      return this.getPositions().length
     }
 
     analyzePosition(fen) {
@@ -119,7 +135,7 @@
     }
 
     lastMove() {
-      this.setPositionIndex(this.get("positions").length - 1)
+      this.setPositionIndex(this.nPositions() - 1)
     }
 
     setPositionIndex(i) {
@@ -127,7 +143,7 @@
         this.set({ mode: "normal" })
         return
       }
-      if (i < 0 || i >= this.get("positions").length) {
+      if (i < 0 || i >= this.nPositions()) {
         return
       }
       this.set({ i: i })
@@ -143,7 +159,7 @@
 
     setEnginePositionIndex(j) {
       if (this.get("mode") === "normal" && j >= 0) {
-        this.analyzePosition(this.get("positions")[this.get("i")])
+        this.analyzePosition(this.getPosition(this.get("i")))
         return
       }
       if (j >= this.get("analysis").n) {
