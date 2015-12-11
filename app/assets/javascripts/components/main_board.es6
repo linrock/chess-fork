@@ -14,10 +14,12 @@
 
     listenForEvents() {
       this.board.listenTo(chess, "change:i", (model, i) => {
-        let positions = model.getPositions()
         let iPrev = model.previous("i")
-        let prevFen = positions[iPrev]
-        let newFen = positions[i]
+        let prevFen = chess.getPosition(iPrev)
+        let newFen = chess.getPosition(i)
+        if (prevFen === newFen) {
+          return
+        }
         if (Math.abs(iPrev - i) === 1) {
           this.animatePositions(prevFen, newFen)
         } else {
@@ -90,7 +92,7 @@
         }
         if (positions.length > 2) {
           chess.setFen(fen1)
-          this.animatePositions(positions.slice(1,positions.length))
+          this.animatePositions(positions.slice(1))
         } else {
           chess.setFen(fen1)
         }

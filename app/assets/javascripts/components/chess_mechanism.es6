@@ -12,7 +12,7 @@
         j: -1,
         mode: "normal",
         moves: new Immutable.List(),
-        positions: [this.mechanism.fen()],
+        positions: new Immutable.List([this.mechanism.fen()]),
         polarity: 1
       })
       this.listenToEvents()
@@ -76,12 +76,12 @@
       }
       this.set({
         moves: new Immutable.List(moves),
-        positions: positions
+        positions: new Immutable.List(positions)
       })
     }
 
     getPosition(i) {
-      return this.get("positions")[i]
+      return this.get("positions").get(i)
     }
 
     getPositions() {
@@ -89,7 +89,7 @@
     }
 
     nPositions() {
-      return this.getPositions().length
+      return this.getPositions().size
     }
 
     analyzePosition(fen) {

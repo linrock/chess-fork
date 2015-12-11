@@ -208,7 +208,7 @@
 
     listenToEvents() {
       this.listenTo(chess, "change:positions", (model, positions) => {
-        this.plotPositionEvaluations(positions.slice(0, positions.length - 1))
+        this.plotPositionEvaluations(positions.slice(0, chess.nPositions() - 1))
         this.show()
       })
       this.listenTo(chess, "change:analysis", (analysis) => {
