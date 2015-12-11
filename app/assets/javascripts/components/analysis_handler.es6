@@ -49,7 +49,7 @@
         if (analysis) {
           this.render(analysis)
         } else {
-          analysisCache.getAndCacheAnalysis(fen)
+          analysisCache.getAnalysis(fen)
         }
       })
       this.listenTo(chess, "change:analysis", (analysis) => {

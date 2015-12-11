@@ -52,14 +52,11 @@
         if (analysis) {
           resolve(analysis)
         } else {
-          this.remoteGet(fen).then(this.notifyAnalysis).then(resolve)
+          this.remoteGet(fen).then((analysis) => {
+            analysisCache.set(fen, analysis)
+            return analysis
+          }).then(this.notifyAnalysis).then(resolve)
         }
-      })
-    }
-
-    getAndCacheAnalysis(fen) {
-      this.getAnalysis(fen).then((analysis) => {
-        analysisCache.set(fen, analysis)
       })
     }
 
