@@ -38,7 +38,7 @@
         return
       }
       this.position.load(chess.get("positions")[i - 1])
-      return this.position.move(chess.get("moves")[i - 1])
+      return this.position.move(chess.getMoves(i - 1))
     }
 
     getPiece(piece) {

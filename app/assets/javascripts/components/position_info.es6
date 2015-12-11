@@ -25,7 +25,7 @@
           this.$el.addClass("invisible")
           return
         }
-        let moveStr = `${chess.getMovePrefix(prevI)} ${chess.get("moves")[prevI]}`
+        let moveStr = `${chess.getMovePrefix(prevI)} ${chess.getMoves(prevI)}`
         this.$el.removeClass("invisible")
         this.$positionDescription.removeClass("small").text(moveStr)
       })

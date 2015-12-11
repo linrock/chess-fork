@@ -165,7 +165,7 @@
       }
       let fen = chess.get("positions")[i - 1]
       let c = new Chess(fen)
-      let move = c.move(chess.get("moves")[i - 1])
+      let move = c.move(chess.getMoves(i - 1))
       this.highlightMove(move, "yellow")
     }
 

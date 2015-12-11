@@ -11,7 +11,7 @@
         i: -1,
         j: -1,
         mode: "normal",
-        moves: [],
+        moves: new Immutable.List(),
         positions: [this.mechanism.fen()],
         polarity: 1
       })
@@ -47,13 +47,12 @@
 
     move(move) {
       let i = this.get("i")
-      let moves = this.get("moves").slice(0, i)
       let c = new Chess(this.get("positions")[i])
       let moveAttempt = c.move(move)
       if (!moveAttempt) {
         return
       }
-      moves.push(moveAttempt.san)
+      let moves = this.getMoves(0, i).push(moveAttempt.san)
       this.mechanism = c
       this.setFen(c.fen())
       this.updatePositions(moves)
@@ -88,6 +87,14 @@
     getMovePrefix(i) {
       let moveNum = 1 + ~~(i / 2)
       return moveNum + (i % 2 == 0 ? "." : "...")
+    }
+
+    getMoves(i, end = false) {
+      if (end) {
+        return this.get("moves").slice(i, end)
+      } else {
+        return this.get("moves").get(i)
+      }
     }
 
     loadPgn(pgn) {
