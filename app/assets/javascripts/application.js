@@ -7,6 +7,7 @@
 //= require chess
 //= require mousetrap
 //= require mithril
+//= require immutable
 //= require d3
 //= require rickshaw
 //= require_self

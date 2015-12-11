@@ -8,6 +8,10 @@
       Mousetrap.bind(["up"],    () => { chess.prevEngineMove() })
       Mousetrap.bind(["down"],  () => { chess.nextEngineMove() })
       Mousetrap.bind(["esc"],   () => { chess.set({ mode: "normal" }) })
+
+      Mousetrap.bind(["command+z", "ctrl+z"], () => {
+        console.log("undo")
+      })
     }
 
   }
