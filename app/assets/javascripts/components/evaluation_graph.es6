@@ -102,7 +102,7 @@
   }
 
 
-  // Use a bar to denote the current position of the board
+  // Use an orange bar to denote the current position of the board
   //
   class StaticBar extends Bar {
 

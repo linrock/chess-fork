@@ -192,7 +192,7 @@
 
     listenForEvents() {
       this.board.$el.on("click", ".square", (event) => {
-        let square = $(event.currentTarget)[0].id
+        let square = $(event.currentTarget).data("square")
         this.selectSquare(square)
       })
       this.board.listenTo(world, "change:i", () => { this.clearSelected() })
