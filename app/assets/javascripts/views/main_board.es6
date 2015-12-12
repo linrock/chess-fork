@@ -36,10 +36,10 @@
         if (j === -1) {
           return
         }
-        let jPrev = chess.previous("j")
-        let prevFen = chess.mechanism.fen()
+        let prevFen = chessboard.fen
         let newFen = chess.get("analysis").variations[0].positions[j + 1]
-        if (j === 0) {
+        let moves = this.positionDiffs(prevFen, newFen)
+        if (moves.length === 1) {
           this.animatePositions(prevFen, newFen)
         } else {
           chess.setFen(newFen)
