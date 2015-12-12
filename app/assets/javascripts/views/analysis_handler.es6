@@ -76,14 +76,24 @@
       for (let variation of variations) {
         let color = ''
         let evaluation = variation.score
+        let polarity = (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
         if (_.isNumber(evaluation)) {
-          evaluation *= (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
+          evaluation *= polarity
           evaluation = evaluation > 0 ? `+${evaluation}` : evaluation
           if (evaluation > 0.5) {
             color = 'green'
           } else if (evaluation < -0.5) {
             color = 'red'
           }
+        } else if (evaluation.indexOf("mate") === 0) {
+          let regex = /mate (-?\d+)/
+          let score = regex.exec(evaluation)[1] * polarity
+          if (score < 0) {
+            color = 'red'
+          } else {
+            color = 'green'
+          }
+          evaluation = `Mate in ${Math.abs(score)}`
         }
         html += this.moveTemplate({
           fen: analysis.fen,

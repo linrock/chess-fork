@@ -121,7 +121,7 @@
     }
 
     firstMove() {
-      this.setPositionIndex(1)
+      this.setPositionIndex(0)
     }
 
     prevMove() {

@@ -520,8 +520,9 @@
   }
 
   .titles {
-    font-size: 13px;
-    margin-bottom: 12px;
+    font-size: 12px;
+    margin-bottom: 14px;
+    color: rgba(50,50,50,0.9);
     @include clearfix;
 
     > div {
@@ -575,6 +576,7 @@
     .evaluation {
       float: left;
       width: 150px;
+      color: rgba(100,100,100,0.9);
 
       &.green {
         color: green;
