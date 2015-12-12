@@ -10,7 +10,7 @@
       return {
         "click .action"   : "hide",
         "click .multi-pv" : "_multiPv",
-        "click .depth-20" : "_depth20",
+        "click .depth-20" : "_deeperAnalysis",
         "click .show-fen" : "_showFen"
       }
     }
@@ -39,7 +39,10 @@
       })
     }
 
-    _depth20() {
+    _deeperAnalysis() {
+      analysisCache.remoteGet(chessboard.fen, { depth: 16 }).then((analysis) => {
+        analysisCache.notifyAnalysis(analysis)
+      })
     }
 
     _showFen() {
