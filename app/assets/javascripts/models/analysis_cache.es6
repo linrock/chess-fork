@@ -5,6 +5,7 @@
   class AnalysisCache {
 
     constructor() {
+      this.calculator = new Chess()
       this.analysis = {}
     }
 
@@ -74,29 +75,19 @@
     // TODO lazy calculate this using a generator
     //
     calcMovesAndPositions(fen, sequence) {
-      let c = new Chess(fen)
+      this.calculator.load(fen)
       let moves = []
       let positions = [fen]
       for (let uciMove of sequence) {
-        let move = c.move(this.uciToMove(uciMove))
+        let move = this.calculator.move(this.uciToMove(uciMove))
         moves.push(move.san)
-        positions.push(c.fen())
+        positions.push(this.calculator.fen())
       }
       return {
         moves: moves,
         positions: positions,
         n: moves.length
       }
-    }
-
-    sequenceToSanList(fen, sequence) {
-      let c = new Chess(fen)
-      let moves = []
-      for (let uciMove of sequence) {
-        let move = c.move(this.uciToMove(uciMove))
-        moves.push(move.san)
-      }
-      return moves
     }
 
   }
