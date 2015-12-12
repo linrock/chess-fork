@@ -347,8 +347,9 @@
 }
 
 .actions {
-  margin-top: 10px;
+  margin-top: 9px;
   margin-left: 20px;
+  width: 204px;
   float: left;
   @include clearfix;
 
@@ -367,9 +368,9 @@
   }
 
   .flip-board {
-    width: 42px;
+    width: 41px;
     font-size: 15px;
-    margin-right: 11px;
+    margin-right: 9px;
     padding: 7px 0;
     border-radius: 2px;
   }
