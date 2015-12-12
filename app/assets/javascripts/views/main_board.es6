@@ -260,7 +260,7 @@
   // Base chessboard class with position rendering behavior
   // and more behaviors built through composition
   //
-  class MainBoard extends Components.Chessboard {
+  class MainBoard extends Views.Chessboard {
 
     get el() {
       return ".main-board"
@@ -303,6 +303,6 @@
   }
 
 
-  Components.MainBoard = MainBoard
+  Views.MainBoard = MainBoard
 
 }

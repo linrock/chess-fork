@@ -82,6 +82,6 @@
   }
 
 
-  Components.ModalMoveList = ModalMoveList
+  Views.ModalMoveList = ModalMoveList
 
 }

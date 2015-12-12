@@ -17,6 +17,6 @@
   }
 
 
-  Components.HotKeys = HotKeys
+  Models.HotKeys = HotKeys
 
 }

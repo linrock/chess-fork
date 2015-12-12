@@ -50,6 +50,6 @@
   }
 
 
-  Components.PositionMenu = PositionMenu
+  Views.PositionMenu = PositionMenu
 
 }

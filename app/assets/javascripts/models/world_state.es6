@@ -41,6 +41,6 @@
   }
 
 
-  Components.WorldState = WorldState
+  Models.WorldState = WorldState
 
 }

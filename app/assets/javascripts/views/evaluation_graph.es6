@@ -296,6 +296,6 @@
   }
 
 
-  Components.EvaluationGraph = EvaluationGraph
+  Views.EvaluationGraph = EvaluationGraph
 
 }

@@ -12,30 +12,33 @@
 //= require rickshaw
 //= require_tree ../../../vendor/assets/javascripts/polyfills
 //= require_self
-//= require_tree ./components
+//= require_tree ./models
+//= require_tree ./views
 
 
-window.Components = {};
+window.Models = {};
+window.Views = {};
 
 $(function() {
 
-  var world = window.world = new Components.WorldState;
-  var chess = window.chess = new Components.ChessMechanism;
-  var chessboard = window.chessboard = new Components.MainBoard;
-  var analysisCache = window.analysisCache = new Components.AnalysisCache;
+  var world = window.world = new Models.WorldState;
+  var chess = window.chess = new Models.ChessMechanism;
+  var chessboard = window.chessboard = new Views.MainBoard;
+  var analysisCache = window.analysisCache = new Models.AnalysisCache;
   chess.start();
 
-  new Components.PgnImporter;
-  new Components.MoveList;
-  new Components.ModalMoveList;
-  new Components.ActionButtons;
-  new Components.HotKeys;
-  new Components.AnalysisHandler;
-  new Components.IntroMessage;
-  new Components.EvaluationGraph;
-  new Components.PositionInfo;
-  // new Components.MiniHoverBoard;
-  new Components.VirtualDomBoard;
-  new Components.SubHeader;
+  new Models.HotKeys;
+
+  new Views.PgnImporter;
+  new Views.MoveList;
+  new Views.ModalMoveList;
+  new Views.ActionButtons;
+  new Views.AnalysisHandler;
+  new Views.IntroMessage;
+  new Views.EvaluationGraph;
+  new Views.PositionInfo;
+  // new Views.MiniHoverBoard;
+  new Views.VirtualDomBoard;
+  new Views.SubHeader;
 
 });

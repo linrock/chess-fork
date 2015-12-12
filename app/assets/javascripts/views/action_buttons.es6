@@ -30,6 +30,6 @@
   }
 
 
-  Components.ActionButtons = ActionButtons
+  Views.ActionButtons = ActionButtons
 
 }

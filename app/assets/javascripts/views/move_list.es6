@@ -57,6 +57,6 @@
   }
 
 
-  Components.MoveList = MoveList
+  Views.MoveList = MoveList
 
 }

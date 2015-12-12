@@ -61,6 +61,6 @@
   }
 
 
-  Components.PgnImporter = PgnImporter
+  Views.PgnImporter = PgnImporter
 
 }

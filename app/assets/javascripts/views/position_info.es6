@@ -14,7 +14,7 @@
 
     initialize() {
       this.$positionDescription = this.$(".position-description")
-      this.menu = new Components.PositionMenu
+      this.menu = new Views.PositionMenu
       this.listenForEvents()
     }
 
@@ -38,6 +38,6 @@
   }
 
 
-  Components.PositionInfo = PositionInfo
+  Views.PositionInfo = PositionInfo
 
 }

@@ -97,6 +97,6 @@
   }
 
 
-  Components.AnalysisHandler = AnalysisHandler
+  Views.AnalysisHandler = AnalysisHandler
 
 }

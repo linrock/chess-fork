@@ -46,7 +46,7 @@
   }
 
 
-  class MiniBoard extends Components.Chessboard {
+  class MiniBoard extends Views.Chessboard {
 
     get sqPrefix() {
       return "msq"
@@ -95,6 +95,6 @@
   }
 
 
-  Components.MiniHoverBoard = MiniHoverBoard
+  Views.MiniHoverBoard = MiniHoverBoard
 
 }

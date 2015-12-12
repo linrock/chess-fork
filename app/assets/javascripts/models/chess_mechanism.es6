@@ -169,6 +169,6 @@
   }
 
 
-  Components.ChessMechanism = ChessMechanism
+  Models.ChessMechanism = ChessMechanism
 
 }

@@ -18,6 +18,6 @@
   }
 
 
-  Components.IntroMessage = IntroMessage
+  Views.IntroMessage = IntroMessage
 
 }

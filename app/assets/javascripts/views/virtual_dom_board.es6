@@ -87,6 +87,6 @@
   }
 
 
-  Components.VirtualDomBoard = VirtualDomBoard
+  Views.VirtualDomBoard = VirtualDomBoard
 
 }

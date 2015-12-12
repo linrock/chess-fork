@@ -68,6 +68,6 @@
   }
 
 
-  Components.Chessboard = Chessboard
+  Views.Chessboard = Chessboard
 
 }

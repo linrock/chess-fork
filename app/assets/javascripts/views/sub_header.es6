@@ -19,6 +19,6 @@
   }
 
 
-  Components.SubHeader = SubHeader
+  Views.SubHeader = SubHeader
 
 }

@@ -102,6 +102,6 @@
   }
 
 
-  Components.AnalysisCache = AnalysisCache
+  Models.AnalysisCache = AnalysisCache
 
 }
