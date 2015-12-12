@@ -116,6 +116,13 @@
       this.listenTo(world, "change:i", (model, i) => {
         this.reposition(i)
       })
+      this.listenTo(world, "change:moves", (model, moves) => {
+        if (moves.size > 0) {
+          this.$el.show()
+        } else {
+          this.$el.hide()
+        }
+      })
     }
 
     render() {
