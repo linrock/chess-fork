@@ -69,10 +69,15 @@
       })
       let html = ''
       for (let variation of variations) {
+        let evaluation = variation.score
+        if (_.isNumber(evaluation)) {
+          evaluation *= (/ w /.test(analysis.fen) ? 1 : -1)
+          evaluation = evaluation > 0 ? `+${evaluation}` : evaluation
+        }
         html += this.moveTemplate({
           fen: analysis.fen,
           move: `${chess.getMovePrefix(world.get("i"))} ${variation.moves[0]}`,
-          evaluation: variation.score,
+          evaluation: evaluation,
           engine: analysis.engine,
           depth: variation.depth
         })
