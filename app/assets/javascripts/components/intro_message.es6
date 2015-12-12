@@ -9,7 +9,7 @@
     }
 
     initialize() {
-      this.listenTo(chess, "change:i", (model, i) => {
+      this.listenTo(world, "change:i", (model, i) => {
         this.$el.fadeOut(50)
       })
       $(() => { this.$el.removeClass("invisible") })

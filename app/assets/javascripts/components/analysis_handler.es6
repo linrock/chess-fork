@@ -39,7 +39,7 @@
     }
 
     listenForEvents() {
-      this.listenTo(chess, "change:i", (model, i) => {
+      this.listenTo(world, "change:i", (model, i) => {
         if (i === 0) {
           this.$el.addClass("invisible")
           return
@@ -71,7 +71,7 @@
       for (let variation of variations) {
         html += this.moveTemplate({
           fen: analysis.fen,
-          move: `${chess.getMovePrefix(chess.get("i"))} ${variation.moves[0]}`,
+          move: `${chess.getMovePrefix(world.get("i"))} ${variation.moves[0]}`,
           evaluation: variation.score,
           engine: analysis.engine,
           depth: variation.depth

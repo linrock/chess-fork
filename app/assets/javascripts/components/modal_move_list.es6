@@ -45,7 +45,7 @@
     render() {
       this.$moveList.empty()
       let j = 0
-      let plyNum = chess.get("i")
+      let plyNum = world.get("i")
       let moveNum = ~~ (plyNum / 2)
       let analysis = analysisCache.get(chess.getPosition(plyNum))
       let html = ''

@@ -20,7 +20,7 @@
     }
 
     listenForEvents() {
-      this.listenTo(chess, "change:i", () => {
+      this.listenTo(world, "change:i", () => {
         this.hide()
       })
     }

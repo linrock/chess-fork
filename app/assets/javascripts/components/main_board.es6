@@ -13,7 +13,7 @@
     }
 
     listenForEvents() {
-      this.board.listenTo(chess, "change:i", (model, i) => {
+      this.board.listenTo(world, "change:i", (model, i) => {
         let iPrev = model.previous("i")
         let prevFen = chess.getPosition(iPrev)
         let newFen = chess.getPosition(i)
@@ -130,7 +130,7 @@
     }
 
     listenForEvents() {
-      this.board.listenTo(chess, "change:i", (model, i) => {
+      this.board.listenTo(world, "change:i", (model, i) => {
         this.highlightGameMoveIndex(i)
       })
       this.board.listenTo(chess, "change:j", (model, j) => {
@@ -145,7 +145,7 @@
       })
       this.board.listenTo(chess, "change:mode", (model, mode) => {
         if (mode === "normal") {
-          this.highlightGameMoveIndex(chess.get("i"))
+          this.highlightGameMoveIndex(world.get("i"))
         }
       })
     }
@@ -162,7 +162,7 @@
 
     highlightGameMoveIndex(i) {
       this.clearHighlights()
-      if (i === 0) {
+      if (i <= 0) {
         return
       }
       let fen = chess.getPosition(i - 1)
@@ -189,7 +189,7 @@
         let square = $(event.currentTarget)[0].id
         this.selectSquare(square)
       })
-      this.board.listenTo(chess, "change:i", () => { this.clearSelected() })
+      this.board.listenTo(world, "change:i", () => { this.clearSelected() })
     }
 
     selectSquare(square) {

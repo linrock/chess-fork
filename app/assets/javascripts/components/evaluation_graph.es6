@@ -110,7 +110,7 @@
       this.listenTo(this.graph, "click", (event) => {
         this.$el.show()
       })
-      this.listenTo(chess, "change:i", (model, i) => {
+      this.listenTo(world, "change:i", (model, i) => {
         this.reposition(i)
       })
     }
@@ -207,7 +207,7 @@
     }
 
     listenToEvents() {
-      this.listenTo(chess, "change:positions", (model, positions) => {
+      this.listenTo(world, "change:positions", (model, positions) => {
         this.plotPositionEvaluations(positions.slice(0, chess.nPositions() - 1))
         this.show()
       })

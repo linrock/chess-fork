@@ -20,7 +20,7 @@
 
     initialize() {
       this.$moveActions = this.$(".move-actions")
-      this.listenTo(chess, "change:i", (model, i) => {
+      this.listenTo(world, "change:i", (model, i) => {
         if (i > 0) {
           this.$moveActions.removeClass("invisible")
         }

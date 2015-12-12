@@ -15,8 +15,12 @@ Components.PgnImporter = Backbone.View.extend({
     this.$error = this.$(".invalid-pgn")
     this.validator = new Chess
     this.pgnIsValid = false
-    this.listenTo(chess, "change:moves", function() {
-      this.$el.hide()
+    this.listenTo(world, "change:moves", function(model, moves) {
+      if (moves.size === 0) {
+        this.$el.show()
+      } else {
+        this.$el.hide()
+      }
     });
   },
 

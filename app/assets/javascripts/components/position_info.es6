@@ -19,7 +19,7 @@
     }
 
     listenForEvents() {
-      this.listenTo(chess, "change:i", (model, i) => {
+      this.listenTo(world, "change:i", (model, i) => {
         let prevI = i - 1
         if (prevI < 0) {
           this.$el.addClass("invisible")

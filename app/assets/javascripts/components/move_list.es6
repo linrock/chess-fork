@@ -21,12 +21,12 @@
     }
 
     listenToEvents() {
-      this.listenTo(chess, "change:moves", (model, moves) => {
+      this.listenTo(world, "change:moves", (model, moves) => {
         this.render(moves)
       })
-      this.listenTo(chess, "change:i", (model, i) => {
+      this.listenTo(world, "change:i", (model, i) => {
         this.$(".move").removeClass("current")
-        if (i === 0) {
+        if (i <= 0) {
           return
         }
         this.$(`[data-ply="${i}"]`).addClass("current")

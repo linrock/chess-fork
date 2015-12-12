@@ -10,7 +10,7 @@
       Mousetrap.bind(["esc"],   () => { chess.set({ mode: "normal" }) })
 
       Mousetrap.bind(["command+z", "ctrl+z"], () => {
-        chronicle.rewind()
+        world.rewind()
       })
     }
 
