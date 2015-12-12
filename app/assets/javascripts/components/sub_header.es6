@@ -13,9 +13,12 @@
     }
 
     _resetBoard() {
-      
+      world.trigger("reset")
     }
 
   }
+
+
+  Components.SubHeader = SubHeader
 
 }

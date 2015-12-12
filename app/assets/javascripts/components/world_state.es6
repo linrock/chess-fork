@@ -8,32 +8,31 @@
 
     initialize() {
       this.states = Immutable.Stack()
-      this.set({
-        moves: new Immutable.List(),
-        positions: new Immutable.List([ new Chess().fen() ]),
-        i: -1
-      })
-      this.initHistory()
       this.listenForEvents()
+      this.reset()
     }
 
     listenForEvents() {
       this.listenTo(this, "change", this.recordState)
+      this.listenTo(this, "reset",  this.reset)
     }
 
     recordState(state) {
       this.states = this.states.push(new Immutable.Map(state.attributes))
     }
 
-    initHistory() {
-      this.states = this.states.push(new Immutable.Map({
-        moves: this.get("moves"),
-        positions: this.get("positions"),
+    reset() {
+      this.set({
+        moves: new Immutable.List(),
+        positions: new Immutable.List([ new Chess().fen() ]),
         i: -1
-      }))
+      })
     }
 
     rewind() {
+      if (this.states.size <= 1) {
+        return
+      }
       this.states = this.states.pop()
       this.set(this.states.first().toObject())
       this.states = this.states.pop() // XXX because setting a state records the state again

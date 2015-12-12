@@ -40,7 +40,7 @@
 
     listenForEvents() {
       this.listenTo(world, "change:i", (model, i) => {
-        if (i === 0) {
+        if (i <= 0) {
           this.$el.addClass("invisible")
           return
         }

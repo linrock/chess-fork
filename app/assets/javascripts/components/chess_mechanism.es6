@@ -21,6 +21,9 @@
           this.set({ mode: "normal" })
         }
       })
+      this.listenTo(world, "change", (model) => {
+        this.setFen(model.get("positions").get(model.get("i")))
+      })
       this.listenTo(this, "change:mode", (model, mode) => {
         if (mode === "normal") {
           this.setFen(this.getPosition(world.get("i")))

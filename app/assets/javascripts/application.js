@@ -36,5 +36,6 @@ $(function() {
   new Components.PositionInfo;
   // new Components.MiniHoverBoard;
   new Components.VirtualDomBoard;
+  new Components.SubHeader;
 
 });
