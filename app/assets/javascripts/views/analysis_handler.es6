@@ -14,7 +14,7 @@
           <div class="move engine-move" data-fen="<%= fen %>">
             <%= move %>
           </div>
-          <div class="evaluation"><%= evaluation %></div>
+          <div class="evaluation <%= color %>"><%= evaluation %></div>
           <div class="source">
             <%= engine %> &ndash; depth <%= depth %>
           </div>
@@ -57,6 +57,11 @@
           this.render(analysis)
         }
       })
+      this.listenTo(chess, "polarity:flip", () => {
+        let fen = chess.getCurrentPosition()
+        let analysis = analysisCache.get(fen)
+        this.render(analysis)
+      })
     }
 
     render(analysis) {
@@ -69,15 +74,22 @@
       })
       let html = ''
       for (let variation of variations) {
+        let color = ''
         let evaluation = variation.score
         if (_.isNumber(evaluation)) {
-          evaluation *= (/ w /.test(analysis.fen) ? 1 : -1)
+          evaluation *= (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
           evaluation = evaluation > 0 ? `+${evaluation}` : evaluation
+          if (evaluation > 0.5) {
+            color = 'green'
+          } else if (evaluation < -0.5) {
+            color = 'red'
+          }
         }
         html += this.moveTemplate({
           fen: analysis.fen,
           move: `${chess.getMovePrefix(world.get("i"))} ${variation.moves[0]}`,
           evaluation: evaluation,
+          color: color,
           engine: analysis.engine,
           depth: variation.depth
         })

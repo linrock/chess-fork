@@ -542,6 +542,8 @@
 
   }
 
+  // List of candidate moves under the board
+  //
   .moves {
     font-weight: 600;
     @include clearfix;
@@ -573,6 +575,15 @@
     .evaluation {
       float: left;
       width: 150px;
+
+      &.green {
+        color: green;
+      }
+
+      &.red {
+        color: red;
+      }
+
     }
 
     .source {

@@ -78,6 +78,10 @@
       return world.get("positions").get(i)
     }
 
+    getCurrentPosition() {
+      return world.get("positions").get(world.get("i"))
+    }
+
     getPositions() {
       return world.get("positions")
     }
