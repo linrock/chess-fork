@@ -156,11 +156,12 @@
     }
 
     setEnginePositionIndex(j) {
+      let fen = this.getCurrentPosition()
       if (this.get("mode") === "normal" && j >= 0) {
-        this.analyzePosition(this.getPosition(world.get("i")))
+        this.analyzePosition(fen)
         return
       }
-      if (j >= this.get("analysis").n) {
+      if (j >= analysisCache.get(fen).variations[0].n) {
         return
       }
       if (j < 0) {

@@ -53,7 +53,9 @@
     }
 
     _loadPgn() {
-      if (!chess.loadPgn(this.pgn())) {
+      if (chess.loadPgn(this.pgn())) {
+        this.$textarea.val("")
+      } else {
         this.$error.removeClass("invisible")
       }
     }
