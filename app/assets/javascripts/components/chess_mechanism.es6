@@ -21,9 +21,6 @@
           this.set({ mode: "normal" })
         }
       })
-      this.listenTo(world, "change", (model) => {
-        this.setFen(model.get("positions").get(model.get("i")))
-      })
       this.listenTo(this, "change:mode", (model, mode) => {
         if (mode === "normal") {
           this.setFen(this.getPosition(world.get("i")))
@@ -57,14 +54,11 @@
       let ind = i < 1 ? 1 : i + 1
       let positions = new Immutable.List(this.getPositions().slice(0, ind))
       this.mechanism = c
-      this.setFen(newFen)
-      var newState = {
+      world.set({
         moves: new Immutable.List(moves),
         positions: positions.push(newFen),
         i: (i < 0) ? 1 : i + 1
-      }
-      world.set(newState)
-      this.trigger("change:state", newState)
+      })
     }
 
     loadGameHistory(moves) {

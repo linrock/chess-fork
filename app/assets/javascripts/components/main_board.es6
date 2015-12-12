@@ -3,7 +3,7 @@
 
 {
 
-  // For handling animation of pieces on the board
+  // For handling animation of pieces on the board when relevant
   //
   class PieceAnimator {
 
@@ -18,6 +18,12 @@
         let prevFen = chess.getPosition(iPrev)
         let newFen = chess.getPosition(i)
         if (prevFen === newFen) {
+          chess.setFen(newFen)
+          return
+        }
+        if (this.board.ignoreNextAnimation) {
+          this.board.ignoreNextAnimation = false
+          chess.setFen(newFen)
           return
         }
         if (Math.abs(iPrev - i) === 1) {
@@ -194,7 +200,7 @@
 
     selectSquare(square) {
       if (this.selectedSquare && square != this.selectedSquare) {
-        this.board.move({ from: this.selectedSquare, to: square  })
+        this.board.move({ from: this.selectedSquare, to: square })
         this.clearSelected()
       } else {
         this.selectedSquare = square
@@ -243,7 +249,7 @@
           this.board.move({
             from: $(ui.draggable).parents(".square").data("square"),
             to: $(event.target).data("square"),
-          })
+          }, true)
         }
       })
     }
@@ -284,7 +290,8 @@
       this.listenTo(chess, "polarity:flip", this.flip)
     }
 
-    move(move) {
+    move(move, ignoreNextAnimation = false) {
+      this.ignoreNextAnimation = ignoreNextAnimation
       move.promotion = move.promotion || "q"
       chess.move(move)
     }
