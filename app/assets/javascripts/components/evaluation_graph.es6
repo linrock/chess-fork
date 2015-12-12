@@ -72,8 +72,11 @@
     reposition(i) {
       let n = this.graph.points.length
       let sc = i / (n - 1)
-      if (sc < 0 || sc > 1) {
+      if (sc < 0) {
         return
+      }
+      if (sc > 1) {
+        sc = 1
       }
       this.$el.css({
         left: Math.round(sc * this.graph.width)
