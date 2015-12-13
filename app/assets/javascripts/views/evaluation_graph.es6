@@ -203,8 +203,6 @@
       return {
         "mousedown"   : "_click",
         "mousemove"   : "_mouseMove",
-        "mouseenter"  : "_mouseEnter",
-        "mouseleave"  : "_mouseLeave"
       }
     }
 
@@ -213,6 +211,7 @@
       this.width = parseInt(this.$el.css("width"))
       this.graph = new AreaGraph(this.$areaGraph)
       this.normalizer = new PointsNormalizer
+      this.bindHoverEvents()
       this.listenToEvents()
     }
 
@@ -227,6 +226,13 @@
       this.listenTo(chess, "polarity:flip", () => {
         this.plotPositionEvaluations(chess.getPositions())
       })
+    }
+
+    bindHoverEvents() {
+      this.$el.hoverIntent(
+        (e) => { this._mouseEnter(e) },
+        (e) => { this._mouseLeave(e) }
+      )
     }
 
     render(points) {
