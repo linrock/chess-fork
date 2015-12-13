@@ -18,11 +18,19 @@
     initialize() {
       this.$title = this.$(".sub-header-title")
       this.listenForEvents()
+      this.initSubviews()
     }
 
     listenForEvents() {
       this.listenTo(openingState, "change:opening", (model, opening) => {
         this.$title.text(opening)
+      })
+    }
+
+    initSubviews() {
+      this.$("[data-tooltip]").each((i, e) => {
+        console.dir($(e))
+        new Views.Tooltip({ el: $(e) })
       })
     }
 

@@ -69,7 +69,7 @@ class OpeningTree
     end
     {
       :opening      => last_opening,
-      :search_done  => current.children.size == 0 || move_list.length > 0
+      :search_done  => current.is_leaf? || move_list.length > 0
     }
   end
 
