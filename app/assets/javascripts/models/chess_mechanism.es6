@@ -104,8 +104,12 @@
     }
 
     getMoves(i, end = false) {
-      if (end) {
-        return world.get("moves").slice(i, end)
+      if (end !== false) {
+        if (end > i) {
+          return world.get("moves").slice(i, end)
+        } else {
+          return new Immutable.List()
+        }
       } else {
         return world.get("moves").get(i)
       }
