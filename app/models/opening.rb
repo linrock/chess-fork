@@ -19,9 +19,11 @@ class Opening
   end
 
   def variation_name
+    return @variation_name if defined?(@variation_name)
     match = self.name[/:(.*)/, 1]
     return unless match
-    match.split(",").map(&:strip).select {|str| str[0] !~ /\d/ }.join(", ")
+    @variation_name =
+      match.split(",").map(&:strip).select {|str| str[0] !~ /\d/ }.join(", ")
   end
 
   def variation_line
@@ -30,8 +32,25 @@ class Opening
     match.split(",").map(&:strip).select {|str| str[0] =~ /\d/ }.join(", ")
   end
 
+  def full_name
+    if variation_name && variation_name.length > 0
+      "#{base_eco} #{base_name}: #{variation_name}"
+    else
+      "#{base_eco} #{base_name}"
+    end
+  end
+
   def move_list
     pgn.gsub(/\d+\./, '').gsub(/\*/, '').strip.split(/\s+/)
+  end
+
+  def as_json(options = {})
+    {
+      :eco       => base_eco,
+      :name      => base_name,
+      :variation => variation_name,
+      :full_name => full_name
+    }
   end
 
 end

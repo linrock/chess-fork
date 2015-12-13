@@ -51,13 +51,20 @@ class OpeningTree
     build_tree(openings)
   end
 
-  def get_opening(move_list)
+  def search_for_opening(move_list)
     current = @root
     while (move = move_list.shift)
-      return current unless current.children[move]
+      break unless current.children[move]
       current = current.children[move]
     end
-    current.opening
+    {
+      :opening      => current.opening,
+      :search_done  => current.children.size == 0 || move_list.length > 0
+    }
+  end
+
+  def get_opening(move_list)
+    search_for_opening(move_list)[:opening]
   end
 
   def get_opening_from_pgn(pgn)
