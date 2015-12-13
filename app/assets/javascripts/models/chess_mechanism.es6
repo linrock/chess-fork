@@ -165,7 +165,8 @@
         this.analyzePosition(fen)
         return
       }
-      if (j >= analysisCache.get(fen).variations[0].n) {
+      let analysis = analysisCache.get(fen)
+      if (!analysis || j >= analysis.variations[0].n) {
         return
       }
       if (j < 0) {

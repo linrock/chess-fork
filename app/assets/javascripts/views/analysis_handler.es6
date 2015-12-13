@@ -94,6 +94,9 @@
     }
 
     render(analysis) {
+      if (!analysis) {
+        return
+      }
       if (!analysis.variations[0].moves[0]) {
         this.renderGameOver()
         return

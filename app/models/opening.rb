@@ -35,7 +35,8 @@ class Opening
   def variation_line
     return unless variation
     return @variation_line if defined?(@variation_line)
-    variation.split(",").map(&:strip).select {|str| str[0] =~ /\d/ }.join(", ")
+    @variation_line =
+      variation.split(",").map(&:strip).select {|str| str[0] =~ /\d/ }.join(", ")
   end
 
   def move_list
