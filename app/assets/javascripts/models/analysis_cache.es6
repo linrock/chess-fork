@@ -19,6 +19,7 @@
 
     remoteGet(fen, options = {}) {
       options.fen = fen
+      chess.trigger("analysis:pending")
       return new Promise((resolve, reject) => {
         $.ajax({
           url: "/analysis",

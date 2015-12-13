@@ -49,9 +49,11 @@
         if (analysis) {
           this.render(analysis)
         } else {
-          this.hide()
           analysisCache.getAnalysis(fen)
         }
+      })
+      this.listenTo(chess, "analysis:pending", () => {
+        this.fade()
       })
       this.listenTo(chess, "change:analysis", (analysis) => {
         if (chessboard.fen == analysis.fen) {
@@ -122,7 +124,11 @@
     }
 
     show() {
-      this.$el.removeClass("invisible")
+      this.$el.removeClass("invisible faded")
+    }
+
+    fade() {
+      this.$el.addClass("faded")
     }
 
     hide() {

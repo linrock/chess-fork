@@ -523,6 +523,11 @@
     opacity: 0;
   }
 
+  &.faded {
+    opacity: 0.4;
+    transition: opacity 0.05s ease;
+  }
+
   .titles {
     font-size: 12px;
     margin-bottom: 14px;
