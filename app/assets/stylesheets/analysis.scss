@@ -523,11 +523,6 @@
     opacity: 0;
   }
 
-  &.faded {
-    opacity: 0.4;
-    transition: opacity 0.05s ease;
-  }
-
   .titles {
     font-size: 12px;
     margin-bottom: 14px;
@@ -556,7 +551,13 @@
   //
   .moves {
     font-weight: 600;
+    transition: opacity 0.2s ease;
     @include clearfix;
+
+    &.faded {
+      opacity: 0.5;
+      transition: opacity 0.05s ease;
+    }
 
     .move-row {
       margin-bottom: 12px;

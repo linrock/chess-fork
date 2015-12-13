@@ -124,11 +124,12 @@
     }
 
     show() {
-      this.$el.removeClass("invisible faded")
+      this.$el.removeClass("invisible")
+      this.$moves.removeClass("faded")
     }
 
     fade() {
-      this.$el.addClass("faded")
+      this.$moves.addClass("faded")
     }
 
     hide() {
