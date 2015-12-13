@@ -35,7 +35,8 @@
           this.set({ length: false })
         }
         this.getOpeningForMoves(moves).then((opening) => {
-          this.set({ opening: opening.full_name })
+          let openingText = `${opening.eco} – ${opening.full_name}`
+          this.set({ opening: openingText })
         }).catch((error) => {})
       })
     }

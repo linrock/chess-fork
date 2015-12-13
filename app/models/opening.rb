@@ -18,26 +18,24 @@ class Opening
     self.name.split(":").first
   end
 
-  def variation_name
-    return @variation_name if defined?(@variation_name)
+  def variation
+    return @variation if defined?(@variation)
     match = self.name[/:(.*)/, 1]
     return unless match
+    @variation = match.strip
+  end
+
+  def variation_name
+    return unless variation
+    return @variation_name if defined?(@variation_name)
     @variation_name =
-      match.split(",").map(&:strip).select {|str| str[0] !~ /\d/ }.join(", ")
+      variation.split(",").map(&:strip).select {|str| str[0] !~ /\d/ }.join(", ")
   end
 
   def variation_line
-    match = self.name[/:(.*)/, 1]
-    return unless match
-    match.split(",").map(&:strip).select {|str| str[0] =~ /\d/ }.join(", ")
-  end
-
-  def full_name
-    if variation_name && variation_name.length > 0
-      "#{base_eco} #{base_name}: #{variation_name}"
-    else
-      "#{base_eco} #{base_name}"
-    end
+    return unless variation
+    return @variation_line if defined?(@variation_line)
+    variation.split(",").map(&:strip).select {|str| str[0] =~ /\d/ }.join(", ")
   end
 
   def move_list
@@ -48,8 +46,8 @@ class Opening
     {
       :eco       => base_eco,
       :name      => base_name,
-      :variation => variation_name,
-      :full_name => full_name
+      :variation => variation,
+      :full_name => self.name
     }
   end
 
