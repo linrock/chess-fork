@@ -47,7 +47,7 @@
 
     _showFen() {
       // TODO better way of showing the FEN string
-      $(".position-description").addClass("small").text(chessboard.fen)
+      $(".position-description").addClass("fen").text(chessboard.fen)
     }
 
   }

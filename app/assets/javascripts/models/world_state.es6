@@ -35,7 +35,7 @@
       }
       this.states = this.states.pop()
       this.set(this.states.first().toObject())
-      this.states = this.states.pop() // XXX because setting a state records the state again
+      this.states = this.states.pop()
     }
 
   }
