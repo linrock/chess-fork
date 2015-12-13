@@ -80,6 +80,10 @@
   line-height: 46px;
   @include clearfix;
 
+  .sub-header-title {
+    float: left;
+  }
+
   .header-actions {
     float: right;
 

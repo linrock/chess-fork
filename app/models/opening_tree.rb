@@ -18,7 +18,11 @@ class OpeningTree
     end
 
     def inspect
-      %(<Node @eco="#{@opening.eco}" @name="#{@opening.name}">)
+      if @opening
+        %(<Node @eco="#{@opening.eco}" @name="#{@opening.name}" @n_children=#{@children.size}>)
+      else
+        %(<Node @n_children=#{@children.size}>)
+      end
     end
 
   end
@@ -53,12 +57,14 @@ class OpeningTree
 
   def search_for_opening(move_list)
     current = @root
+    last_opening = nil
     while (move = move_list.shift)
       break unless current.children[move]
       current = current.children[move]
+      last_opening = current.opening if current.opening
     end
     {
-      :opening      => current.opening,
+      :opening      => last_opening,
       :search_done  => current.children.size == 0 || move_list.length > 0
     }
   end

@@ -25,6 +25,7 @@ $(function() {
   var chess = window.chess = new Models.ChessMechanism;
   var chessboard = window.chessboard = new Views.MainBoard;
   var analysisCache = window.analysisCache = new Models.AnalysisCache;
+  var openingState = window.openingState = new Models.OpeningState;
   chess.start();
 
   new Models.HotKeys;
