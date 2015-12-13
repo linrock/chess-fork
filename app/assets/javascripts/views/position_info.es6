@@ -25,10 +25,28 @@
           this.$el.addClass("invisible")
           return
         }
-        let moveStr = `${chess.getMovePrefix(prevI)} ${chess.getMoves(prevI)}`
-        this.$el.removeClass("invisible")
-        this.$positionDescription.removeClass("small").text(moveStr)
+        this.renderMove(prevI)
       })
+      this.listenTo(chess, "change:mode", (model, mode) => {
+        let i = world.get("i")
+        if (mode === "normal") {
+          this.renderMove(i - 1)
+        } else if (mode === "analysis") {
+          let firstVariationMove = chess.get("analysis").variations[0].moves[0]
+          let moveStr = `${chess.getMovePrefix(i)} ${firstVariationMove}`
+          this.render(`Variation after ${moveStr}`)
+        }
+      })
+    }
+
+    renderMove(i) {
+      let moveStr = `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
+      this.render(moveStr)
+    }
+
+    render(text) {
+      this.$el.removeClass("invisible")
+      this.$positionDescription.removeClass("small").text(text)
     }
 
     _toggleMenu() {
