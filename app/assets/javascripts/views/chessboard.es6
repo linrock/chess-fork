@@ -66,6 +66,10 @@
       }, 100)
     }
 
+    animating() {
+      return !!this.$el.find(".piece:animated").length
+    }
+
     $getSquare(id) {
       return $(`#${this.sqPrefix}-${id}`)
     }

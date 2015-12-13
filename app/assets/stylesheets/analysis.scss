@@ -596,9 +596,10 @@
   }
 
   .titles {
-    font-size: 12px;
+    font-size: 11px;
+    font-style: italic;
     margin-bottom: 14px;
-    color: rgba(50,50,50,0.9);
+    color: rgba(50,50,50,0.8);
     @include clearfix;
 
     > div {
@@ -610,7 +611,7 @@
     }
 
     .evaluation-title {
-      width: 150px;
+      width: 140px;
     }
 
     .evaluation-source {
@@ -657,7 +658,7 @@
 
     .evaluation {
       float: left;
-      width: 150px;
+      width: 140px;
       color: rgba(100,100,100,0.9);
 
       &.green {

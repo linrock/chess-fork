@@ -148,6 +148,9 @@
       if (i < 0 || i >= this.nPositions()) {
         return
       }
+      if (chessboard.animating()) {
+        return
+      }
       world.set({ i: i })
     }
 
@@ -171,6 +174,9 @@
       }
       if (j < 0) {
         this.set({ mode: "normal" })
+        return
+      }
+      if (chessboard.animating()) {
         return
       }
       this.set({ j: j })
