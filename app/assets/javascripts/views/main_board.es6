@@ -277,9 +277,6 @@
       this.pointAndClick = new PointAndClick(this)
       this.dragAndDrop = new DragAndDrop(this)
       this.listenForEvents()
-    }
-
-    afterRender() {
       this.dragAndDrop.init()
     }
 

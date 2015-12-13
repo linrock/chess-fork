@@ -23,7 +23,7 @@
       }
       return $("<img>").
         attr("src", `/assets/pieces/${className}.png`).
-        addClass(`piece ${className}`)
+        addClass(`invisible piece ${className}`)
     }
 
   }
@@ -33,6 +33,8 @@
 
     initialize() {
       this.pieces = new Pieces(this)
+      this.render("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+      this.showPieces()
     }
 
     render(fen) {
@@ -40,7 +42,6 @@
         fen += " 0 1"
       }
       this.renderFen(fen)
-      this.afterRender()
     }
 
     renderFen(fen) {
@@ -59,7 +60,11 @@
       this.fen = fen
     }
 
-    afterRender() {}
+    showPieces() {
+      setTimeout(() => {
+        this.$(".piece").removeClass("invisible")
+      }, 100)
+    }
 
     $getSquare(id) {
       return $(`#${this.sqPrefix}-${id}`)
