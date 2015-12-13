@@ -49,6 +49,7 @@
         if (analysis) {
           this.render(analysis)
         } else {
+          this.hide()
           analysisCache.getAnalysis(fen)
         }
       })
@@ -64,6 +65,32 @@
       })
     }
 
+    getFormattedEvaluation(evaluation, polarity) {
+      let color = ''
+      if (_.isNumber(evaluation)) {
+        evaluation *= polarity
+        evaluation = evaluation > 0 ? `+${evaluation}` : evaluation
+        if (evaluation > 0.5) {
+          color = 'green'
+        } else if (evaluation < -0.5) {
+          color = 'red'
+        }
+      } else if (evaluation.indexOf("mate") === 0) {
+        let regex = /mate (-?\d+)/
+        let score = regex.exec(evaluation)[1] * polarity
+        if (score < 0) {
+          color = 'red'
+        } else {
+          color = 'green'
+        }
+        evaluation = `Mate in ${Math.abs(score)}`
+      }
+      return {
+        color: color,
+        evaluation: evaluation
+      }
+    }
+
     render(analysis) {
       if (!analysis.variations[0].moves[0]) {
         this.renderGameOver()
@@ -74,32 +101,13 @@
       })
       let html = ''
       for (let variation of variations) {
-        let color = ''
-        let evaluation = variation.score
         let polarity = (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
-        if (_.isNumber(evaluation)) {
-          evaluation *= polarity
-          evaluation = evaluation > 0 ? `+${evaluation}` : evaluation
-          if (evaluation > 0.5) {
-            color = 'green'
-          } else if (evaluation < -0.5) {
-            color = 'red'
-          }
-        } else if (evaluation.indexOf("mate") === 0) {
-          let regex = /mate (-?\d+)/
-          let score = regex.exec(evaluation)[1] * polarity
-          if (score < 0) {
-            color = 'red'
-          } else {
-            color = 'green'
-          }
-          evaluation = `Mate in ${Math.abs(score)}`
-        }
+        let formatted = this.getFormattedEvaluation(variation.score, polarity)
         html += this.moveTemplate({
           fen: analysis.fen,
           move: `${chess.getMovePrefix(world.get("i"))} ${variation.moves[0]}`,
-          evaluation: evaluation,
-          color: color,
+          evaluation: formatted.evaluation,
+          color: formatted.color,
           engine: analysis.engine,
           depth: variation.depth
         })

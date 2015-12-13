@@ -17,6 +17,10 @@ class OpeningTree
       @opening = opening
     end
 
+    def is_leaf?
+      @children.size == 0
+    end
+
     def inspect
       if @opening
         %(<Node @eco="#{@opening.eco}" @name="#{@opening.name}" @n_children=#{@children.size}>)
