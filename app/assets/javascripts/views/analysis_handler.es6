@@ -30,6 +30,7 @@
 
     initialize() {
       this.$moves = this.$(".moves")
+      this.$error = this.$(".error")
       this.listenForEvents()
     }
 
@@ -49,7 +50,9 @@
         if (analysis) {
           this.render(analysis)
         } else {
-          analysisCache.getAnalysis(fen)
+          analysisCache.getAnalysis(fen).catch((error) => {
+            console.log(error)
+          })
         }
       })
       this.listenTo(chess, "analysis:pending", () => {
@@ -93,7 +96,12 @@
       }
     }
 
+    renderError(message) {
+      this.$error.removeClass("invisible").text(message)
+    }
+
     render(analysis) {
+      // this.$error.addClass("invisible")
       if (!analysis) {
         return
       }

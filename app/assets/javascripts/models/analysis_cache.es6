@@ -54,10 +54,15 @@
         if (analysis) {
           resolve(analysis)
         } else {
-          this.remoteGet(fen).then((analysis) => {
-            analysisCache.set(fen, analysis)
-            return analysis
-          }).then(this.notifyAnalysis).then(resolve)
+          this.remoteGet(fen).
+            catch((error) => {
+              return reject("Error fetching analysis...")
+            }).
+            then((analysis) => {
+              analysisCache.set(fen, analysis)
+              return analysis
+            }).
+            then(this.notifyAnalysis).then(resolve)
         }
       })
     }

@@ -46,7 +46,7 @@
 
     render(text) {
       this.$el.removeClass("invisible")
-      this.$positionDescription.removeClass("small").text(text)
+      this.$positionDescription.removeClass("fen").text(text)
     }
 
     _toggleMenu() {

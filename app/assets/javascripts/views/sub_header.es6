@@ -25,11 +25,15 @@
       this.listenTo(openingState, "change:opening", (model, opening) => {
         this.$title.text(opening)
       })
+      this.listenTo(world, "change:moves", (model, moves) => {
+        if (moves.size === 0) {
+          this.$title.text("Welcome to the analysis board!")
+        }
+      })
     }
 
     initSubviews() {
       this.$("[data-tooltip]").each((i, e) => {
-        console.dir($(e))
         new Views.Tooltip({ el: $(e) })
       })
     }
