@@ -1423,10 +1423,13 @@ var Chess = function(fen) {
       }
 
       /* delete move numbers */
-      ms = ms.replace(/\d+\./g, '');
+      ms = ms.replace(/\d+\.(\.\.)?/g, '');
 
       /* delete ... indicating black to move */
       ms = ms.replace(/\.\.\./g, '');
+
+      /* delete numeric annotation glyphs */
+      ms = ms.replace(/\$\d+/g, '');
 
       /* trim and get array of moves */
       var moves = trim(ms).split(new RegExp(/\s+/));
