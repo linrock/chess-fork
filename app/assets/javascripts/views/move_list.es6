@@ -40,10 +40,10 @@
       let html = ''
       for (let move of moves) {
         if (plyNum % 2 === 1) {
-          html += `<div class="move-num">${moveNum}.</div>`
+          html += `<div class="move-num">${moveNum}. </div>`
           moveNum++
         }
-        html += `<div class="move" data-ply="${plyNum}">${move}</div>`
+        html += `<div class="move" data-ply="${plyNum}">${move} </div>`
         plyNum++
       }
       this.$moveList.html(html)

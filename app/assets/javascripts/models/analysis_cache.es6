@@ -37,21 +37,6 @@
       })
     }
 
-    formatAnalysisResponse(data, fen) {
-      data.fen = fen
-      for (let i in data.variations) {
-        let variation = data.variations[i]
-        let formatted = this.calcMovesAndPositions(fen, variation.sequence)
-        data.variations[i] = _.extend(variation, formatted)
-      }
-      return data
-    }
-
-    notifyAnalysis(analysis) {
-      chess.trigger("change:analysis", analysis)
-      return analysis
-    }
-
     getAnalysis(fen) {
       return new Promise((resolve, reject) => {
         let analysis = analysisCache.get(fen)
@@ -66,9 +51,15 @@
               analysisCache.set(fen, analysis)
               return analysis
             }).
-            then(this.notifyAnalysis).then(resolve)
+            then(this.notifyAnalysis).
+            then(resolve)
         }
       })
+    }
+
+    notifyAnalysis(analysis) {
+      chess.trigger("change:analysis", analysis)
+      return analysis
     }
 
     uciToMove(uciMove) {
@@ -80,6 +71,16 @@
         move.promotion = uciMove[4]
       }
       return move
+    }
+
+    formatAnalysisResponse(data, fen) {
+      data.fen = fen
+      for (let i in data.variations) {
+        let variation = data.variations[i]
+        let formatted = this.calcMovesAndPositions(fen, variation.sequence)
+        data.variations[i] = _.extend(variation, formatted)
+      }
+      return data
     }
 
     // TODO lazy calculate this using a generator
