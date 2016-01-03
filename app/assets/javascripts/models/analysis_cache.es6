@@ -28,19 +28,23 @@
           dataType: "json",
           context: this,
           success: (data, status, xhr) => {
-            data.fen = fen
-            for (let i in data.variations) {
-              let variation = data.variations[i]
-              let formatted = this.calcMovesAndPositions(fen, variation.sequence)
-              data.variations[i] = _.extend(variation, formatted)
-            }
-            resolve(data)
+            resolve(this.formatAnalysisResponse(data, fen))
           },
           error: (xhr, status, error) => {
             reject(fen)
           }
         })
       })
+    }
+
+    formatAnalysisResponse(data, fen) {
+      data.fen = fen
+      for (let i in data.variations) {
+        let variation = data.variations[i]
+        let formatted = this.calcMovesAndPositions(fen, variation.sequence)
+        data.variations[i] = _.extend(variation, formatted)
+      }
+      return data
     }
 
     notifyAnalysis(analysis) {

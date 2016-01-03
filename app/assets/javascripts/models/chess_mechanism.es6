@@ -72,6 +72,7 @@
         moves: new Immutable.List(moves),
         positions: new Immutable.List(positions)
       })
+      this.trigger("game:loaded")
     }
 
     getPosition(i) {
