@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 
-gem 'rails', '4.2.5'
+gem 'rails', '4.2.8'
 gem 'unicorn'
 gem 'pg'
 
@@ -35,6 +35,7 @@ gem 'sprockets-es6'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'quiet_assets'
 end
 
 group :development do
