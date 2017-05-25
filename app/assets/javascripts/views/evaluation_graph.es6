@@ -36,7 +36,7 @@
       let graph = new Rickshaw.Graph({
         element: $("<div>").appendTo(this.$el)[0],
         width: this.width(points),
-        height: 100,
+        height: 120,
         series: series,
         min: -10,
         max: 10,

@@ -16,7 +16,7 @@
           </div>
           <div class="evaluation <%= color %>"><%= evaluation %></div>
           <div class="source">
-            <%= engine %> &ndash; depth <%= depth %>
+            depth <%= depth %>
           </div>
         </div>
       `)
