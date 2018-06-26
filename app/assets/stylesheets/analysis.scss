@@ -37,8 +37,8 @@
   $tooltip-bg-color: #333;
 
   -webkit-backface-visibility: hidden;
-  @include transition(opacity 0.12s ease-in-out);
-  @include user-select(none);
+  transition: opacity 0.12s ease-in-out;
+  user-select: none;
 
   position: absolute;
   left: 50%;
@@ -82,7 +82,7 @@
   &.visible {
     visibility: visible;
     opacity: 1;
-    @include transition(opacity 0.15s ease-in-out);
+    transition: opacity 0.15s ease-in-out;
   }
 
 }
@@ -154,7 +154,7 @@
       padding: 0 9px;
       text-decoration: none;
       color: inherit;
-      @include transition(color 0.12s ease);
+      transition: color 0.12s ease;
 
       &:hover {
         color: #333;
@@ -186,7 +186,7 @@
     height: 60px;
     float: left;
     transition: background 0.1s ease-in-out;
-    @include user-select(none);
+    user-select: none;
 
     &.light {
       background: #f3e4cf;
@@ -737,7 +737,7 @@
       height: $square-size;
       float: left;
       transition: background 0.1s ease-in-out;
-      @include user-select(none);
+      user-select: none;
 
       &.light {
         background: rgb(243, 228, 207);
