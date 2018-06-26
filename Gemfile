@@ -17,7 +17,6 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'font-awesome-rails'
 gem 'sprockets', '>= 3.0.0'
-gem 'sprockets-es6'
 gem 'bourbon'
 gem 'webpacker'
 
