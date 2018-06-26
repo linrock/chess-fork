@@ -9,5 +9,4 @@ class OpeningsController < ApplicationController
       render :json => {}
     end
   end
-
 end
