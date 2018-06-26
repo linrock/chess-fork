@@ -19,6 +19,7 @@ gem 'font-awesome-rails'
 gem 'sprockets', '>= 3.0.0'
 gem 'sprockets-es6'
 gem 'bourbon'
+gem 'webpacker'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
