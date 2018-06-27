@@ -13,11 +13,11 @@ export default class ActionButtons extends Backbone.View {
 
   get events() {
     return {
-      "click .flip-board" : () => { chess.trigger("polarity:flip") },
-      "click .first-move" : () => { chess.firstMove() },
-      "click .prev-move"  : () => { chess.prevMove()  },
-      "click .next-move"  : () => { chess.nextMove()  },
-      "click .last-move"  : () => { chess.lastMove()  }
+      "click .flip-board" : () => chess.trigger("polarity:flip"),
+      "click .first-move" : () => chess.firstMove(),
+      "click .prev-move"  : () => chess.prevMove(),
+      "click .next-move"  : () => chess.nextMove(),
+      "click .last-move"  : () => chess.lastMove()
     }
   }
 

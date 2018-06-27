@@ -1,7 +1,6 @@
 import Backbone from 'backbone'
 
 import PositionMenu from './position_menu'
-
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
