@@ -94,7 +94,7 @@ export default class ChessMechanism extends Backbone.Model {
     return world.get("positions")
   }
 
-  nPositions() {
+  nPositions(): number {
     return this.getPositions().size
   }
 
@@ -103,7 +103,7 @@ export default class ChessMechanism extends Backbone.Model {
     if (!analysis) {
       return;
     }
-    this.set({ j: 0, analysis: analysis, mode: "analysis" })
+    this.set({ j: 0, analysis, mode: "analysis" })
   }
 
   getMovePrefix(i) {

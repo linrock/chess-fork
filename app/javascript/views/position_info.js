@@ -29,12 +29,12 @@ export default class PositionInfo extends Backbone.View {
         this.$el.addClass("invisible")
         return
       }
-      this.renderMove(prevI)
+      this.renderMoveNum(prevI)
     })
     this.listenTo(chess, "change:mode", (model, mode) => {
       let i = world.get("i")
       if (mode === "normal") {
-        this.renderMove(i - 1)
+        this.renderMoveNum(i - 1)
       } else if (mode === "analysis") {
         let firstVariationMove = chess.get("analysis").variations[0].moves[0]
         let moveStr = `${chess.getMovePrefix(i)} ${firstVariationMove}`
@@ -43,7 +43,7 @@ export default class PositionInfo extends Backbone.View {
     })
   }
 
-  renderMove(i) {
+  renderMoveNum(i) {
     const moveStr = `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
     this.render(moveStr)
   }

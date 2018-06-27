@@ -2,6 +2,7 @@
 
 import * as Backbone from 'backbone'
 
+import { FEN } from './types'
 import { chess } from './chess_mechanism'
 import { world } from './main'
 import analysisCache from './analysis_cache'
@@ -19,7 +20,7 @@ export default class AnalysisSequencer extends Backbone.Model {
     })
   }
 
-  analyzePositionsSequentially(positions: Array<string>) {
+  analyzePositionsSequentially(positions: Array<FEN>) {
     const fen = positions.shift()
     if (!fen) {
       return

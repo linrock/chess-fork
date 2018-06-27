@@ -1,22 +1,23 @@
 import m from 'mithril'
-import Backbone from 'backbone'
+import * as Backbone from 'backbone'
 import Chess from 'chess.js'
 
+import { ChessMove } from '../types'
 import { chess } from '../chess_mechanism'
 
-export default class VirtualDomBoard extends Backbone.View {
+export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
+  private ROWS = [8, 7, 6, 5, 4, 3, 2, 1]
+  private COLS = ['a','b','c','d','e','f','g','h']
+  private position = new Chess()
+  private moveColors = ["#ffffcc", "#ffff66"]
+  private boardEl: HTMLElement
 
-  el() {
-    return ".mini-hover-board"
+  get el() {
+    return document.querySelector(".mini-hover-board")
   }
 
   initialize() {
-    this.ROWS = [8, 7, 6, 5, 4, 3, 2, 1]
-    this.COLS = ['a','b','c','d','e','f','g','h']
-    this.$board = this.$(".hover-board")
-    this.board = this.$board[0]
-    this.moveColors = ["#ffffcc", "#ffff66"]
-    this.position = new Chess
+    this.boardEl = this.el.querySelector(`.hover-board`)
     this.listenForEvents()
   }
 
@@ -27,17 +28,17 @@ export default class VirtualDomBoard extends Backbone.View {
         return
       }
       let lastMove = this.getLastMove(i)
-      this.render(fen, lastMove)
+      this.renderFen(fen, lastMove)
     })
     this.listenTo(chess, "preview:hide", () => {
-      this.$board.addClass("invisible")
+      this.boardEl.classList.add("invisible")
     })
     this.listenTo(chess, "preview:show", () => {
-      this.$board.removeClass("invisible")
+      this.boardEl.classList.remove("invisible")
     })
   }
 
-  getLastMove(i) {
+  getLastMove(i): ChessMove {
     if (i === 0) {
       return
     }
@@ -45,14 +46,14 @@ export default class VirtualDomBoard extends Backbone.View {
     return this.position.move(chess.getMoves(i - 1))
   }
 
-  getPiece(piece) {
-    let className = piece.color + piece.type
+  getPiece(piece): m.Component {
+    const className = piece.color + piece.type
     return m(`img.piece.${className}`, {
       src: `/assets/pieces/${className}.png`
     })
   }
 
-  vSquaresFromFen(fen, highlights) {
+  vSquaresFromFen(fen, highlights): m.Component {
     this.position.load(fen)
     let i = 0
     let squares = []
@@ -67,7 +68,7 @@ export default class VirtualDomBoard extends Backbone.View {
         }
         let style = {}
         if (highlights[id]) {
-          style.style = { background: highlights[id] }
+          Object.assign(style, { background: highlights[id] })
         }
         squares.push(m(`div.square.${polarities[i % 2]}`, style, pieces))
         i += 1
@@ -77,14 +78,14 @@ export default class VirtualDomBoard extends Backbone.View {
     return squares
   }
 
-  render(fen, lastMove) {
+  renderFen(fen, lastMove) {
     let highlights = {}
     if (lastMove) {
       highlights[lastMove.from] = this.moveColors[0]
       highlights[lastMove.to] = this.moveColors[1]
     }
     requestAnimationFrame(() => {
-      m.render(this.board, m(".chessboard", this.vSquaresFromFen(fen, highlights)))
+      m.render(this.boardEl, m(".chessboard", this.vSquaresFromFen(fen, highlights)))
     })
   }
 }

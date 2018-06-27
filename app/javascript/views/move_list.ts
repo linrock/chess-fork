@@ -1,19 +1,21 @@
 // Clickable list of moves that represent the state
 // of the game
 
-import $ from 'jquery'
-import Backbone from 'backbone'
+import * as $ from 'jquery'
+import * as Backbone from 'backbone'
 
+import { San, HTML } from '../types'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
-export default class MoveList extends Backbone.View {
+export default class MoveList extends Backbone.View<Backbone.Model> {
+  private $moveList: JQuery
 
   get el() {
     return ".game-move-list"
   }
 
-  get events() {
+  events(): Backbone.EventsHash {
     return {
       "click .move" : "_gotoMove"
     }
@@ -26,31 +28,34 @@ export default class MoveList extends Backbone.View {
 
   listenToEvents() {
     this.listenTo(world, "change:moves", (model, moves) => {
-      this.render(moves)
+      this.renderMoves(moves.toArray())
     })
     this.listenTo(world, "change:i", (model, i) => {
       this.$(".move").removeClass("current")
-      if (i <= 0) {
-        return
+      if (i > 0) {
+        this.$(`[data-ply="${i}"]`).addClass("current")
       }
-      this.$(`[data-ply="${i}"]`).addClass("current")
     })
   }
 
-  render(moves) {
-    this.$moveList.empty()
+  moveListHtml(moves: Array<San>): HTML {
     let moveNum = 1
     let plyNum = 1
     let html = ''
-    for (let move of moves) {
+    moves.forEach(move => {
       if (plyNum % 2 === 1) {
         html += `<div class="move-num">${moveNum}. </div>`
         moveNum++
       }
       html += `<div class="move" data-ply="${plyNum}">${move} </div>`
       plyNum++
-    }
-    this.$moveList.html(html)
+    })
+    return html
+  }
+
+  renderMoves(moves: Array<San>) {
+    this.$moveList.empty()
+    this.$moveList.html(this.moveListHtml(moves))
   }
 
   _gotoMove(e) {

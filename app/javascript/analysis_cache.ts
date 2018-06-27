@@ -4,13 +4,14 @@ import * as $ from 'jquery'
 import * as _ from 'underscore'
 import Chess from 'chess.js'
 
+import { ChessMove, UciMove, FEN } from './types'
 import { chess } from './chess_mechanism'
 
 interface Variation {
   depth: number
   multipv: number
   score: number
-  sequence: Array<string>
+  sequence: Array<UciMove>
   n: number //
 }
 
@@ -26,12 +27,6 @@ interface RemoteOptions {
   depth?: number
 }
 
-interface ChessMove {
-  from: string
-  to: string
-  promotion?: string
-}
-
 class AnalysisCache {
   private calculator: Chess
   private analysisMap: { [fen: string] : Analysis }
@@ -41,15 +36,15 @@ class AnalysisCache {
     this.analysisMap = {}
   }
 
-  get(fen: string): Analysis {
+  get(fen: FEN): Analysis {
     return this.analysisMap[fen]
   }
 
-  set(fen: string, analysis: Analysis) {
+  set(fen: FEN, analysis: Analysis) {
     this.analysisMap[fen] = analysis
   }
 
-  remoteGet(fen, options: RemoteOptions = {}): Promise<Analysis> {
+  remoteGet(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
     options.fen = fen
     chess.trigger("analysis:pending")
     return new Promise((resolve, reject) => {
@@ -69,7 +64,7 @@ class AnalysisCache {
     })
   }
 
-  getAnalysis(fen): Promise<Analysis> {
+  getAnalysis(fen: FEN): Promise<Analysis> {
     return new Promise((resolve, reject) => {
       let analysis = this.get(fen)
       if (analysis) {
@@ -91,7 +86,7 @@ class AnalysisCache {
     return analysis
   }
 
-  uciToMove(uciMove): ChessMove {
+  uciToMove(uciMove: UciMove): ChessMove {
     const move: ChessMove = {
       from: uciMove.slice(0,2),
       to: uciMove.slice(2,4)
@@ -102,7 +97,7 @@ class AnalysisCache {
     return move
   }
 
-  formatAnalysisResponse(data, fen): Analysis {
+  formatAnalysisResponse(data, fen: FEN): Analysis {
     data.fen = fen
     for (let i in data.variations) {
       let variation = data.variations[i]
@@ -114,7 +109,7 @@ class AnalysisCache {
 
   // TODO lazy calculate this using a generator
   //
-  calcMovesAndPositions(fen, sequence) {
+  calcMovesAndPositions(fen: FEN, sequence: Array<UciMove>) {
     this.calculator.load(fen)
     let moves = []
     let positions = [fen]
