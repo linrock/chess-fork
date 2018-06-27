@@ -51,5 +51,4 @@ class Opening
       :full_name => self.name
     }
   end
-
 end

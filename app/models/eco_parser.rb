@@ -4,7 +4,6 @@ class EcoParser
 
   ROW_SCANNER = /\A(?<eco>[A-E]\d{2}[a-z]?)\s+"(?<name>.*)"\s+(?<pgn>.*)\z/
 
-
   attr_accessor :openings
 
   def initialize(eco_file)
@@ -21,5 +20,4 @@ class EcoParser
     end
     @openings
   end
-
 end

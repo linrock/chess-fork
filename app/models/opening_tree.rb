@@ -2,7 +2,6 @@
 #
 class OpeningTree
 
-
   # children -> maps move names to more nodes
   #
   class Node
@@ -28,9 +27,7 @@ class OpeningTree
         %(<Node @n_children=#{@children.size}>)
       end
     end
-
   end
-
 
   attr_accessor :root, :size
 
@@ -84,5 +81,4 @@ class OpeningTree
   def inspect
     %(<OpeningTree @size=#{@size}>)
   end
-
 end
