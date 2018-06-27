@@ -3,7 +3,6 @@
 import AnalysisCache from '../models/analysis_cache'
 import AnalysisSequencer from '../models/analysis_sequencer'
 import OpeningState from '../models/opening_state'
-import HotKeys from '../models/hot_keys'
 
 import MainBoard from '../views/main_board'
 import PgnImporter from '../views/pgn_importer'
@@ -18,6 +17,7 @@ import VirtualDomBoard from '../views/virtual_dom_board'
 import SubHeader from '../views/sub_header'
 
 import { chess } from '../chess_mechanism'
+import HotKeys from '../hotkeys'
 
 document.addEventListener('DOMContentLoaded', () => {
   window.analysisCache = new AnalysisCache
