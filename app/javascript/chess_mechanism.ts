@@ -98,12 +98,13 @@ export default class ChessMechanism extends Backbone.Model {
     return this.getPositions().size
   }
 
-  analyzePosition(fen) {
+  analyzePosition(fen, k) {
+    k = k || 0 // multipv index
     let analysis = analysisCache.get(fen)
     if (!analysis) {
       return;
     }
-    this.set({ j: 0, analysis, mode: "analysis" })
+    this.set({ j: 0, analysis, mode: "analysis", k })
   }
 
   getMovePrefix(i) {
@@ -173,7 +174,7 @@ export default class ChessMechanism extends Backbone.Model {
   setEnginePositionIndex(j) {
     let fen = this.getCurrentPosition()
     if (this.get("mode") === "normal" && j >= 0) {
-      this.analyzePosition(fen)
+      this.analyzePosition(fen, 0)
       return
     }
     let analysis = analysisCache.get(fen)

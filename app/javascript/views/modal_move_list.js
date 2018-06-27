@@ -38,6 +38,11 @@ export default class ModalMoveList extends Backbone.View {
           break
       }
     })
+    this.listenTo(chess, "change:k", (model, k) => {
+      if (model.get("mode") === `analysis`) {
+        this.render()
+      }
+    })
     this.listenTo(chess, "change:j", (model, j) => {
       if (j === -1) {
         return
@@ -60,7 +65,7 @@ export default class ModalMoveList extends Backbone.View {
                <div class="move">...</div>`
     }
     moveNum += 1
-    for (let move of analysis.variations[0].moves) {
+    for (let move of analysis.variations[chess.get("k")].moves) {
       if (plyNum % 2 === 0) {
         html += `<div class="move-num">${moveNum}.</div>`
         moveNum += 1

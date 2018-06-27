@@ -22,33 +22,27 @@
 </nav>
 
 <div class="analysis-board">
-
   <div class="main-board">
     <%= render :partial => "analysis/chessboard",
                :locals  => { :square_prefix => "sq" } %>
   </div>
 
   <div class="moves-and-importer">
-
     <div class="game-move-list">
       <div class="move-list"></div>
     </div>
 
     <div class="modal-move-list invisible">
-
       <div class="modal-bg"></div>
 
       <div class="modal">
-
         <header class="modal-header">
           <div class="engine-name"></div>
           <div class="close-modal">x</div>
         </header>
 
         <div class="move-list"></div>
-
       </div>
-
     </div>
 
     <div class="pgn-importer">
@@ -58,7 +52,6 @@
       <button class="load-pgn invisible">Load PGN</button>
       <div class="invalid-pgn invisible">Not a valid PGN</div>
     </div>
-
   </div>
 
   <div class="actions">
@@ -72,13 +65,11 @@
   </div>
 
   <div class="bottom-area">
-
     <div class="intro-message invisible">
       Move a piece on the board <em>or</em> import a game to get started
     </div>
 
     <div class="position-info invisible">
-
       <div class="position-actions-menu invisible">
 
         <a class="action multi-pv" href="javascript:">
@@ -95,33 +86,32 @@
           <div class="icon"><%= fa_icon "hashtag" %></div>
           <div class="name">Show FEN</div>
         </a>
-
       </div>
 
       <button class="show-position-actions"><%= fa_icon "ellipsis-h" %></button>
 
       <div class="position-description"></div>
-
     </div>
 
     <div class="suggested-moves invisible">
-
       <div class="error"></div>
 
       <div class="titles">
-        Engine Responses
+        <div class="response">Response</div>
+        <div class="eval">Score</div>
+        <div class="depth">Depth</div>
       </div>
 
       <div class="moves">
         <div class="move engine-move"></div>
         <div class="evaluation"></div>
-        <div class="source"></div>
+        <div class="depth"></div>
       </div>
 
       <div class="engine-actions">
-        <a href="javascript:">+ more</a>
+        <a href="javascript:" class="more-moves">+ more moves</a>
+        <a href="javascript:" class="more-depth">+ depth</a>
       </div>
-    
     </div>
 
     <div class="mini-hover-board">
@@ -134,7 +124,5 @@
     <div class="evaluation-graph invisible">
       <div class="area-graph"></div>
     </div>
-
   </div>
-
 </div>

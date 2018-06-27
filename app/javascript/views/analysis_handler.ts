@@ -14,7 +14,13 @@ interface PositionEvaluation {
   evaluation: string
 }
 
+interface EngineOptions {
+  multipv?: number
+  depth?: number
+}
+
 export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
+  private engineOptions: EngineOptions = {}
   private $moves: JQuery
   private $error: JQuery
 
@@ -22,24 +28,26 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
     return ".suggested-moves"
   }
 
-  get moveTemplate() {
-    return _.template(`
+  moveTemplate(options) {
+    const { fen, move, depth, evaluation, color, k } = options
+    return `
       <div class="move-row">
-        <div class="move engine-move" data-fen="<%= fen %>">
-          <%= move %>
+        <div class="move engine-move" data-fen="${fen}" data-k="${k}">
+          ${move}
         </div>
-        <div class="evaluation <%= color %>"><%= evaluation %></div>
+        <div class="evaluation ${color}">${evaluation}</div>
         <div class="source">
-          depth <%= depth %>
+          ${depth}
         </div>
       </div>
-    `)
+    `
   }
 
   events(): Backbone.EventsHash {
     return {
       "click .move" : "_enterAnalysisMode",
-      "click .engine-actions a": "_multiPv"
+      "click .more-moves": "_multiPv",
+      "click .more-depth": "_higherDepth"
     }
   }
 
@@ -50,14 +58,20 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
   }
 
   _enterAnalysisMode(event) {
-    const fen = $(event.currentTarget).data("fen")
-    chess.analyzePosition(fen)
+    const { fen, k } = event.currentTarget.dataset
+    chess.analyzePosition(fen, k)
   }
 
   _multiPv() {
-    analysisCache.localGet((<any>window).chessboard.fen, { multipv: 3 }).then((analysis) => {
-      analysisCache.notifyAnalysis(analysis)
-    })
+    this.engineOptions.multipv = 3
+    analysisCache.localGet((<any>window).chessboard.fen, this.engineOptions)
+      .then((analysis) => analysisCache.notifyAnalysis(analysis))
+  }
+
+  _higherDepth() {
+    this.engineOptions.depth = 16
+    analysisCache.localGet((<any>window).chessboard.fen, this.engineOptions)
+      .then((analysis) => analysisCache.notifyAnalysis(analysis))
   }
 
   listenForEvents() {
@@ -127,6 +141,7 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
       return variation.multipv
     })
     let html = ''
+    let k = 0
     for (let variation of variations) {
       let polarity = (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
       const { color, evaluation } = this.getFormattedEvaluation(variation.score, polarity)
@@ -137,7 +152,9 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
         depth: variation.depth,
         evaluation,
         color,
+        k,
       })
+      k += 1
     }
     this.show()
     this.$moves.html(html)

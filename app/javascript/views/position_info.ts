@@ -1,16 +1,18 @@
-import Backbone from 'backbone'
+import * as Backbone from 'backbone'
 
 import PositionMenu from './position_menu'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
-export default class PositionInfo extends Backbone.View {
+export default class PositionInfo extends Backbone.View<Backbone.Model> {
+  private $positionDescription: JQuery
+  private menu: PositionMenu
 
   get el() {
     return ".position-info"
   }
 
-  get events() {
+  events(): Backbone.EventsHash {
     return {
       "click .show-position-actions" : "_toggleMenu"
     }
@@ -36,19 +38,32 @@ export default class PositionInfo extends Backbone.View {
       if (mode === "normal") {
         this.renderMoveNum(i - 1)
       } else if (mode === "analysis") {
-        let firstVariationMove = chess.get("analysis").variations[0].moves[0]
-        let moveStr = `${chess.getMovePrefix(i)} ${firstVariationMove}`
-        this.render(`Variation after ${moveStr}`)
+        this.renderText(this.getVariationMoveStr())
+      }
+    })
+    this.listenTo(chess, "change:k", (model, k) => {
+      if (chess.get("mode") === `analysis`) {
+        this.renderText(this.getVariationMoveStr())
       }
     })
   }
 
-  renderMoveNum(i) {
-    const moveStr = `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
-    this.render(moveStr)
+  getVariationMoveStr(): string {
+    const i = world.get("i")
+    const k = chess.get("k") || 0
+    return `Variation after ${chess.getMovePrefix(i)} ${this.firstVariationMove(k)}`
   }
 
-  render(text) {
+  firstVariationMove(k): string {
+    return chess.get("analysis").variations[k].moves[0]
+  }
+
+  renderMoveNum(i) {
+    const moveStr = `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
+    this.renderText(moveStr)
+  }
+
+  renderText(text) {
     this.$el.removeClass("invisible")
     this.$positionDescription.removeClass("fen").text(text)
   }

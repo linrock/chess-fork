@@ -44,7 +44,9 @@ class AnalysisCache {
             sequence: variation.pv.split(/\s+/)
           }))
         }
-        resolve(this.formatAnalysisResponse(analysisData))
+        const formattedAnalysis = this.formatAnalysisResponse(analysisData)
+        this.set(fen, formattedAnalysis)
+        resolve(formattedAnalysis)
       })
     })
   }
