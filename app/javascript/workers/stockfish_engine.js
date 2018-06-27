@@ -23,14 +23,19 @@ class StockfishEngine {
     this.stockfish.addEventListener('message', e => console.log(e.data))
   }
 
+  sendToStockfish(message) {
+    console.warn(message)
+    this.stockfish.postMessage(message)
+  }
+
   analyze(fen, options = {}, callback = () => {}) {
     options.depth = +options.depth || SEARCH_DEPTH
     if (options.multipv && options.multipv > 1) {
-      this.stockfish.postMessage('setoption name MultiPV value ' + options.multipv)
+      this.sendToStockfish(`setoption name MultiPV value ${options.multipv}`)
     }
-    this.stockfish.postMessage('position fen ' + fen)
+    this.sendToStockfish(`position fen ${fen}`)
     this.emitEvaluationWhenDone(fen, options, callback)
-    this.stockfish.postMessage('go depth ' + options.depth)
+    this.sendToStockfish(`go depth ${options.depth}`)
   }
 
   emitEvaluationWhenDone(fen, options, callback) {
@@ -51,6 +56,7 @@ class StockfishEngine {
     let state
     let processOutput = (e) => {
       if (e.data.indexOf('bestmove ') === 0) {
+        done(state)
         return
       }
 
@@ -96,10 +102,6 @@ class StockfishEngine {
         mate: mate,
         pv: matches[6],
         best: matches[6].split(' ')[0]
-      }
-
-      if (multiPv === targetMultiPv && state.eval.depth === targetDepth) {
-        done(state)
       }
     }
 

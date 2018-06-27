@@ -28,56 +28,36 @@ class AnalysisCache {
     this.analysisMap[fen] = analysis
   }
 
-  remoteGet(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
-    chess.trigger("analysis:pending")
-    return new Promise((resolve, reject) => {
-      $.ajax({
-        url: "/analysis",
-        type: "POST",
-        data: Object.assign(options, { fen }),
-        dataType: "json",
-        context: this,
-        success: (data, status, xhr) => {
-          resolve(this.formatAnalysisResponse(data, fen))
-        },
-        error: (xhr, status, error) => {
-          reject(fen)
-        }
-      })
-    })
-  }
-
   // analysis from local stockfish in browser
   localGet(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
     return new Promise((resolve, reject) => {
       stockfish.analyze(fen, options, (data) => {
-        // console.warn('analysis complete')
-        // console.dir(data)
         const analysisData: Analysis = {
+          fen: data.fen,
           bestmove: data.eval.best,
           engine: 'Stockfish 2018',
-          variations: data.eval.pvs.map((variation) => {
-            return {
-              depth: data.eval.depth,
-              multipv: data.eval.pvs.length,
-              score: variation.mate || (variation.cp / 100),
-              sequence: variation.pv.split(/\s+/)
-            }
-          })
+          variations: data.eval.pvs.map(variation => ({
+            depth: data.eval.depth,
+            multipv: data.eval.pvs.length,
+            score: variation.mate || (variation.cp / 100),
+            sequence: variation.pv.split(/\s+/)
+          }))
         }
-        // console.dir(analysisData)
-        resolve(this.formatAnalysisResponse(analysisData, fen))
+        resolve(this.formatAnalysisResponse(analysisData))
       })
     })
   }
 
-  getAnalysis(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
+  getAnalysis(fen: FEN, options: RemoteOptions = {}, cacheOnly = false): Promise<Analysis> {
     return new Promise((resolve, reject) => {
-      let analysis = this.get(fen)
+      const analysis = this.get(fen)
       if (analysis) {
         resolve(analysis)
       } else {
-        // this.remoteGet(fen, options).
+        if (cacheOnly) {
+          resolve(null)
+          return
+        }
         this.localGet(fen, options).
           then((analysis) => {
             this.set(fen, analysis)
@@ -105,11 +85,10 @@ class AnalysisCache {
     return move
   }
 
-  formatAnalysisResponse(data, fen: FEN): Analysis {
-    data.fen = fen
+  formatAnalysisResponse(data): Analysis {
     for (let i in data.variations) {
       let variation = data.variations[i]
-      let formatted = this.calcMovesAndPositions(fen, variation.sequence)
+      let formatted = this.calcMovesAndPositions(data.fen, variation.sequence)
       data.variations[i] = Object.assign({}, variation, formatted)
     }
     return data
@@ -127,9 +106,9 @@ class AnalysisCache {
       positions.push(this.calculator.fen())
     }
     return {
-      moves: moves,
-      positions: positions,
-      n: moves.length
+      n: moves.length,
+      positions,
+      moves,
     }
   }
 }

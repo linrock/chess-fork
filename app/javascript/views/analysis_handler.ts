@@ -71,7 +71,7 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
       if (analysis) {
         this.renderAnalysis(analysis)
       } else {
-        analysisCache.getAnalysis(fen)
+        analysisCache.getAnalysis(fen, {}, true) // only fetch from cache
       }
     })
     this.listenTo(chess, "analysis:pending", () => this.fade())

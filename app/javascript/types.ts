@@ -24,6 +24,7 @@ export interface Variation {
 }
 
 export interface Analysis {
+  fen: FEN
   bestmove: UciMove
   engine: string
   variations: Array<Variation>
