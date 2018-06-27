@@ -1,18 +1,23 @@
 // For handling the manual import of a chess game
 
-import Backbone from 'backbone'
+import * as Backbone from 'backbone'
 import Chess from 'chess.js'
 
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
-export default class PgnImporter extends Backbone.View {
+export default class PgnImporter extends Backbone.View<Backbone.Model> {
+  private $textarea: JQuery
+  private $button: JQuery
+  private $error: JQuery
+  private validator: Chess
+  private pgnIsValid: boolean
 
   get el() {
     return ".pgn-importer"
   }
 
-  get events() {
+  events(): Backbone.EventsHash {
     return {
       "keyup textarea"   : "_validatePgn",
       "click .load-pgn"  : "_loadPgn"
@@ -34,11 +39,11 @@ export default class PgnImporter extends Backbone.View {
     })
   }
 
-  pgn() {
-    return this.$textarea.val()
+  pgn(): string {
+    return <string>this.$textarea.val()
   }
 
-  correctPgn(pgn) {
+  correctPgn(pgn): string {
     return pgn.trim().replace("0-0-0", "O-O-O").replace("0-0", "O-O").
       replace("‒", "-").
       replace("–", "-").

@@ -1,9 +1,6 @@
 // The chessboard, which reflects the current state of the
 // chess mechanism
 
-import _ from 'underscore'
-import $ from 'jquery'
-
 import PieceAnimator from './main_board/piece_animator'
 import SquareHighlighter from './main_board/square_highlighter'
 import PointAndClick from './main_board/point_and_click'
@@ -35,9 +32,7 @@ export default class MainBoard extends Chessboard {
   }
 
   listenForEvents() {
-    this.listenTo(chess, "change:fen", (model, fen) => {
-      this.render(fen)
-    })
+    this.listenTo(chess, "change:fen", (model, fen) => this.render(fen))
     this.listenTo(chess, "polarity:flip", this.flip)
   }
 

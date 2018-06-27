@@ -1,8 +1,5 @@
 /* eslint no-console:0 */
 
-import AnalysisSequencer from '../models/analysis_sequencer'
-import OpeningState from '../models/opening_state'
-
 import MainBoard from '../views/main_board'
 import PgnImporter from '../views/pgn_importer'
 import MoveList from '../views/move_list'
@@ -16,11 +13,10 @@ import VirtualDomBoard from '../views/virtual_dom_board'
 import SubHeader from '../views/sub_header'
 
 import { chess } from '../chess_mechanism'
+import AnalysisSequencer from '../analysis_sequencer'
 import HotKeys from '../hotkeys'
 
 document.addEventListener('DOMContentLoaded', () => {
-  window.openingState = new OpeningState
-
   new AnalysisSequencer
   chess.start()
 

@@ -1,9 +1,10 @@
 // Handles fetching analysis for a sequence of positions
 
-import Backbone from 'backbone'
-import { chess } from '../chess_mechanism'
-import { world } from '../main'
-import analysisCache from '../analysis_cache'
+import * as Backbone from 'backbone'
+
+import { chess } from './chess_mechanism'
+import { world } from './main'
+import analysisCache from './analysis_cache'
 
 export default class AnalysisSequencer extends Backbone.Model {
 
@@ -13,17 +14,17 @@ export default class AnalysisSequencer extends Backbone.Model {
 
   listenForEvents() {
     this.listenTo(chess, "game:loaded", () => {
-      let positions = world.get("positions").toArray()
+      const positions = world.get("positions").toArray()
       this.analyzePositionsSequentially(positions)
     })
   }
 
-  analyzePositionsSequentially(positions) {
-    let fen = positions.shift()
+  analyzePositionsSequentially(positions: Array<string>) {
+    const fen = positions.shift()
     if (!fen) {
       return
     }
-    let analysis = analysisCache.get(fen)
+    const analysis = analysisCache.get(fen)
     if (analysis) {
       this.analyzePositionsSequentially(positions)
     } else {

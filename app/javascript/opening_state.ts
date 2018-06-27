@@ -5,7 +5,7 @@ import * as $ from 'jquery'
 import * as Backbone from 'backbone'
 import * as Immutable from 'immutable'
 
-import { world } from '../main'
+import { world } from './main'
 
 interface OpeningResponse {
   eco: string,
@@ -29,7 +29,7 @@ class OpeningCache {
 }
 
 
-export default class OpeningState extends Backbone.Model {
+class OpeningState extends Backbone.Model {
   private cache: OpeningCache
 
   initialize() {
@@ -95,3 +95,7 @@ export default class OpeningState extends Backbone.Model {
     })
   }
 }
+
+const openingState = new OpeningState
+
+export default openingState

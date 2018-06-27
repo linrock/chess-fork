@@ -5,6 +5,7 @@ import $ from 'jquery'
 import Backbone from 'backbone'
 
 import Tooltip from './tooltip'
+import openingState from '../opening_state'
 import { world } from '../main'
 
 export default class SubHeader extends Backbone.View {
