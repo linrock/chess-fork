@@ -1,16 +1,22 @@
 // For querying for openings that correspond to the move sequence
 // in the current move list
 
-import $ from 'jquery'
-import Backbone from 'backbone'
-import Immutable from 'immutable'
+import * as $ from 'jquery'
+import * as Backbone from 'backbone'
+import * as Immutable from 'immutable'
 
 import { world } from '../main'
 
+interface OpeningResponse {
+  eco: string,
+  full_name: string
+}
+
 class OpeningCache {
+  private openings: Immutable.Map<Array<string>, Immutable.Map<string, any>>
 
   constructor() {
-    this.openings = new Immutable.Map()
+    this.openings = Immutable.Map()
   }
 
   getOpening(moves) {
@@ -18,12 +24,13 @@ class OpeningCache {
   }
 
   setOpening(moves, opening) {
-    this.openings = this.openings.set(moves, new Immutable.Map(opening))
+    this.openings = this.openings.set(moves, Immutable.Map(opening))
   }
 }
 
 
 export default class OpeningState extends Backbone.Model {
+  private cache: OpeningCache
 
   initialize() {
     this.cache = new OpeningCache()
@@ -35,16 +42,16 @@ export default class OpeningState extends Backbone.Model {
       if (this.get("length") && moves.size > this.get("length")) {
         return
       } else {
-        this.set({ length: false })
+        this.set({ length: 0 })
       }
       this.getOpeningForMoves(moves).then((opening) => {
         let openingText = `${opening.eco} – ${opening.full_name}`
         this.set({ opening: openingText })
-      }).catch((error) => {})
+      })
     })
   }
 
-  remoteGetOpeningForMoves(moves) {
+  remoteGetOpeningForMoves(moves): Promise<OpeningResponse> {
     return new Promise((resolve, reject) => {
       $.ajax({
         url: "/openings",
@@ -66,7 +73,7 @@ export default class OpeningState extends Backbone.Model {
     })
   }
 
-  processRemoteResponse(moves, response) {
+  processRemoteResponse(moves, response): OpeningResponse {
     let opening = response.opening
     if (response.search_done) {
       this.set({ length: moves.size })
@@ -75,11 +82,11 @@ export default class OpeningState extends Backbone.Model {
     return opening
   }
 
-  getOpeningForMoves(moves) {
+  getOpeningForMoves(moves): Promise<OpeningResponse> {
     return new Promise((resolve, reject) => {
       let opening = this.cache.getOpening(moves)
       if (opening) {
-        resolve(opening.toObject())
+        resolve(<OpeningResponse>opening.toObject())
       } else {
         return this.remoteGetOpeningForMoves(moves).then((response) => {
           resolve(this.processRemoteResponse(moves, response))
