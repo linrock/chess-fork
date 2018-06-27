@@ -30,7 +30,8 @@ export default class AnalysisHandler extends Backbone.View {
 
   get events() {
     return {
-      "click .move" : "_enterAnalysisMode"
+      "click .move" : "_enterAnalysisMode",
+      "click .engine-actions a": "_multiPv"
     }
   }
 
@@ -43,6 +44,12 @@ export default class AnalysisHandler extends Backbone.View {
   _enterAnalysisMode(event) {
     let fen = $(event.currentTarget).data("fen")
     chess.analyzePosition(fen)
+  }
+
+  _multiPv() {
+    analysisCache.remoteGet(window.chessboard.fen, { multipv: 3 }).then((analysis) => {
+      analysisCache.notifyAnalysis(analysis)
+    })
   }
 
   listenForEvents() {
