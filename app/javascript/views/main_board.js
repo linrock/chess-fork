@@ -3,7 +3,6 @@
 
 import _ from 'underscore'
 import $ from 'jquery'
-import Chess from 'chess.js'
 
 import PieceAnimator from './main_board/piece_animator'
 import SquareHighlighter from './main_board/square_highlighter'
@@ -49,6 +48,6 @@ export default class MainBoard extends Chessboard {
   }
 
   flip() {
-    this.$el.find(".square").each((i,sq) => { this.$el.prepend(sq) })
+    this.$(".square").each((i,sq) => this.$el.prepend(sq))
   }
 }

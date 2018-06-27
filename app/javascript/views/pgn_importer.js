@@ -1,6 +1,5 @@
 // For handling the manual import of a chess game
 
-import $ from 'jquery'
 import Backbone from 'backbone'
 import Chess from 'chess.js'
 
@@ -40,7 +39,7 @@ export default class PgnImporter extends Backbone.View {
   }
 
   correctPgn(pgn) {
-    return $.trim(pgn).replace("0-0-0", "O-O-O").replace("0-0", "O-O").
+    return pgn.trim().replace("0-0-0", "O-O-O").replace("0-0", "O-O").
       replace("‒", "-").
       replace("–", "-").
       replace("½-½", "1/2-1/2").

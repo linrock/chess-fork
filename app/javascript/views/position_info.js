@@ -44,7 +44,7 @@ export default class PositionInfo extends Backbone.View {
   }
 
   renderMove(i) {
-    let moveStr = `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
+    const moveStr = `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
     this.render(moveStr)
   }
 

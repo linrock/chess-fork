@@ -81,6 +81,6 @@ export default class ModalMoveList extends Backbone.View {
 
   _gotoMove(e) {
     let j = $(e.currentTarget).data("j")
-    chess.set({ j: j })
+    chess.set({ j })
   }
 }

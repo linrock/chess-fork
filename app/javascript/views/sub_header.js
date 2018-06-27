@@ -1,4 +1,5 @@
 // The subheader with action buttons under the main title bar
+// and the current opening of the loaded game
 
 import $ from 'jquery'
 import Backbone from 'backbone'

@@ -1,15 +1,6 @@
-import _ from 'underscore'
 import Backbone from 'backbone'
 
 export default class Tooltip extends Backbone.View {
-
-  get template() {
-    return _.template(`
-      <div class="tooltip invisible">
-        <div class="content"><%= text %></div>
-      </div>
-    `)
-  }
 
   get events() {
     return {
@@ -18,14 +9,22 @@ export default class Tooltip extends Backbone.View {
     }
   }
 
+  template(text) {
+    return `
+      <div class="tooltip invisible">
+        <div class="content">${text}</div>
+      </div>
+    `
+  }
+
   initialize() {
-    let text = this.$el.data("tooltip")
+    const text = this.$el.data("tooltip")
     this.render(text)
   }
 
   render(text) {
     this.$el.css({ position: "relative" })
-    this.$el.append(this.template({ text: text }))
+    this.$el.append(this.template(text))
     this.$tooltip = this.$(".tooltip")
     this.$tooltip.css({
       "margin-left" : -Math.round(this.$tooltip.width() / 2)

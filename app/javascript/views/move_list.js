@@ -54,7 +54,7 @@ export default class MoveList extends Backbone.View {
   }
 
   _gotoMove(e) {
-    let i = $(e.currentTarget).data("ply")
+    const i = $(e.currentTarget).data("ply")
     chess.setPositionIndex(i)
   }
 }

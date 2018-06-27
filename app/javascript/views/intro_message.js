@@ -12,9 +12,7 @@ export default class IntroMessage extends Backbone.View {
   }
 
   initialize() {
-    this.listenTo(world, "change:i", (model, i) => {
-      this.$el.fadeOut(50)
-    })
-    $(() => { this.$el.removeClass("invisible") })
+    this.listenTo(world, "change:i", (model, i) => this.$el.fadeOut(50))
+    $(() => this.$el.removeClass("invisible"))
   }
 }
