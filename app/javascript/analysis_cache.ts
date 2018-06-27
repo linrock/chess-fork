@@ -1,28 +1,12 @@
 // Handles fetching analysis from remote server + rendering it
 
 import * as $ from 'jquery'
-import * as _ from 'underscore'
 import Chess from 'chess.js'
 
-import { ChessMove, UciMove, FEN } from './types'
+import { ChessMove, UciMove, FEN, Variation, Analysis } from './types'
 import { chess } from './chess_mechanism'
 
-interface Variation {
-  depth: number
-  multipv: number
-  score: number
-  sequence: Array<UciMove>
-  n: number //
-}
-
-interface Analysis {
-  bestmove: string
-  engine: string
-  variations: Array<Variation>
-}
-
 interface RemoteOptions {
-  fen?: string
   multipv?: number
   depth?: number
 }
@@ -45,13 +29,12 @@ class AnalysisCache {
   }
 
   remoteGet(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
-    options.fen = fen
     chess.trigger("analysis:pending")
     return new Promise((resolve, reject) => {
       $.ajax({
         url: "/analysis",
         type: "POST",
-        data: options,
+        data: Object.assign(options, { fen }),
         dataType: "json",
         context: this,
         success: (data, status, xhr) => {
@@ -64,13 +47,13 @@ class AnalysisCache {
     })
   }
 
-  getAnalysis(fen: FEN): Promise<Analysis> {
+  getAnalysis(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
     return new Promise((resolve, reject) => {
       let analysis = this.get(fen)
       if (analysis) {
         resolve(analysis)
       } else {
-        this.remoteGet(fen).
+        this.remoteGet(fen, options).
           then((analysis) => {
             this.set(fen, analysis)
             return analysis
@@ -102,7 +85,7 @@ class AnalysisCache {
     for (let i in data.variations) {
       let variation = data.variations[i]
       let formatted = this.calcMovesAndPositions(fen, variation.sequence)
-      data.variations[i] = _.extend(variation, formatted)
+      data.variations[i] = Object.assign({}, variation, formatted)
     }
     return data
   }

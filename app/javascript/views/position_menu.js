@@ -38,15 +38,11 @@ export default class PositionMenu extends Backbone.View {
   }
 
   _multiPv() {
-    analysisCache.remoteGet(window.chessboard.fen, { multipv: 3 }).then((analysis) => {
-      analysisCache.notifyAnalysis(analysis)
-    })
+    analysisCache.getAnalysis(window.chessboard.fen, { multipv: 3 })
   }
 
   _deeperAnalysis() {
-    analysisCache.remoteGet(window.chessboard.fen, { depth: 16 }).then((analysis) => {
-      analysisCache.notifyAnalysis(analysis)
-    })
+    analysisCache.getAnalysis(window.chessboard.fen, { multipv: 16 })
   }
 
   _showFen() {

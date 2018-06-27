@@ -4,10 +4,13 @@
 import * as _ from 'underscore'
 import Chess from 'chess.js'
 
+import { FEN } from '../../types'
 import { chess } from '../../chess_mechanism'
 import analysisCache from '../../analysis_cache'
 
-const getGameOverScore = (fen): number => {
+type Score = number // -10 to 10
+
+const getGameOverScore = (fen: FEN): Score => {
   const c = new Chess(fen)
   if (c.in_stalemate()) {
     return 0
@@ -21,7 +24,7 @@ const getGameOverScore = (fen): number => {
   return 0
 }
 
-const getNormalizedScore = (fen): number => {
+const getNormalizedScore = (fen: FEN): Score => {
   let polarity = /\sw\s/.test(fen) ? 1 : -1
   polarity *= chess.get("polarity")
   const analysis = analysisCache.get(fen)
@@ -52,6 +55,6 @@ const getNormalizedScore = (fen): number => {
   return score
 }
 
-export const getNormalizedScores = (fenArray: Array<string>): Array<number> => {
+export const getNormalizedScores = (fenArray: Array<FEN>): Array<Score> => {
   return fenArray.map(fen => getNormalizedScore(fen))
 }

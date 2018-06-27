@@ -3,6 +3,7 @@
 import * as Backbone from 'backbone'
 import Chess from 'chess.js'
 
+import { PGN } from '../types'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
@@ -39,11 +40,11 @@ export default class PgnImporter extends Backbone.View<Backbone.Model> {
     })
   }
 
-  pgn(): string {
+  pgnInput(): string {
     return <string>this.$textarea.val()
   }
 
-  correctPgn(pgn): string {
+  correctPgn(pgn: string): PGN {
     return pgn.trim().replace("0-0-0", "O-O-O").replace("0-0", "O-O").
       replace("‒", "-").
       replace("–", "-").
@@ -52,7 +53,7 @@ export default class PgnImporter extends Backbone.View<Backbone.Model> {
   }
 
   _validatePgn() {
-    if (this.validator.load_pgn(this.correctPgn(this.pgn()))) {
+    if (this.validator.load_pgn(this.correctPgn(this.pgnInput()))) {
       this.pgnIsValid = true
       this.$button.removeClass("invisible")
       this.$error.addClass("invisible")
@@ -62,7 +63,7 @@ export default class PgnImporter extends Backbone.View<Backbone.Model> {
   }
 
   _loadPgn() {
-    if (chess.loadPgn(this.pgn())) {
+    if (chess.loadPgn(this.correctPgn(this.pgnInput()))) {
       this.$textarea.val("")
     } else {
       this.$error.removeClass("invisible")

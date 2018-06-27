@@ -1,7 +1,6 @@
 // The subheader with action buttons under the main title bar
 // and the current opening of the loaded game
 
-import $ from 'jquery'
 import Backbone from 'backbone'
 
 import Tooltip from './tooltip'
@@ -39,9 +38,7 @@ export default class SubHeader extends Backbone.View {
   }
 
   initSubviews() {
-    this.$("[data-tooltip]").each((i, e) => {
-      new Tooltip({ el: $(e) })
-    })
+    this.$("[data-tooltip]").each((i, el) => new Tooltip({ el }))
   }
 
   _resetBoard() {

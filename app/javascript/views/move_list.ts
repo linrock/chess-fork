@@ -4,7 +4,7 @@
 import * as $ from 'jquery'
 import * as Backbone from 'backbone'
 
-import { San, HTML } from '../types'
+import { SanMove, HTML } from '../types'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
@@ -38,7 +38,7 @@ export default class MoveList extends Backbone.View<Backbone.Model> {
     })
   }
 
-  moveListHtml(moves: Array<San>): HTML {
+  moveListHtml(moves: Array<SanMove>): HTML {
     let moveNum = 1
     let plyNum = 1
     let html = ''
@@ -53,7 +53,7 @@ export default class MoveList extends Backbone.View<Backbone.Model> {
     return html
   }
 
-  renderMoves(moves: Array<San>) {
+  renderMoves(moves: Array<SanMove>) {
     this.$moveList.empty()
     this.$moveList.html(this.moveListHtml(moves))
   }

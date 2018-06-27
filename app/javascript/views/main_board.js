@@ -32,7 +32,7 @@ export default class MainBoard extends Chessboard {
   }
 
   listenForEvents() {
-    this.listenTo(chess, "change:fen", (model, fen) => this.render(fen))
+    this.listenTo(chess, "change:fen", (model, fen) => this.renderFen(fen))
     this.listenTo(chess, "polarity:flip", this.flip)
   }
 

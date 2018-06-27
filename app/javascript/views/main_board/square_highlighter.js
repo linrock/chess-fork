@@ -42,7 +42,7 @@ export default class SquareHighlighter {
   }
 
   highlightMove(move, color) {
-    let colorCodes = this.colors[color]
+    const colorCodes = this.colors[color]
     this.board.$getSquare(move.from).css({ background: colorCodes[0] })
     this.board.$getSquare(move.to).css({ background: colorCodes[1] })
   }
@@ -52,9 +52,9 @@ export default class SquareHighlighter {
     if (i <= 0) {
       return
     }
-    let fen = chess.getPosition(i - 1)
-    let c = new Chess(fen)
-    let move = c.move(chess.getMoves(i - 1))
+    const fen = chess.getPosition(i - 1)
+    const c = new Chess(fen)
+    const move = c.move(chess.getMoves(i - 1))
     this.highlightMove(move, "yellow")
   }
 }

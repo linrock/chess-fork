@@ -1,12 +1,16 @@
 // Basic chessboard that just renders positions
 
-import $ from 'jquery'
-import Backbone from 'backbone'
+import * as $ from 'jquery'
+import * as Backbone from 'backbone'
 import Chess from 'chess.js'
+
+import { FEN } from '../types'
 
 // For handling the DOM elements of the pieces on the board
 //
 class Pieces {
+  private board: Chessboard
+  private $buffer: JQuery
 
   constructor(board) {
     this.board = board
@@ -30,22 +34,21 @@ class Pieces {
 }
 
 
-export default class Chessboard extends Backbone.View {
+export default class Chessboard extends Backbone.View<Backbone.Model> {
+  private pieces: Pieces
+  private fen: FEN
+  private sqPrefix: string
 
   initialize() {
     this.pieces = new Pieces(this)
-    this.render("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    this.renderFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     this.showPieces()
   }
 
-  render(fen) {
+  renderFen(fen) {
     if (fen.split(" ").length === 4) {
       fen += " 0 1"
     }
-    this.renderFen(fen)
-  }
-
-  renderFen(fen) {
     let columns = ['a','b','c','d','e','f','g','h']
     let position = new Chess(fen)
     this.pieces.reset()
