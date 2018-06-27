@@ -6,8 +6,24 @@ import Chess from 'chess.js'
 
 import { chess } from './chess_mechanism'
 
+interface Variation {
+  depth: number
+  multipv: number
+  score: number
+  sequence: Array<string>
+  n: number //
+}
+
+interface Analysis {
+  bestmove: string
+  engine: string
+  variations: Array<Variation>
+}
+
 interface RemoteOptions {
   fen?: string
+  multipv?: number
+  depth?: number
 }
 
 interface ChessMove {
@@ -18,22 +34,22 @@ interface ChessMove {
 
 class AnalysisCache {
   private calculator: Chess
-  private analysis: object
+  private analysisMap: { [fen: string] : Analysis }
 
   constructor() {
     this.calculator = new Chess()
-    this.analysis = {}
+    this.analysisMap = {}
   }
 
-  get(fen) {
-    return this.analysis[fen]
+  get(fen: string): Analysis {
+    return this.analysisMap[fen]
   }
 
-  set(fen, analysis) {
-    this.analysis[fen] = analysis
+  set(fen: string, analysis: Analysis) {
+    this.analysisMap[fen] = analysis
   }
 
-  remoteGet(fen, options: RemoteOptions = {}) {
+  remoteGet(fen, options: RemoteOptions = {}): Promise<Analysis> {
     options.fen = fen
     chess.trigger("analysis:pending")
     return new Promise((resolve, reject) => {
@@ -53,15 +69,15 @@ class AnalysisCache {
     })
   }
 
-  getAnalysis(fen) {
+  getAnalysis(fen): Promise<Analysis> {
     return new Promise((resolve, reject) => {
-      let analysis = analysisCache.get(fen)
+      let analysis = this.get(fen)
       if (analysis) {
         resolve(analysis)
       } else {
         this.remoteGet(fen).
           then((analysis) => {
-            analysisCache.set(fen, analysis)
+            this.set(fen, analysis)
             return analysis
           }).
           then(this.notifyAnalysis).
@@ -70,7 +86,7 @@ class AnalysisCache {
     })
   }
 
-  notifyAnalysis(analysis) {
+  notifyAnalysis(analysis): Analysis {
     chess.trigger("change:analysis", analysis)
     return analysis
   }
@@ -86,7 +102,7 @@ class AnalysisCache {
     return move
   }
 
-  formatAnalysisResponse(data, fen) {
+  formatAnalysisResponse(data, fen): Analysis {
     data.fen = fen
     for (let i in data.variations) {
       let variation = data.variations[i]

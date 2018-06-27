@@ -159,7 +159,7 @@ export default class ChessMechanism extends Backbone.Model {
     if ((<any>window).chessboard.animating()) {
       return
     }
-    world.set({ i: i })
+    world.set({ i })
   }
 
   prevEngineMove() {
