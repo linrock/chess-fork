@@ -4,9 +4,9 @@ import $ from 'jquery'
 import _ from 'underscore'
 import Chess from 'chess.js'
 
-import { chess } from '../chess_mechanism'
+import { chess } from './chess_mechanism'
 
-export default class AnalysisCache {
+class AnalysisCache {
 
   constructor() {
     this.calculator = new Chess()
@@ -102,3 +102,7 @@ export default class AnalysisCache {
     }
   }
 }
+
+const analysisCache = new AnalysisCache
+
+export default analysisCache

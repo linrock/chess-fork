@@ -2,6 +2,7 @@ import $ from 'jquery'
 import Backbone from 'backbone'
 
 import { world } from '../main'
+import analysisCache from '../analysis_cache'
 
 export default class PositionMenu extends Backbone.View {
 

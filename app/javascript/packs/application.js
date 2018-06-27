@@ -1,6 +1,5 @@
 /* eslint no-console:0 */
 
-import AnalysisCache from '../models/analysis_cache'
 import AnalysisSequencer from '../models/analysis_sequencer'
 import OpeningState from '../models/opening_state'
 
@@ -20,7 +19,6 @@ import { chess } from '../chess_mechanism'
 import HotKeys from '../hotkeys'
 
 document.addEventListener('DOMContentLoaded', () => {
-  window.analysisCache = new AnalysisCache
   window.openingState = new OpeningState
 
   new AnalysisSequencer

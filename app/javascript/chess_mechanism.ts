@@ -1,15 +1,18 @@
 // Handles the internal state of chess positions/history
 // Also functions as an event dispatcher
 
-import Backbone from 'backbone'
-import Immutable from 'immutable'
+import * as Backbone from 'backbone'
+import * as Immutable from 'immutable'
 import Chess from 'chess.js'
 
 import { world } from './main'
+import analysisCache from './analysis_cache'
 
 export default class ChessMechanism extends Backbone.Model {
+  public mechanism: Chess
 
-  initialize() {
+  constructor() {
+    super()
     this.mechanism = new Chess
     this.set({
       j: -1,
@@ -56,10 +59,10 @@ export default class ChessMechanism extends Backbone.Model {
     let moves = this.getMoves(0, i).push(moveAttempt.san)
     let newFen = c.fen()
     let ind = i < 1 ? 1 : i + 1
-    let positions = new Immutable.List(this.getPositions().slice(0, ind))
+    let positions = Immutable.List(this.getPositions().slice(0, ind))
     this.mechanism = c
     world.set({
-      moves: new Immutable.List(moves),
+      moves: Immutable.List(moves),
       positions: positions.push(newFen),
       i: (i < 0) ? 1 : i + 1
     })
@@ -73,8 +76,8 @@ export default class ChessMechanism extends Backbone.Model {
       positions.push(c.fen())
     }
     world.set({
-      moves: new Immutable.List(moves),
-      positions: new Immutable.List(positions)
+      moves: Immutable.List(moves),
+      positions: Immutable.List(positions)
     })
     this.trigger("game:loaded")
   }
@@ -113,7 +116,7 @@ export default class ChessMechanism extends Backbone.Model {
       if (end > i) {
         return world.get("moves").slice(i, end)
       } else {
-        return new Immutable.List()
+        return Immutable.List()
       }
     } else {
       return world.get("moves").get(i)
@@ -153,7 +156,7 @@ export default class ChessMechanism extends Backbone.Model {
     if (i < 0 || i >= this.nPositions()) {
       return
     }
-    if (window.chessboard.animating()) {
+    if ((<any>window).chessboard.animating()) {
       return
     }
     world.set({ i: i })
@@ -181,7 +184,7 @@ export default class ChessMechanism extends Backbone.Model {
       this.set({ mode: "normal" })
       return
     }
-    if (window.chessboard.animating()) {
+    if ((<any>window).chessboard.animating()) {
       return
     }
     this.set({ j: j })

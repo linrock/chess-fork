@@ -6,6 +6,7 @@ import Backbone from 'backbone'
 
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
+import analysisCache from '../analysis_cache'
 
 export default class AnalysisHandler extends Backbone.View {
 

@@ -3,6 +3,7 @@
 import Backbone from 'backbone'
 import { chess } from '../chess_mechanism'
 import { world } from '../main'
+import analysisCache from '../analysis_cache'
 
 export default class AnalysisSequencer extends Backbone.Model {
 

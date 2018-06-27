@@ -5,6 +5,7 @@ import _ from 'underscore'
 import Chess from 'chess.js'
 
 import { chess } from '../../chess_mechanism'
+import analysisCache from '../../analysis_cache'
 
 export default class PointsNormalizer {
 
