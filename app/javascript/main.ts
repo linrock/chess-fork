@@ -2,11 +2,18 @@
 // For undo'ing moves and state changes
 // state - i, fen, moves, position
 
-import Backbone from 'backbone'
-import Immutable from 'immutable'
+import * as Backbone from 'backbone'
+import * as Immutable from 'immutable'
 import Chess from 'chess.js'
 
+interface WorldStateSnapshot {
+  i: number,
+  moves: Immutable.List<string>,
+  positions: Immutable.List<string>,
+}
+
 export default class WorldState extends Backbone.Model {
+  private states: Immutable.Stack<Immutable.Map<string, any>>
 
   initialize() {
     this.states = Immutable.Stack()
@@ -20,13 +27,13 @@ export default class WorldState extends Backbone.Model {
   }
 
   recordState(state) {
-    this.states = this.states.push(new Immutable.Map(state.attributes))
+    this.states = this.states.push(Immutable.Map(<WorldStateSnapshot>state.attributes))
   }
 
   reset() {
     this.set({
-      moves: new Immutable.List(),
-      positions: new Immutable.List([ new Chess().fen() ]),
+      moves: Immutable.List(),
+      positions: Immutable.List([ new Chess().fen() ]),
       i: -1
     })
   }
