@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
   new AnalysisSequencer
   chess.start()
 
-  window.chessboard = new MainBoard
-
   new HotKeys
 
+  // interface views
+  window.chessboard = new MainBoard
   new PgnImporter
   new MoveList
   new ModalMoveList

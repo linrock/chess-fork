@@ -1,5 +1,3 @@
-import d from '../dispatcher'
-
 const wasmSupported = typeof WebAssembly === 'object' && WebAssembly.validate(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00))
 
 const SEARCH_DEPTH = 10
@@ -8,7 +6,6 @@ class StockfishEngine {
 
   constructor(options = {}) {
     this.initialized = false
-    this.multipv = options.multipv || 1
     this.initStockfish()
   }
 
@@ -17,9 +14,6 @@ class StockfishEngine {
       return
     }
     this.stockfish = new Worker(`/assets/stockfish${wasmSupported ? '.wasm' : ''}.js`)
-    if (this.multipv > 1) {
-      this.stockfish.postMessage('setoption name MultiPV value ' + this.multipv)
-    }
     this.stockfish.postMessage('uci')
     this.debugMessages()
     this.initialized = true
@@ -30,18 +24,21 @@ class StockfishEngine {
   }
 
   analyze(fen, options = {}, callback = () => {}) {
-    let targetDepth = +options.depth || SEARCH_DEPTH
+    options.depth = +options.depth || SEARCH_DEPTH
+    if (options.multipv && options.multipv > 1) {
+      this.stockfish.postMessage('setoption name MultiPV value ' + options.multipv)
+    }
     this.stockfish.postMessage('position fen ' + fen)
-    this.emitEvaluationWhenDone(fen, targetDepth, callback)
-    this.stockfish.postMessage('go depth ' + targetDepth)
+    this.emitEvaluationWhenDone(fen, options, callback)
+    this.stockfish.postMessage('go depth ' + options.depth)
   }
 
-  emitEvaluationWhenDone(fen, depth, callback) {
+  emitEvaluationWhenDone(fen, options, callback) {
     const start = new Date()
-    const targetDepth = depth
-    const targetMultiPv = this.multipv
+    const targetDepth = options.depth
+    const targetMultiPv = options.multipv || 1
 
-    const done = (state) => {
+    let done = (state) => {
       callback({
         fen,
         eval: state.eval
@@ -62,8 +59,8 @@ class StockfishEngine {
         return
       }
 
-      var depth = parseInt(matches[1])
-      if (depth < targetDepth) {
+      var currDepth = parseInt(matches[1])
+      if (currDepth < targetDepth) {
         return
       }
 
@@ -84,7 +81,7 @@ class StockfishEngine {
       if (multiPv === 1) {
         state = {
           eval: {
-            depth: depth,
+            depth: currDepth,
             nps: parseInt(matches[5]),
             best: matches[6].split(' ')[0],
             cp: cp,
@@ -92,7 +89,7 @@ class StockfishEngine {
             pvs: []
           }
         }
-      } else if (!state || depth < state.eval.depth) return // multipv progress
+      } else if (!state || currDepth < state.eval.depth) return // multipv progress
 
       state.eval.pvs[multiPv - 1] = {
         cp: cp,

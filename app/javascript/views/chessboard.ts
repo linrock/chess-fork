@@ -65,9 +65,7 @@ export default class Chessboard extends Backbone.View<Backbone.Model> {
   }
 
   showPieces() {
-    setTimeout(() => {
-      this.$(".piece").removeClass("invisible")
-    }, 100)
+    setTimeout(() => this.$(".piece").removeClass("invisible"), 100)
   }
 
   animating() {

@@ -55,7 +55,7 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
   }
 
   _multiPv() {
-    analysisCache.remoteGet((<any>window).chessboard.fen, { multipv: 3 }).then((analysis) => {
+    analysisCache.localGet((<any>window).chessboard.fen, { multipv: 3 }).then((analysis) => {
       analysisCache.notifyAnalysis(analysis)
     })
   }

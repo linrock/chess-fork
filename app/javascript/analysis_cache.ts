@@ -2,9 +2,9 @@
 
 import * as $ from 'jquery'
 import Chess from 'chess.js'
-
 import { ChessMove, UciMove, FEN, Variation, Analysis } from './types'
 import { chess } from './chess_mechanism'
+import stockfish from './workers/stockfish_engine'
 
 interface RemoteOptions {
   multipv?: number
@@ -47,13 +47,38 @@ class AnalysisCache {
     })
   }
 
+  // analysis from local stockfish in browser
+  localGet(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
+    return new Promise((resolve, reject) => {
+      stockfish.analyze(fen, options, (data) => {
+        // console.warn('analysis complete')
+        // console.dir(data)
+        const analysisData: Analysis = {
+          bestmove: data.eval.best,
+          engine: 'Stockfish 2018',
+          variations: data.eval.pvs.map((variation) => {
+            return {
+              depth: data.eval.depth,
+              multipv: data.eval.pvs.length,
+              score: variation.mate || (variation.cp / 100),
+              sequence: variation.pv.split(/\s+/)
+            }
+          })
+        }
+        // console.dir(analysisData)
+        resolve(this.formatAnalysisResponse(analysisData, fen))
+      })
+    })
+  }
+
   getAnalysis(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
     return new Promise((resolve, reject) => {
       let analysis = this.get(fen)
       if (analysis) {
         resolve(analysis)
       } else {
-        this.remoteGet(fen, options).
+        // this.remoteGet(fen, options).
+        this.localGet(fen, options).
           then((analysis) => {
             this.set(fen, analysis)
             return analysis
