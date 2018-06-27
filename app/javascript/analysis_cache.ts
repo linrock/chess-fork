@@ -1,12 +1,24 @@
 // Handles fetching analysis from remote server + rendering it
 
-import $ from 'jquery'
-import _ from 'underscore'
+import * as $ from 'jquery'
+import * as _ from 'underscore'
 import Chess from 'chess.js'
 
 import { chess } from './chess_mechanism'
 
+interface RemoteOptions {
+  fen?: string
+}
+
+interface ChessMove {
+  from: string
+  to: string
+  promotion?: string
+}
+
 class AnalysisCache {
+  private calculator: Chess
+  private analysis: object
 
   constructor() {
     this.calculator = new Chess()
@@ -21,7 +33,7 @@ class AnalysisCache {
     this.analysis[fen] = analysis
   }
 
-  remoteGet(fen, options = {}) {
+  remoteGet(fen, options: RemoteOptions = {}) {
     options.fen = fen
     chess.trigger("analysis:pending")
     return new Promise((resolve, reject) => {
@@ -63,8 +75,8 @@ class AnalysisCache {
     return analysis
   }
 
-  uciToMove(uciMove) {
-    let move = {
+  uciToMove(uciMove): ChessMove {
+    const move: ChessMove = {
       from: uciMove.slice(0,2),
       to: uciMove.slice(2,4)
     }
