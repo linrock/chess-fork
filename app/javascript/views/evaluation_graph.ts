@@ -3,6 +3,7 @@ declare var require: any
 
 import * as _ from 'underscore'
 import * as $ from 'jquery'
+import * as Immutable from 'immutable'
 import * as Backbone from 'backbone'
 
 require('jquery-hoverintent')
@@ -10,7 +11,7 @@ require('jquery-hoverintent')
 import HoverBar from './evaluation_graph/hover_bar'
 import StaticBar from './evaluation_graph/static_bar'
 import AreaGraph from './evaluation_graph/area_graph'
-import PointsNormalizer from './evaluation_graph/points_normalizer'
+import { getNormalizedScores } from './evaluation_graph/points_normalizer'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
@@ -18,7 +19,6 @@ import { chess } from '../chess_mechanism'
 export default class EvaluationGraph extends Backbone.View<Backbone.Model> {
   private $areaGraph: JQuery
   private width: number
-  private normalizer: PointsNormalizer
   private graph: AreaGraph
   private hoverBar: HoverBar
   private staticBar: StaticBar
@@ -40,7 +40,6 @@ export default class EvaluationGraph extends Backbone.View<Backbone.Model> {
     this.$areaGraph = this.$(".area-graph")
     this.width = parseInt(this.$el.css("width"))
     this.graph = new AreaGraph(this.$areaGraph)
-    this.normalizer = new PointsNormalizer
     this.bindHoverEvents()
     this.listenToEvents()
   }
@@ -97,8 +96,8 @@ export default class EvaluationGraph extends Backbone.View<Backbone.Model> {
     return ~~( offX / this.width * this.points.length )
   }
 
-  plotPositionEvaluations(positions) {
-    this.points = this.normalizer.getNormalizedScores(positions)
+  plotPositionEvaluations(positions: Immutable.List<string>) {
+    this.points = getNormalizedScores(positions.toArray())
     this.renderPoints(this.points)
   }
 
