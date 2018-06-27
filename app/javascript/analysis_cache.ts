@@ -32,6 +32,7 @@ class AnalysisCache {
   localGet(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
     return new Promise((resolve, reject) => {
       stockfish.analyze(fen, options, (data) => {
+        const polarity = fen.includes(` w `) ? 1 : -1
         const analysisData: Analysis = {
           fen: data.fen,
           bestmove: data.eval.best,
@@ -39,7 +40,7 @@ class AnalysisCache {
           variations: data.eval.pvs.map(variation => ({
             depth: data.eval.depth,
             multipv: data.eval.pvs.length,
-            score: variation.mate || (variation.cp / 100),
+            score: variation.mate || (variation.cp * polarity / 100),
             sequence: variation.pv.split(/\s+/)
           }))
         }
