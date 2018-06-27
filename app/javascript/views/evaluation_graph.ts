@@ -1,8 +1,9 @@
 // The real-time evaluation graph in the bottom right
+declare var require: any
 
-import _ from 'underscore'
-import $ from 'jquery'
-import Backbone from 'backbone'
+import * as _ from 'underscore'
+import * as $ from 'jquery'
+import * as Backbone from 'backbone'
 
 require('jquery-hoverintent')
 
@@ -14,13 +15,21 @@ import { world } from '../main'
 import { chess } from '../chess_mechanism'
 
 
-export default class EvaluationGraph extends Backbone.View {
+export default class EvaluationGraph extends Backbone.View<Backbone.Model> {
+  private $areaGraph: JQuery
+  private width: number
+  private normalizer: PointsNormalizer
+  private graph: AreaGraph
+  private hoverBar: HoverBar
+  private staticBar: StaticBar
+  private points: Array<number>
+  private hoverI: number
 
   get el() {
     return ".evaluation-graph"
   }
 
-  get events() {
+  events(): Backbone.EventsHash {
     return {
       "mousedown"   : "_click",
       "mousemove"   : "_mouseMove",
@@ -50,13 +59,10 @@ export default class EvaluationGraph extends Backbone.View {
   }
 
   bindHoverEvents() {
-    this.$el.hoverIntent(
-      (e) => { this._mouseEnter(e) },
-      (e) => { this._mouseLeave(e) }
-    )
+    (<any>this.$el).hoverIntent(e => this._mouseEnter(e), e => this._mouseLeave(e))
   }
 
-  render(points) {
+  renderPoints(points) {
     this.$areaGraph.empty()
     this.graph.render(points)
     this.addHoverBar()
@@ -79,7 +85,7 @@ export default class EvaluationGraph extends Backbone.View {
     }
   }
 
-  getIFromMousePosition(event) {
+  getIFromMousePosition(event): number {
     if (!this.points) {
       return
     }
@@ -93,11 +99,11 @@ export default class EvaluationGraph extends Backbone.View {
 
   plotPositionEvaluations(positions) {
     this.points = this.normalizer.getNormalizedScores(positions)
-    this.render(this.points)
+    this.renderPoints(this.points)
   }
 
   _click(event) {
-    let i = this.getIFromMousePosition(event)
+    const i = this.getIFromMousePosition(event)
     if (!_.isNumber(i)) {
       return
     }

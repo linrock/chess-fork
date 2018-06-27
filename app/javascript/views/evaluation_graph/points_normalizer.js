@@ -10,7 +10,7 @@ import analysisCache from '../../analysis_cache'
 export default class PointsNormalizer {
 
   getGameOverScore(fen) {
-    let c = new Chess(fen)
+    const c = new Chess(fen)
     if (c.in_stalemate()) {
       return 0
     } else if (c.in_checkmate()) {
@@ -26,7 +26,7 @@ export default class PointsNormalizer {
   getNormalizedScore(fen) {
     let polarity = /\sw\s/.test(fen) ? 1 : -1
     polarity *= chess.get("polarity")
-    let analysis = analysisCache.get(fen)
+    const analysis = analysisCache.get(fen)
     if (!analysis || !analysis.variations[0]) {
       return 0
     }
