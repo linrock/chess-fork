@@ -4,6 +4,9 @@ declare var WebAssembly: any
 
 const wasmSupported = typeof WebAssembly === 'object' && WebAssembly.validate(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00))
 
+const DEFAULT_DEPTH = 12
+const DEFAULT_MULTIPV = 1
+
 interface Variation {
   cp: number
   mate: number|null
@@ -42,6 +45,7 @@ class StockfishEngine {
   }
 
   public analyze(fen: FEN, options: AnalysisOptions): Promise<PositionAnalysis> {
+    options.depth = options.depth || DEFAULT_DEPTH
     const { depth, multipv } = options
     this.stockfish.postMessage('position fen ' + fen)
     if (multipv > 1) {
@@ -64,7 +68,6 @@ class StockfishEngine {
   ) {
     const start = new Date()
     const targetDepth = options.depth
-    const targetMultiPv = options.multipv
 
     const done = state => {
       this.stockfish.removeEventListener('message', processOutput)

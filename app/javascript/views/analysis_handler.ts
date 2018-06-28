@@ -4,7 +4,7 @@ import * as $ from 'jquery'
 import * as _ from 'underscore'
 import * as Backbone from 'backbone'
 
-import { HTML, Variation } from '../types'
+import { HTML, FEN, Variation } from '../types'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 import analysisCache from '../analysis_cache'
@@ -64,14 +64,26 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
 
   _multiPv() {
     this.engineOptions.multipv = 3
-    analysisCache.localGet((<any>window).chessboard.fen, this.engineOptions)
-      .then((analysis) => analysisCache.notifyAnalysis(analysis))
+    this.engineOptions.depth = 12
+    const fen = this.currentFen()
+    const analysis = analysisCache.get(fen, this.engineOptions)
+    if (!analysis) {
+      chess.trigger("analysis:enqueue", fen, this.engineOptions)
+    }
   }
 
   _higherDepth() {
+    this.engineOptions.multipv = 1
     this.engineOptions.depth = 16
-    analysisCache.localGet((<any>window).chessboard.fen, this.engineOptions)
-      .then((analysis) => analysisCache.notifyAnalysis(analysis))
+    const fen = this.currentFen()
+    const analysis = analysisCache.get(fen, this.engineOptions)
+    if (!analysis) {
+      chess.trigger("analysis:enqueue", fen, this.engineOptions)
+    }
+  }
+
+  currentFen(): FEN {
+    return chess.getPosition(world.get("i"))
   }
 
   listenForEvents() {
@@ -81,11 +93,11 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
         return
       }
       const fen = chess.getPosition(i)
-      const analysis = analysisCache.get(fen)
+      const analysis = analysisCache.get(fen, this.engineOptions)
       if (analysis) {
         this.renderAnalysis(analysis)
       } else {
-        chess.trigger("analysis:enqueue", fen)
+        chess.trigger("analysis:enqueue", fen, this.engineOptions)
       }
     })
     this.listenTo(chess, "analysis:pending", () => this.fade())
@@ -97,13 +109,13 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
     this.listenTo(chess, "analysis:complete", fen => {
       const currentFen = chess.getPosition(world.get("i"))
       if (fen === currentFen) {
-        const analysis = analysisCache.get(fen)
+        const analysis = analysisCache.get(fen, this.engineOptions)
         this.renderAnalysis(analysis)
       }
     })
     this.listenTo(chess, "polarity:flip", () => {
       const fen = chess.getCurrentPosition()
-      const analysis = analysisCache.get(fen)
+      const analysis = analysisCache.get(fen, this.engineOptions)
       this.renderAnalysis(analysis)
     })
   }

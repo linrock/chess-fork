@@ -2,7 +2,6 @@ import $ from 'jquery'
 import Backbone from 'backbone'
 
 import { world } from '../main'
-import analysisCache from '../analysis_cache'
 
 export default class PositionMenu extends Backbone.View {
 
@@ -13,8 +12,8 @@ export default class PositionMenu extends Backbone.View {
   get events() {
     return {
       "click .action"   : "hide",
-      "click .multi-pv" : "_multiPv",
-      "click .depth-20" : "_deeperAnalysis",
+      // "click .multi-pv" : "_multiPv",
+      // "click .depth-20" : "_deeperAnalysis",
       "click .show-fen" : "_showFen"
     }
   }
@@ -35,14 +34,6 @@ export default class PositionMenu extends Backbone.View {
 
   toggle() {
     this.$el.toggleClass("invisible")
-  }
-
-  _multiPv() {
-    analysisCache.getAnalysis(window.chessboard.fen, { multipv: 3 })
-  }
-
-  _deeperAnalysis() {
-    analysisCache.getAnalysis(window.chessboard.fen, { multipv: 16 })
   }
 
   _showFen() {

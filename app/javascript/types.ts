@@ -29,3 +29,9 @@ export interface Analysis {
   engine: string
   variations: Array<Variation>
 }
+
+// sent to stockfish worker
+export interface AnalysisOptions {
+  multipv?: number
+  depth?: number
+}
