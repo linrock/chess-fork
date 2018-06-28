@@ -23,8 +23,7 @@
 
 <div class="analysis-board">
   <div class="main-board">
-    <%= render :partial => "analysis/chessboard",
-               :locals  => { :square_prefix => "sq" } %>
+    <%= render partial: "analysis/chessboard", locals: { square_prefix: "sq" } %>
   </div>
 
   <div class="moves-and-importer">
@@ -109,8 +108,8 @@
       </div>
 
       <div class="engine-actions">
-        <a href="javascript:" class="more-moves">+ more moves</a>
-        <a href="javascript:" class="more-depth">+ depth</a>
+        <a href="javascript:" class="more-moves">+ show more moves</a>
+        <a href="javascript:" class="more-depth">+ higher depth</a>
       </div>
     </div>
 

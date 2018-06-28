@@ -10,7 +10,7 @@ import { uciToMove } from './utils'
 import analysisCache from './analysis_cache'
 import stockfish from './workers/stockfish_engine'
 
-export default class AnalysisSequencer extends Backbone.Model {
+export default class AnalysisEngine extends Backbone.Model {
   private calculator: Chess = new Chess
   private positionQueue: Array<[FEN, AnalysisOptions]> = []
   private isAnalyzing = false
@@ -27,7 +27,6 @@ export default class AnalysisSequencer extends Backbone.Model {
       this.analyzeNextPosition()
     })
     this.listenTo(chess, "analysis:enqueue", (fen, options) => {
-      console.log(`analysis enqueued: ${fen} ${JSON.stringify(options)}`)
       this.positionQueue.push([fen, options])
       this.analyzeNextPosition()
     })

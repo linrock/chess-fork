@@ -4,7 +4,7 @@ import * as $ from 'jquery'
 import * as _ from 'underscore'
 import * as Backbone from 'backbone'
 
-import { HTML, FEN, Variation } from '../types'
+import { HTML, FEN, Variation, AnalysisOptions } from '../types'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 import analysisCache from '../analysis_cache'
@@ -14,18 +14,18 @@ interface PositionEvaluation {
   evaluation: string
 }
 
-interface EngineOptions {
-  multipv?: number
-  depth?: number
-}
-
 export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
-  private engineOptions: EngineOptions = {}
   private $moves: JQuery
   private $error: JQuery
+  private $movesCmd: JQuery
+  private $depthCmd: JQuery
+  private analysisOptions: AnalysisOptions = {
+    multipv: 1,
+    depth: 12
+  }
 
   get el() {
-    return ".suggested-moves"
+    return `.suggested-moves`
   }
 
   private moveTemplate(options): HTML {
@@ -53,7 +53,8 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
 
   initialize() {
     this.$moves = this.$(".moves")
-    this.$error = this.$(".error")
+    this.$movesCmd = this.$(".more-moves")
+    this.$depthCmd = this.$(".more-depth")
     this.listenForEvents()
   }
 
@@ -63,22 +64,32 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
   }
 
   _multiPv() {
-    this.engineOptions.multipv = 3
-    this.engineOptions.depth = 12
+    if (this.analysisOptions.multipv === 1) {
+      this.analysisOptions.multipv = 3
+      this.$movesCmd.text("- show less moves")
+    } else {
+      this.analysisOptions.multipv = 1
+      this.$movesCmd.text("+ show more moves")
+    }
     const fen = this.currentFen()
-    const analysis = analysisCache.get(fen, this.engineOptions)
+    const analysis = analysisCache.get(fen, this.analysisOptions)
     if (!analysis) {
-      chess.trigger("analysis:enqueue", fen, this.engineOptions)
+      chess.trigger("analysis:enqueue", fen, this.analysisOptions)
     }
   }
 
   _higherDepth() {
-    this.engineOptions.multipv = 1
-    this.engineOptions.depth = 16
+    if (this.analysisOptions.depth === 12) {
+      this.analysisOptions.depth = 16
+      this.$depthCmd.text("- lower depth")
+    } else {
+      this.analysisOptions.depth = 12
+      this.$depthCmd.text("+ higher depth")
+    }
     const fen = this.currentFen()
-    const analysis = analysisCache.get(fen, this.engineOptions)
+    const analysis = analysisCache.get(fen, this.analysisOptions)
     if (!analysis) {
-      chess.trigger("analysis:enqueue", fen, this.engineOptions)
+      chess.trigger("analysis:enqueue", fen, this.analysisOptions)
     }
   }
 
@@ -93,11 +104,11 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
         return
       }
       const fen = chess.getPosition(i)
-      const analysis = analysisCache.get(fen, this.engineOptions)
+      const analysis = analysisCache.get(fen, this.analysisOptions)
       if (analysis) {
         this.renderAnalysis(analysis)
       } else {
-        chess.trigger("analysis:enqueue", fen, this.engineOptions)
+        chess.trigger("analysis:enqueue", fen, this.analysisOptions)
       }
     })
     this.listenTo(chess, "analysis:pending", () => this.fade())
@@ -109,18 +120,18 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
     this.listenTo(chess, "analysis:complete", fen => {
       const currentFen = chess.getPosition(world.get("i"))
       if (fen === currentFen) {
-        const analysis = analysisCache.get(fen, this.engineOptions)
+        const analysis = analysisCache.get(fen, this.analysisOptions)
         this.renderAnalysis(analysis)
       }
     })
     this.listenTo(chess, "polarity:flip", () => {
       const fen = chess.getCurrentPosition()
-      const analysis = analysisCache.get(fen, this.engineOptions)
+      const analysis = analysisCache.get(fen, this.analysisOptions)
       this.renderAnalysis(analysis)
     })
   }
 
-  getFormattedEvaluation(evaluation, polarity): PositionEvaluation {
+  private getFormattedEvaluation(evaluation, polarity): PositionEvaluation {
     let color = ''
     if (_.isNumber(evaluation)) {
       evaluation *= polarity
@@ -143,12 +154,7 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
     return { color, evaluation }
   }
 
-  renderError(message) {
-    this.$error.removeClass("invisible").text(message)
-  }
-
   renderAnalysis(analysis) {
-    // this.$error.addClass("invisible")
     if (!analysis) {
       return
     }

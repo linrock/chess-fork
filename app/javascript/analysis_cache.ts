@@ -6,26 +6,27 @@ import { FEN, Analysis, AnalysisOptions } from './types'
 import { chess } from './chess_mechanism'
 
 interface AnalysisMap {
-  [fen: string]: Analysis
+  [key: string]: Analysis
+}
+
+const defaultAnalysisOptions = {
+  depth: 12,
+  multipv: 1
+}
+
+const analysisKey = (fen: FEN, options: AnalysisOptions): string => {
+  return `${fen}-${JSON.stringify(Object.assign({}, defaultAnalysisOptions, options))}`
 }
 
 class AnalysisCache {
   private analysisMap: AnalysisMap = {}
-  private multipvAnalysisMap: AnalysisMap = {}
 
-  // has side effect of enqueueing for analysis
   public get(fen: FEN, options: AnalysisOptions = {}): Analysis {
-    const isMultipv = options.multipv && options.multipv > 1
-    const analysis = isMultipv ? this.multipvAnalysisMap[fen] : this.analysisMap[fen]
-    return analysis
+    return this.analysisMap[analysisKey(fen, options)]
   }
 
-  public set(fen: FEN, options: AnalysisOptions = {}, analysis: Analysis) {
-    if (options.multipv > 1) {
-      this.multipvAnalysisMap[fen] = analysis
-    } else {
-      this.analysisMap[fen] = analysis
-    }
+  public set(fen: FEN, options: AnalysisOptions = {}, analysis: Analysis): void {
+    this.analysisMap[analysisKey(fen, options)] = analysis
   }
 }
 
