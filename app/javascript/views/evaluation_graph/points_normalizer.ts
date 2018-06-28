@@ -6,7 +6,7 @@ import Chess from 'chess.js'
 
 import { FEN } from '../../types'
 import { chess } from '../../chess_mechanism'
-import analysisCache from '../../analysis_cache'
+import analysisCache from '../../analysis/cache'
 
 type Score = number // -10 to 10
 

@@ -1,18 +1,16 @@
-// Handles fetching analysis from remote server + rendering it
+// local cache for stockfish engine outputs
 
 import * as $ from 'jquery'
 import Chess from 'chess.js'
-import { Analysis } from './analysis'
-import { FEN, AnalysisOptions } from './types'
-import { chess } from './chess_mechanism'
+
+import { FEN } from '../types'
+import { chess } from '../chess_mechanism'
+
+import Analysis from './models/analysis'
+import { AnalysisOptions, defaultAnalysisOptions } from './options'
 
 interface AnalysisMap {
   [key: string]: Analysis
-}
-
-const defaultAnalysisOptions = {
-  depth: 12,
-  multipv: 1
 }
 
 const analysisKey = (fen: FEN, options: AnalysisOptions): string => {

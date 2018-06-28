@@ -12,7 +12,7 @@ import VirtualDomBoard from '../views/virtual_dom_board'
 import SubHeader from '../views/sub_header'
 
 import { chess } from '../chess_mechanism'
-import AnalysisEngine from '../analysis_engine'
+import AnalysisEngine from '../analysis/engine'
 import HotKeys from '../hotkeys'
 
 document.addEventListener('DOMContentLoaded', () => {

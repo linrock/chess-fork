@@ -4,10 +4,12 @@ import * as $ from 'jquery'
 import * as _ from 'underscore'
 import * as Backbone from 'backbone'
 
-import { HTML, FEN, Variation, AnalysisOptions } from '../types'
+import { HTML, FEN } from '../types'
+import { AnalysisOptions } from '../analysis/options'
+import Variation from '../analysis/models/variation'
+import analysisCache from '../analysis/cache'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
-import analysisCache from '../analysis_cache'
 
 interface PositionEvaluation {
   color: string

@@ -10,16 +10,3 @@ export interface ChessMove {  // used by Chess.js
   to: string
   promotion?: string
 }
-
-export interface Analysis {
-  fen: FEN
-  bestmove: UciMove
-  engine: string
-  variations: Array<Variation>
-}
-
-// sent to stockfish worker
-export interface AnalysisOptions {
-  multipv?: number
-  depth?: number
-}

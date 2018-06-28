@@ -6,7 +6,7 @@ import * as Immutable from 'immutable'
 import Chess from 'chess.js'
 
 import { world } from './main'
-import analysisCache from './analysis_cache'
+import analysisCache from './analysis/cache'
 
 export default class ChessMechanism extends Backbone.Model {
   public mechanism: Chess

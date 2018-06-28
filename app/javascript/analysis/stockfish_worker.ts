@@ -7,7 +7,7 @@ const wasmSupported = typeof WebAssembly === 'object' && WebAssembly.validate(Ui
 const DEFAULT_DEPTH = 12
 const DEFAULT_MULTIPV = 1
 
-interface Variation {
+interface PositionVariation {
   cp: number
   mate: number|null
   pv: string
@@ -20,7 +20,7 @@ interface PositionEvaluation {
   best: UciMove
   cp: number
   mate: number|null
-  pvs: Array<Variation>
+  pvs: Array<PositionVariation>
 }
 
 interface PositionAnalysis {

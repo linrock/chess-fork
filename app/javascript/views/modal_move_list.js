@@ -5,7 +5,7 @@ import Backbone from 'backbone'
 
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
-import analysisCache from '../analysis_cache'
+import analysisCache from '../analysis/cache'
 
 export default class ModalMoveList extends Backbone.View {
 
