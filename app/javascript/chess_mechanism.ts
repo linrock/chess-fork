@@ -183,7 +183,7 @@ export default class ChessMechanism extends Backbone.Model {
       return
     }
     let analysis = analysisCache.get(fen)
-    if (!analysis || j >= analysis.variations[0].n) {
+    if (!analysis || j >= analysis.variations[0].length) {
       return
     }
     if (j < 0) {

@@ -1,9 +1,11 @@
-// Handles fetching analysis for a sequence of positions
+// Interface between the UI analysis requirements and the
+// stockfish worker
 
 import * as Backbone from 'backbone'
 import Chess from 'chess.js'
 
-import { UciMove, FEN, Analysis, AnalysisOptions } from './types'
+import { Analysis } from './analysis'
+import { UciMove, FEN, AnalysisOptions } from './types'
 import { chess } from './chess_mechanism'
 import { world } from './main'
 import { uciToMove } from './utils'
@@ -61,49 +63,10 @@ export default class AnalysisEngine extends Backbone.Model {
 
   // analysis from local stockfish in browser
   private stockfishAnalyze(fen: FEN, options: AnalysisOptions = {}): Promise<Analysis> {
-    return stockfish.analyze(fen, options).then(data => {
-      const polarity = fen.includes(` w `) ? 1 : -1
-      const analysisData: Analysis = {
-        fen: data.fen,
-        bestmove: data.state.evaluation.best,
-        engine: 'Stockfish 2018',
-        variations: data.state.evaluation.pvs.map(variation => ({
-          depth: data.state.evaluation.depth,
-          multipv: data.state.evaluation.pvs.length,
-          score: variation.mate || (variation.cp * polarity / 100),
-          sequence: variation.pv.split(/\s+/)
-        }))
-      }
-      const formattedAnalysis = this.formatAnalysisResponse(analysisData)
-      analysisCache.set(fen, options, formattedAnalysis)
-      return formattedAnalysis
+    return stockfish.analyze(fen, options).then(analysisData => {
+      const analysis = new Analysis(analysisData)
+      analysisCache.set(fen, options, analysis)
+      return analysis
     })
-  }
-
-  private formatAnalysisResponse(data): Analysis {
-    for (let i in data.variations) {
-      let variation = data.variations[i]
-      let formatted = this.calcMovesAndPositions(data.fen, variation.sequence)
-      data.variations[i] = Object.assign({}, variation, formatted)
-    }
-    return data
-  }
-
-  // TODO lazy calculate this when move list is rendered
-  //
-  private calcMovesAndPositions(fen: FEN, sequence: Array<UciMove>) {
-    this.calculator.load(fen)
-    let moves = []
-    let positions = [fen]
-    for (let uciMove of sequence) {
-      let move = this.calculator.move(uciToMove(uciMove))
-      moves.push(move.san)
-      positions.push(this.calculator.fen())
-    }
-    return {
-      n: moves.length,
-      positions,
-      moves,
-    }
   }
 }

@@ -11,18 +11,6 @@ export interface ChessMove {  // used by Chess.js
   promotion?: string
 }
 
-export interface Variation {
-  depth: number
-  multipv: number
-  score: number
-  sequence: Array<UciMove>
-
-  // calculated values - move to different interface
-  moves?: Array<SanMove>
-  positions?: Array<FEN>
-  n?: number //
-}
-
 export interface Analysis {
   fen: FEN
   bestmove: UciMove

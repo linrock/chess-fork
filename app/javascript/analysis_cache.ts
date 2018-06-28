@@ -2,7 +2,8 @@
 
 import * as $ from 'jquery'
 import Chess from 'chess.js'
-import { FEN, Analysis, AnalysisOptions } from './types'
+import { Analysis } from './analysis'
+import { FEN, AnalysisOptions } from './types'
 import { chess } from './chess_mechanism'
 
 interface AnalysisMap {
