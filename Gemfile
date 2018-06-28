@@ -4,7 +4,6 @@ ruby '2.5.1'
 
 gem 'rails', '5.2.0'
 gem 'puma'
-gem 'pg'
 
 gem 'bootsnap', require: false
 gem 'eco-classifier'
