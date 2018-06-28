@@ -17,10 +17,10 @@ export interface Variation {
   score: number
   sequence: Array<UciMove>
 
-  // calculated values
-  moves: Array<SanMove>
-  positions: Array<FEN>
-  n: number //
+  // calculated values - move to different interface
+  moves?: Array<SanMove>
+  positions?: Array<FEN>
+  n?: number //
 }
 
 export interface Analysis {

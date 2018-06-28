@@ -31,15 +31,15 @@ class AnalysisCache {
   // analysis from local stockfish in browser
   localGet(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
     return new Promise((resolve, reject) => {
-      stockfish.analyze(fen, options, (data) => {
+      stockfish.analyze(fen, options).then(data => {
         const polarity = fen.includes(` w `) ? 1 : -1
         const analysisData: Analysis = {
           fen: data.fen,
-          bestmove: data.eval.best,
+          bestmove: data.state.evaluation.best,
           engine: 'Stockfish 2018',
-          variations: data.eval.pvs.map(variation => ({
-            depth: data.eval.depth,
-            multipv: data.eval.pvs.length,
+          variations: data.state.evaluation.pvs.map(variation => ({
+            depth: data.state.evaluation.depth,
+            multipv: data.state.evaluation.pvs.length,
             score: variation.mate || (variation.cp * polarity / 100),
             sequence: variation.pv.split(/\s+/)
           }))
