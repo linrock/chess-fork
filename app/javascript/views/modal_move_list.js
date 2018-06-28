@@ -54,10 +54,16 @@ export default class ModalMoveList extends Backbone.View {
 
   render() {
     this.$moveList.empty()
+    const k = chess.get("k")
     let j = 0
     let plyNum = world.get("i")
     let moveNum = ~~ (plyNum / 2)
-    let analysis = analysisCache.get(chess.getPosition(plyNum))
+    let analysis
+    if (k > 0) {
+      analysis = analysisCache.get(chess.getPosition(plyNum), { multipv: 3 })
+    } else {
+      analysis = analysisCache.get(chess.getPosition(plyNum))
+    }
     let html = ''
     if (plyNum % 2 === 1) {
       moveNum += 1
@@ -65,7 +71,7 @@ export default class ModalMoveList extends Backbone.View {
                <div class="move">...</div>`
     }
     moveNum += 1
-    for (let move of analysis.variations[chess.get("k")].moves) {
+    for (let move of analysis.variations[k].moves) {
       if (plyNum % 2 === 0) {
         html += `<div class="move-num">${moveNum}.</div>`
         moveNum += 1

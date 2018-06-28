@@ -100,7 +100,12 @@ export default class ChessMechanism extends Backbone.Model {
 
   analyzePosition(fen, k) {
     k = k || 0 // multipv index
-    let analysis = analysisCache.get(fen)
+    let analysis
+    if (k > 0) {
+      analysis = analysisCache.get(fen, { multipv: 3 })
+    } else {
+      analysis = analysisCache.get(fen)
+    }
     if (!analysis) {
       return;
     }
