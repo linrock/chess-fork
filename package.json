@@ -13,7 +13,10 @@
     "rickshaw": "^1.6.6",
     "ts-loader": "3.5.0",
     "typescript": "^2.9.2",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "vue": "^2.5.16",
+    "vue-loader": "14.2.2",
+    "vue-template-compiler": "^2.5.16"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
