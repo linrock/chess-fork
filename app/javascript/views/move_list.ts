@@ -1,8 +1,8 @@
 // Clickable list of moves that represent the state
 // of the game
 
-import * as $ from 'jquery'
-import * as Backbone from 'backbone'
+import $ from 'jquery'
+import Backbone from 'backbone'
 
 import { SanMove, HTML } from '../types'
 import { world } from '../main'

@@ -1,7 +1,7 @@
 // Basic chessboard that just renders positions
 
-import * as $ from 'jquery'
-import * as Backbone from 'backbone'
+import $ from 'jquery'
+import Backbone from 'backbone'
 import Chess from 'chess.js'
 
 import { FEN } from '../types'

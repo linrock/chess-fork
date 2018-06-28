@@ -1,6 +1,6 @@
 // For handling the manual import of a chess game
 
-import * as Backbone from 'backbone'
+import Backbone from 'backbone'
 import Chess from 'chess.js'
 
 import { PGN } from '../types'

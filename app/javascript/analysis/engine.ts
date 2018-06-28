@@ -1,6 +1,6 @@
 // Interface between the analysis UI and the stockfish worker
 
-import * as Backbone from 'backbone'
+import Backbone from 'backbone'
 import Chess from 'chess.js'
 
 import { chess } from '../chess_mechanism'

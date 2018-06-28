@@ -1,6 +1,6 @@
 // local cache for stockfish engine outputs
 
-import * as $ from 'jquery'
+import $ from 'jquery'
 import Chess from 'chess.js'
 
 import { FEN } from '../types'

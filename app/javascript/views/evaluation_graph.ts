@@ -1,10 +1,10 @@
 // The real-time evaluation graph in the bottom right
 declare var require: any
 
-import * as _ from 'underscore'
-import * as $ from 'jquery'
-import * as Immutable from 'immutable'
-import * as Backbone from 'backbone'
+import _ from 'underscore'
+import $ from 'jquery'
+import Immutable from 'immutable'
+import Backbone from 'backbone'
 
 require('jquery-hoverintent')
 

@@ -1,7 +1,7 @@
 // For taking raw analysis data and updating the polarity
 // of the points to graph correctly
 
-import * as _ from 'underscore'
+import _ from 'underscore'
 import Chess from 'chess.js'
 
 import { FEN } from '../../types'

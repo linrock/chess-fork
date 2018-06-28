@@ -1,5 +1,5 @@
 import m from 'mithril'
-import * as Backbone from 'backbone'
+import Backbone from 'backbone'
 import Chess from 'chess.js'
 
 import { ChessMove } from '../types'

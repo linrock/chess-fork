@@ -1,9 +1,9 @@
 // For querying for openings that correspond to the move sequence
 // in the current move list
 
-import * as $ from 'jquery'
-import * as Backbone from 'backbone'
-import * as Immutable from 'immutable'
+import $ from 'jquery'
+import Backbone from 'backbone'
+import Immutable from 'immutable'
 
 import { world } from './main'
 

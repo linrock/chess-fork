@@ -2,8 +2,8 @@
 // For undo'ing moves and state changes
 // state - i, fen, moves, position
 
-import * as Backbone from 'backbone'
-import * as Immutable from 'immutable'
+import Backbone from 'backbone'
+import Immutable from 'immutable'
 import Chess from 'chess.js'
 
 interface WorldStateSnapshot {

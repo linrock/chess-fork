@@ -1,8 +1,8 @@
 // The analysis info view under the board
 
-import * as $ from 'jquery'
-import * as _ from 'underscore'
-import * as Backbone from 'backbone'
+import $ from 'jquery'
+import _ from 'underscore'
+import Backbone from 'backbone'
 
 import { HTML, FEN } from '../types'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'

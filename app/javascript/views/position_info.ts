@@ -1,4 +1,4 @@
-import * as Backbone from 'backbone'
+import Backbone from 'backbone'
 
 import PositionMenu from './position_menu'
 import { world } from '../main'

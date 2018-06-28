@@ -1,8 +1,8 @@
 // Handles the internal state of chess positions/history
 // Also functions as an event dispatcher
 
-import * as Backbone from 'backbone'
-import * as Immutable from 'immutable'
+import Backbone from 'backbone'
+import Immutable from 'immutable'
 import Chess from 'chess.js'
 
 import { world } from './main'
