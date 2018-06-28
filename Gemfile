@@ -7,6 +7,7 @@ gem 'puma'
 gem 'pg'
 
 gem 'bootsnap', require: false
+gem 'eco-classifier'
 
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'

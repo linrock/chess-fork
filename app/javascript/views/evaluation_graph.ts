@@ -36,7 +36,7 @@ export default class EvaluationGraph extends Backbone.View<Backbone.Model> {
     }
   }
 
-  initialize(options = {}) {
+  initialize() {
     this.$areaGraph = this.$(".area-graph")
     this.width = parseInt(this.$el.css("width"))
     this.graph = new AreaGraph(this.$areaGraph)

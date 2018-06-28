@@ -6,7 +6,7 @@ import Chess from 'chess.js'
 import { chess } from '../chess_mechanism'
 import { world } from '../main'
 import { uciToMove } from '../utils'
-import { UciMove, FEN } from '../types'
+import { FEN } from '../types'
 
 import { AnalysisOptions } from './options'
 import Analysis from './models/analysis'

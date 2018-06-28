@@ -1,3 +1,5 @@
+require 'eco_classifier'
+
 class AnalysisController < ActionController::Base
   layout 'application'
 
@@ -8,9 +10,11 @@ class AnalysisController < ActionController::Base
   #
   def get_opening
     if params[:moves]
-      render :json => $opening_tree.search_for_opening(params[:moves])
+      render json: {
+        opening: EcoClassifier.classify_moves(params[:moves]).as_json
+      }
     else
-      render :json => {}
+      render json: {}
     end
   end
 end
