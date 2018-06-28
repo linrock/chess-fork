@@ -51,16 +51,12 @@ class AnalysisCache {
     })
   }
 
-  getAnalysis(fen: FEN, options: RemoteOptions = {}, cacheOnly = false): Promise<Analysis> {
+  getAnalysis(fen: FEN, options: RemoteOptions = {}): Promise<Analysis> {
     return new Promise((resolve, reject) => {
       const analysis = this.get(fen)
       if (analysis) {
         resolve(analysis)
       } else {
-        if (cacheOnly) {
-          resolve(null)
-          return
-        }
         this.localGet(fen, options).
           then((analysis) => {
             this.set(fen, analysis)

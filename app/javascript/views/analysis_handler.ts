@@ -4,7 +4,7 @@ import * as $ from 'jquery'
 import * as _ from 'underscore'
 import * as Backbone from 'backbone'
 
-import { Variation } from '../types'
+import { HTML, Variation } from '../types'
 import { world } from '../main'
 import { chess } from '../chess_mechanism'
 import analysisCache from '../analysis_cache'
@@ -28,7 +28,7 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
     return ".suggested-moves"
   }
 
-  moveTemplate(options) {
+  private moveTemplate(options): HTML {
     const { fen, move, depth, evaluation, color, k } = options
     return `
       <div class="move-row">
@@ -85,12 +85,19 @@ export default class AnalysisHandler extends Backbone.View<Backbone.Model> {
       if (analysis) {
         this.renderAnalysis(analysis)
       } else {
-        analysisCache.getAnalysis(fen, {}, true) // only fetch from cache
+        chess.trigger("analysis:enqueue", fen)
       }
     })
     this.listenTo(chess, "analysis:pending", () => this.fade())
     this.listenTo(chess, "change:analysis", (analysis) => {
       if (analysis && (<any>window).chessboard.fen === analysis.fen) {
+        this.renderAnalysis(analysis)
+      }
+    })
+    this.listenTo(chess, "analysis:complete", fen => {
+      const currentFen = chess.getPosition(world.get("i"))
+      if (fen === currentFen) {
+        const analysis = analysisCache.get(fen)
         this.renderAnalysis(analysis)
       }
     })
