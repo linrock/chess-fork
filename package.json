@@ -11,6 +11,8 @@
     "mithril": "^1.1.6",
     "mousetrap": "^1.6.2",
     "rickshaw": "^1.6.6",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
     "ts-loader": "3.5.0",
     "typescript": "^2.9.2",
     "underscore": "^1.9.1",

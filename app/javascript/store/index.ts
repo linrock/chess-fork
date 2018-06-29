@@ -47,10 +47,9 @@ listener.listenTo(chess, "analysis:complete", fen => {
     store.currentAnalysis = analysis
   }
 })
-listener.listenTo(chess, "analysis:options:change", ({ multipv, depth }) => {
+listener.listenTo(chess, "analysis:options:change", () => {
   const fen = currentFen()
-  store.multipv = multipv
-  store.depth = depth
+  const { multipv, depth } = store
   chess.trigger("analysis:enqueue", fen, { multipv, depth })
 })
 

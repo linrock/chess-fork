@@ -17,7 +17,6 @@
       <a href="javascript:" class="undo"
          data-tooltip="Undo"><%= fa_icon "undo" %></a>
     </div>
-
   </div>
 </nav>
 
@@ -70,7 +69,6 @@
 
     <div class="position-info invisible">
       <div class="position-actions-menu invisible">
-
         <a class="action multi-pv" href="javascript:">
           <div class="icon"><%= fa_icon "usb" %></div>
           <div class="name">More candidate moves</div>
@@ -92,27 +90,12 @@
       <div class="position-description"></div>
     </div>
 
-    <div class="suggested-moves invisible">
-      <div class="error"></div>
-
-      <div class="titles">
-        <div class="response">Response</div>
-        <div class="eval">Score</div>
-        <div class="depth">Depth</div>
-      </div>
-
-      <div class="variations"></div>
-
-      <div class="engine-actions">
-        <a href="javascript:" class="more-moves">+ show more moves</a>
-        <a href="javascript:" class="more-depth">+ higher depth</a>
-      </div>
-    </div>
+    <div class="analysis-info"></div>
 
     <div class="mini-hover-board">
       <div class="hover-board invisible">
-        <%= render :partial => "analysis/chessboard",
-                   :locals  => { :square_prefix => "msq" } %>
+        <%= render partial: "analysis/chessboard",
+                   locals: { square_prefix: "msq" } %>
       </div>
     </div>
 
