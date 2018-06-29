@@ -3,7 +3,6 @@ import Vue from 'vue'
 import MainBoard from '../views/main_board'
 import PgnImporter from '../views/pgn_importer'
 import MoveList from '../views/move_list'
-// import ModalMoveList from '../views/modal_move_list'
 import ActionButtons from '../views/action_buttons'
 import IntroMessage from '../views/intro_message'
 import EvaluationGraph from '../views/evaluation_graph'
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.chessboard = new MainBoard
   new PgnImporter
   new MoveList
-  // new ModalMoveList
   new ActionButtons
   new IntroMessage
   new EvaluationGraph

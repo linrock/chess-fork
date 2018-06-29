@@ -25,9 +25,9 @@ export default class SquareHighlighter {
         return
       }
       this.clearHighlights()
-      const fen = chess.get("analysis").variations[0].positions[j]
+      const fen = chess.get("analysis").variations[chess.get("k")].positions[j]
       const c = new Chess(fen)
-      const move = c.move(chess.get("analysis").variations[0].moves[j])
+      const move = c.move(chess.get("analysis").variations[chess.get("k")].moves[j])
       this.highlightMove(move, "blue")
     })
     this.board.listenTo(chess, "change:k", (model, k) => {

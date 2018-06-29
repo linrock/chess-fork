@@ -38,7 +38,7 @@ export default class PieceAnimator {
         return
       }
       const prevFen = window.chessboard.fen
-      const newFen = chess.get("analysis").variations[chess.get("k")].positions[j + 1]
+      const newFen = this.currentAnalysisPosition()
       const moves = this.positionDiffs(prevFen, newFen)
       if (moves.length <= 2) {
         this.animatePositions(prevFen, newFen)
@@ -48,9 +48,13 @@ export default class PieceAnimator {
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
       const prevFen = window.chessboard.fen
-      const newFen = chess.get("analysis").variations[k].positions[chess.get("j") + 1]
+      const newFen = this.currentAnalysisPosition()
       chess.setFen(newFen)
     })
+  }
+
+  currentAnalysisPosition() {
+    return chess.get("analysis").variations[chess.get("k")].positions[chess.get("j") + 1]
   }
 
   // For figuring out what pieces on squares to move
