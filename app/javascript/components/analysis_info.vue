@@ -24,7 +24,7 @@
           {{ variation.move }}
         </div>
         <div class="evaluation">{{ variation.evaluation }}</div>
-        <div class="source">
+        <div class="depth">
           {{ variation.depth }}
         </div>
       </div>
@@ -171,7 +171,6 @@
         text-align right
 
     // List of candidate moves under the board
-    //
     .moves
       font-size 14px
       font-weight 600
@@ -186,25 +185,19 @@
         pointer-events none
         transition opacity 0.05s ease
 
-      .move-row
-        margin-bottom 12px
-        display flex
-
-        .move
-          float left
-          width 80px
-
-          &:hover
-            cursor pointer
+    .move-row
+      margin-bottom 12px
+      display flex
 
       .engine-move
         transition color 0.15s ease
+        width 80px
 
         &:hover
+          cursor pointer
           color #0bf
 
       .evaluation
-        float left
         width 80px
         color rgba(100,100,100,0.9)
 

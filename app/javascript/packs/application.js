@@ -6,12 +6,12 @@ import MoveList from '../views/move_list'
 import ActionButtons from '../views/action_buttons'
 import IntroMessage from '../views/intro_message'
 import EvaluationGraph from '../views/evaluation_graph'
-import PositionInfo from '../views/position_info'
 import VirtualDomBoard from '../views/virtual_dom_board'
 import SubHeader from '../views/sub_header'
 
 import AnalysisInfo from '../components/analysis_info'
 import ModalMoveList from '../components/modal_move_list'
+import PositionInfo from '../components/position_info'
 
 import { chess } from '../chess_mechanism'
 import AnalysisEngine from '../analysis/engine'
@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   new ActionButtons
   new IntroMessage
   new EvaluationGraph
-  new PositionInfo
   // new VirtualDomBoard
   new SubHeader
 
@@ -45,5 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
   new Vue({
     el: modalMoveListEl.appendChild(document.createElement('div')),
     render: h => h(ModalMoveList)
+  })
+
+  const positionInfoEl = document.querySelector(`.vue-position-info`)
+  new Vue({
+    el: positionInfoEl.appendChild(document.createElement('div')),
+    render: h => h(PositionInfo)
   })
 })
