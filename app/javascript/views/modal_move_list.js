@@ -39,9 +39,7 @@ export default class ModalMoveList extends Backbone.View {
       }
     })
     this.listenTo(chess, "change:k", (model, k) => {
-      if (model.get("mode") === `analysis`) {
-        this.render()
-      }
+      this.render()
     })
     this.listenTo(chess, "change:j", (model, j) => {
       if (j === -1) {
@@ -91,7 +89,9 @@ export default class ModalMoveList extends Backbone.View {
   }
 
   _gotoMove(e) {
-    let j = $(e.currentTarget).data("j")
-    chess.set({ j })
+    const j = $(e.currentTarget).data("j")
+    if (j) {
+      chess.set({ j })
+    }
   }
 }
