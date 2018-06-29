@@ -1,20 +1,31 @@
 import Backbone from 'backbone'
 
-import analysisCache from '../analysis/cache'
-import { defaultAnalysisOptions } from '../analysis/options'
+import { FEN } from '../types'
 import { chess } from '../chess_mechanism'
 import { world } from '../main'
+import Analysis from '../analysis/models/analysis'
+import analysisCache from '../analysis/cache'
+import { defaultAnalysisOptions } from '../analysis/options'
 
-const store = Object.assign({}, defaultAnalysisOptions, {
+interface Store {
+  multipv?: number
+  depth?: number
+  positionIndex: number
+  variationIndex: number
+  variationPositionIndex: number
+  currentAnalysis: Analysis
+}
+
+const store: Store = Object.assign({}, defaultAnalysisOptions, {
   positionIndex: 0,
   variationIndex: null,
   variationPositionIndex: null,
   currentAnalysis: null
 })
 
-const currentFen = () => chess.getPosition(store.positionIndex)
+const currentFen = (): FEN => chess.getPosition(store.positionIndex)
 
-const listener = Object.assign({}, Backbone.Events)
+const listener = <any>Object.assign({}, Backbone.Events)
 listener.listenTo(world, "change:i", (_, i) => {
   store.positionIndex = i
   const fen = currentFen()

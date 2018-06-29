@@ -38,7 +38,7 @@ class StockfishEngine {
   constructor() {
     this.stockfish = new Worker(`/assets/stockfish${wasmSupported ? '.wasm' : ''}.js`)
     this.stockfish.postMessage('uci')
-    this.debugMessages()
+    // this.debugMessages()
   }
 
   public analyze(fen: FEN, options: AnalysisOptions): Promise<PositionAnalysis> {

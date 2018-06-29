@@ -31,7 +31,7 @@ export default class ChessMechanism extends Backbone.Model {
     this.listenTo(this, "change:mode", (model, mode) => {
       if (mode === "normal") {
         this.setFen(this.getPosition(world.get("i")))
-        this.set({ j: -1 })
+        this.set({ j: -1, k: 0 })
       } else if (mode === "analysis") {
         this.set({ j: 0 })
       }
@@ -107,7 +107,7 @@ export default class ChessMechanism extends Backbone.Model {
       analysis = analysisCache.get(fen)
     }
     if (!analysis) {
-      return;
+      return
     }
     this.set({ j: 0, analysis, mode: "analysis", k })
   }

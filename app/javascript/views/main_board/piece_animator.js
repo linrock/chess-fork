@@ -15,9 +15,9 @@ export default class PieceAnimator {
 
   listenForEvents() {
     this.board.listenTo(world, "change:i", (model, i) => {
-      let iPrev = model.previous("i")
-      let prevFen = chess.getPosition(iPrev)
-      let newFen = chess.getPosition(i)
+      const iPrev = model.previous("i")
+      const prevFen = chess.getPosition(iPrev)
+      const newFen = chess.getPosition(i)
       if (prevFen === newFen) {
         chess.setFen(newFen)
         return
@@ -37,14 +37,19 @@ export default class PieceAnimator {
       if (j === -1) {
         return
       }
-      let prevFen = window.chessboard.fen
-      let newFen = chess.get("analysis").variations[0].positions[j + 1]
-      let moves = this.positionDiffs(prevFen, newFen)
+      const prevFen = window.chessboard.fen
+      const newFen = chess.get("analysis").variations[chess.get("k")].positions[j + 1]
+      const moves = this.positionDiffs(prevFen, newFen)
       if (moves.length <= 2) {
         this.animatePositions(prevFen, newFen)
       } else {
         chess.setFen(newFen)
       }
+    })
+    this.board.listenTo(chess, "change:k", (model, k) => {
+      const prevFen = window.chessboard.fen
+      const newFen = chess.get("analysis").variations[k].positions[chess.get("j") + 1]
+      chess.setFen(newFen)
     })
   }
 
