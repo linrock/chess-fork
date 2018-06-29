@@ -115,7 +115,7 @@ export default class EvaluationGraph extends Backbone.View<Backbone.Model> {
     if (!_.isNumber(i)) {
       return
     }
-    if (i != this.hoverI) {
+    if (i !== this.hoverI) {
       this.hoverI = i
       this.trigger("hover:i", i)
       chess.trigger("preview:i", i)

@@ -27,13 +27,9 @@ const getGameOverScore = (fen: FEN): Score => {
 const getNormalizedScore = (fen: FEN): Score => {
   let polarity = /\sw\s/.test(fen) ? 1 : -1
   polarity *= chess.get("polarity")
-  const analysis = analysisCache.get(fen)
-  if (!analysis || !analysis.variations[0]) {
+  let score = analysisCache.getScore(fen)
+  if (typeof score === `undefined`) {
     return 0
-  }
-  let score = analysis.variations[0].score
-  if (!score) {
-    return getGameOverScore(fen)
   }
   if (score < -10) {
     score = -10
