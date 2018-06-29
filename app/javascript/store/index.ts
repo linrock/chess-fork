@@ -8,19 +8,21 @@ import analysisCache from '../analysis/cache'
 import { defaultAnalysisOptions } from '../analysis/options'
 
 interface Store {
-  multipv?: number
-  depth?: number
+  mode: string
   positionIndex: number
   variationIndex: number
   variationPositionIndex: number
   currentAnalysis: Analysis
+  multipv?: number
+  depth?: number
 }
 
 const store: Store = Object.assign({}, defaultAnalysisOptions, {
+  mode: `normal`,
   positionIndex: 0,
   variationIndex: null,
   variationPositionIndex: null,
-  currentAnalysis: null
+  currentAnalysis: null,
 })
 
 const currentFen = (): FEN => chess.getPosition(store.positionIndex)
@@ -37,6 +39,8 @@ listener.listenTo(world, "change:i", (_, i) => {
 })
 listener.listenTo(chess, "change:j", (_, j) => store.variationIndex = j)
 listener.listenTo(chess, "change:k", (_, k) => store.variationPositionIndex = k)
+listener.listenTo(chess, "change:mode", (_, mode) => store.mode = mode)
+
 listener.listenTo(chess, "analysis:complete", fen => {
   const analysisOptions = {
     multipv: store.multipv,
