@@ -1,4 +1,5 @@
 import { UciMove, FEN } from '../../types'
+import { PositionAnalysis } from '../types'
 import Variation from './variation'
 
 export default class Analysis {
@@ -7,7 +8,7 @@ export default class Analysis {
   public engine: string
   public variations: Array<Variation>
 
-  constructor(analysisData) {
+  constructor(analysisData: PositionAnalysis) {
     const polarity = analysisData.fen.includes(` w `) ? 1 : -1
     this.fen = analysisData.fen
     this.bestmove = analysisData.state.evaluation.best

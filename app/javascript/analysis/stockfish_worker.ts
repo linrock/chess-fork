@@ -1,36 +1,15 @@
-import { FEN, UciMove } from '../types'
+import { FEN } from '../types'
+import {
+  PositionVariation,
+  PositionEvaluation,
+  PositionAnalysis
+} from './types'
+import { AnalysisOptions } from './options'
 
 declare var WebAssembly: any
 
 const wasmSupported = typeof WebAssembly === 'object' && WebAssembly.validate(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00))
 
-interface PositionVariation {
-  cp: number
-  mate: number|null
-  pv: string
-  best: UciMove
-}
-
-interface PositionEvaluation {
-  depth: number
-  nps: number
-  best: UciMove
-  cp: number
-  mate: number|null
-  pvs: Array<PositionVariation>
-}
-
-interface PositionAnalysis {
-  fen: FEN
-  state: {
-    [evaluation: string]: PositionEvaluation
-  }
-}
-
-interface AnalysisOptions {
-  multipv?: number
-  depth?: number
-}
 
 class StockfishEngine {
   private readonly debug = false
