@@ -32,15 +32,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import _ from 'underscore'
+  import { FEN } from '../types'
   import store from '../store'
   import { chess } from '../chess_mechanism'
   import { world } from '../main'
   import { defaultAnalysisOptions } from '../analysis/options'
   import analysisCache from '../analysis/cache'
 
-  const getFormattedEvaluation = (evaluation, polarity) => {
+  type Evaluation = string|number
+
+  const getFormattedEvaluation = (evaluation: Evaluation, polarity: number) => {
     let color = ''
     if (_.isNumber(evaluation)) {
       evaluation *= polarity
@@ -84,7 +87,7 @@
     },
 
     computed: {
-      currentFen() {
+      currentFen(): FEN {
         return chess.getPosition(this.store.positionIndex)
       },
 

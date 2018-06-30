@@ -1,6 +1,6 @@
 <template>
   <div class="move-list">
-    <template v-for="(sanMove, i) in store.moves">
+    <template v-for="(sanMove, i) in moves">
       <div class="move-num" v-if="i % 2 === 0">{{ ~~(i / 2) + 1 }}. </div>
       <div class="move" @click="gotoMove(i + 1)"
            :class="[{ current: store.positionIndex === i + 1 }]">{{ sanMove }}</div>
@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import { SanMove } from '../types'
   import { chess } from '../chess_mechanism'
   import store from '../store'
@@ -21,6 +21,12 @@
     methods: {
       gotoMove(i) {
         chess.setPositionIndex(i)
+      }
+    },
+
+    computed: {
+      moves(): Array<SanMove> {
+        return store.moves
       }
     }
   }

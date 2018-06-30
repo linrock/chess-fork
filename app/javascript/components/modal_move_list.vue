@@ -29,7 +29,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import { SanMove } from '../types'
+  import Analysis from '../analysis/models/analysis'
   import store from '../store'
   import { chess } from '../chess_mechanism'
 
@@ -43,25 +45,25 @@
         chess.set({ mode: `normal` })
         store.mode = `normal`
       },
-      gotoMove(variationIndex) {
+      gotoMove(variationIndex: number) {
         chess.set({ j: variationIndex })
       }
     },
 
     computed: {
-      currentAnalysis() {
+      currentAnalysis(): Analysis {
         return store.currentAnalysis
       },
-      analysisMoves() {
-        if (!store.currentAnalysis || (store.variationPositionIndex === null)) {
+      analysisMoves(): Array<SanMove> {
+        if (!this.currentAnalysis || (store.variationPositionIndex === null)) {
           return []
         }
-        return store.currentAnalysis.variations[store.variationPositionIndex].moves
+        return this.currentAnalysis.variations[store.variationPositionIndex].moves
       },
-      startPlyNum() {
+      startPlyNum(): number {
         return store.positionIndex
       },
-      startMoveNum() {
+      startMoveNum(): number {
         return Math.round( this.startPlyNum / 2)
       }
     }

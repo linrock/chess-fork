@@ -11,11 +11,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import { FEN, SanMove } from '../types'
   import store from '../store'
   import { chess } from '../chess_mechanism'
 
-  const firstVariationMove = (k) => {
+  const firstVariationMove = (k: number): SanMove => {
     return chess.get("analysis").variations[k].moves[0]
   }
 
@@ -28,14 +29,16 @@
     },
 
     computed: {
-      currentFen() {
+      currentFen(): FEN {
         if (store.mode === `normal`) {
           return chess.getPosition(store.positionIndex)
         } else if (store.mode === `analysis`) {
-          return store.currentAnalysis.variations[store.variationPositionIndex].positions[store.variationIndex + 1]
+          const j = store.variationIndex + 1
+          const k = store.variationPositionIndex
+          return store.currentAnalysis.variations[k].positions[j]
         }
       },
-      positionInfoText() {
+      positionInfoText(): string {
         const i = store.positionIndex - 1
         if (store.mode === `normal`) {
           return `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
