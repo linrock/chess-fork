@@ -8,10 +8,11 @@
         i.fa.fa-chevron-left
       button.action(@click="chess.prevMove()")
         i.fa.fa-chevron-left
-      button.action.next-move(@click="chess.nextMove()")
+      button.action(@click="chess.nextMove()")
         i.fa.fa-chevron-right
-      button.action.last-move(@click="chess.lastMove()")
+      button.action(@click="chess.lastMove()")
         i.fa.fa-chevron-right
+        ||
 
 </template>
 

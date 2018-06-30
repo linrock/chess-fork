@@ -9,9 +9,9 @@ interface GraphPoint {
 // The actual area graph that gets rendered
 //
 export default class AreaGraph {
-  private $el: JQuery
+  private readonly $el: JQuery
+  private readonly color = "rgba(70, 130, 180, 1)"
   private maxWidth: number
-  private color = "rgba(70, 130, 180, 1)"
 
   constructor($el) {
     this.$el = $el
