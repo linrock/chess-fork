@@ -9,21 +9,20 @@ import { FEN } from '../types'
 // For handling the DOM elements of the pieces on the board
 //
 class Pieces {
+  private readonly $buffer = $("<div>").addClass("piece-buffer")
   private board: Chessboard
-  private $buffer: JQuery
 
   constructor(board) {
     this.board = board
-    this.$buffer = $("<div>").addClass("piece-buffer")
   }
 
-  reset() {
+  public reset(): void {
     this.board.$(".piece").appendTo(this.$buffer)
   }
   
-  $getPiece(piece) {
-    let className = piece.color + piece.type
-    let $piece = this.$buffer.find("." + className).first()
+  public $getPiece(piece): JQuery {
+    const className = piece.color + piece.type
+    const $piece = this.$buffer.find("." + className).first()
     if ($piece.length) {
       return $piece
     }
@@ -35,9 +34,9 @@ class Pieces {
 
 
 export default class Chessboard extends Backbone.View<Backbone.Model> {
+  private readonly sqPrefix: string
   private pieces: Pieces
   private fen: FEN
-  private sqPrefix: string
 
   initialize() {
     this.pieces = new Pieces(this)
@@ -45,7 +44,7 @@ export default class Chessboard extends Backbone.View<Backbone.Model> {
     this.showPieces()
   }
 
-  renderFen(fen) {
+  private renderFen(fen): void {
     if (fen.split(" ").length === 4) {
       fen += " 0 1"
     }
@@ -64,15 +63,15 @@ export default class Chessboard extends Backbone.View<Backbone.Model> {
     this.fen = fen
   }
 
-  showPieces() {
+  private showPieces(): void {
     setTimeout(() => this.$(".piece").removeClass("invisible"), 100)
   }
 
-  isAnimating(): boolean {
+  public isAnimating(): boolean {
     return !!this.$el.find(".piece:animated").length
   }
 
-  $getSquare(id) {
+  public $getSquare(id): JQuery {
     return $(`#${this.sqPrefix}-${id}`)
   }
 }

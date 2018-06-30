@@ -80,11 +80,11 @@
         return chess.getPosition(this.store.positionIndex)
       },
 
-      movesButtonText() {
+      movesButtonText(): string {
         return this.store.multipv === 1 ? '+ show more moves' : '- show less moves'
       },
 
-      depthButtonText() {
+      depthButtonText(): string {
         return this.store.depth === 12 ? '+ higher depth' : '- lower depth'
       },
 

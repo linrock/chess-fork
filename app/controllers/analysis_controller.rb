@@ -6,8 +6,7 @@ class AnalysisController < ActionController::Base
   def index
   end
 
-  # params - pgn - input a pgn
-  #
+  # params - moves - array of SAN moves
   def get_opening
     if params[:moves]
       render json: {
