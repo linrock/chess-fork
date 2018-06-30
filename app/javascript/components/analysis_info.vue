@@ -17,7 +17,7 @@
           @click="enterAnalysisMode"
         )
           | {{ variation.move }}
-        .evaluation {{ variation.evaluation }}
+        .evaluation(:class="variation.color") {{ variation.evaluation }}
         .depth {{ variation.depth }}
 
 </template>
