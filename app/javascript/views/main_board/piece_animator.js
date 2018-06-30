@@ -47,6 +47,9 @@ export default class PieceAnimator {
       }
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
+      if (this.board.isAnimating()) {
+        return
+      }
       const prevFen = window.chessboard.fen
       const newFen = this.currentAnalysisPosition()
       chess.setFen(newFen)

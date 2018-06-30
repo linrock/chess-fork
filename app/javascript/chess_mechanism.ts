@@ -162,7 +162,7 @@ export default class ChessMechanism extends Backbone.Model {
     if (i < 0 || i >= this.nPositions()) {
       return
     }
-    if ((<any>window).chessboard.animating()) {
+    if ((<any>window).chessboard.isAnimating()) {
       return
     }
     world.set({ i })
@@ -190,7 +190,7 @@ export default class ChessMechanism extends Backbone.Model {
       this.set({ mode: "normal" })
       return
     }
-    if ((<any>window).chessboard.animating()) {
+    if ((<any>window).chessboard.isAnimating()) {
       return
     }
     this.set({ j: j })
