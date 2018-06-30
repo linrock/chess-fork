@@ -12,7 +12,7 @@ import HoverBar from './evaluation_graph/hover_bar'
 import StaticBar from './evaluation_graph/static_bar'
 import AreaGraph from './evaluation_graph/area_graph'
 import { getNormalizedScores } from './evaluation_graph/points_normalizer'
-import { world } from '../main'
+import { world } from '../world_state'
 import { chess } from '../chess_mechanism'
 
 

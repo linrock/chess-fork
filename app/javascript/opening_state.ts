@@ -5,7 +5,7 @@ import $ from 'jquery'
 import Backbone from 'backbone'
 import Immutable from 'immutable'
 
-import { world } from './main'
+import { world } from './world_state'
 
 interface OpeningResponse {
   eco: string,

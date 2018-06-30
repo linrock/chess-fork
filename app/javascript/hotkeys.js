@@ -1,6 +1,6 @@
 import Mousetrap from 'mousetrap'
 import { chess } from './chess_mechanism'
-import { world } from './main'
+import { world } from './world_state'
 
 export default class HotKeys {
 

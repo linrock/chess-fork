@@ -3,7 +3,7 @@
 import $ from 'jquery'
 import Backbone from 'backbone'
 
-import { world } from '../main'
+import { world } from '../world_state'
 
 export default class IntroMessage extends Backbone.View {
 

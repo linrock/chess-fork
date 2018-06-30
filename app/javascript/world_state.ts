@@ -21,16 +21,15 @@ export default class WorldState extends Backbone.Model {
     this.reset()
   }
 
-  listenForEvents() {
+  private listenForEvents(): void {
     this.listenTo(this, "change", this.recordState)
-    this.listenTo(this, "reset",  this.reset)
   }
 
-  recordState(state) {
+  private recordState(state: WorldState) {
     this.states = this.states.push(Immutable.Map(<WorldStateSnapshot>state.attributes))
   }
 
-  reset() {
+  public reset(): void {
     this.set({
       moves: Immutable.List(),
       positions: Immutable.List([ new Chess().fen() ]),
@@ -38,7 +37,7 @@ export default class WorldState extends Backbone.Model {
     })
   }
 
-  rewind() {
+  public rewind(): void {
     if (this.states.size <= 1) {
       return
     }

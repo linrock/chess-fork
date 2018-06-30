@@ -1,7 +1,7 @@
 // Use an orange bar to denote the current position of the board
 
 import Bar from './bar'
-import { world } from '../../main'
+import { world } from '../../world_state'
 
 export default class StaticBar extends Bar {
 

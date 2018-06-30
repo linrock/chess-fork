@@ -2,7 +2,7 @@ import Backbone from 'backbone'
 
 import { FEN, SanMove } from '../types'
 import { chess } from '../chess_mechanism'
-import { world } from '../main'
+import { world } from '../world_state'
 import Analysis from '../analysis/models/analysis'
 import analysisCache from '../analysis/cache'
 import { defaultAnalysisOptions } from '../analysis/options'

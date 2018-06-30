@@ -4,7 +4,7 @@ import Backbone from 'backbone'
 import Chess from 'chess.js'
 
 import { chess } from '../chess_mechanism'
-import { world } from '../main'
+import { world } from '../world_state'
 import { uciToMove } from '../utils'
 import { FEN } from '../types'
 

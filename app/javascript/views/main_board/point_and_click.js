@@ -1,7 +1,7 @@
 // Point and click pieces to select and move them
 
 import $ from 'jquery'
-import { world } from '../../main'
+import { world } from '../../world_state'
 
 export default class PointAndClick {
 

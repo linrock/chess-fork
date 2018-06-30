@@ -1,7 +1,7 @@
 import _ from 'underscore'
 import Chess from 'chess.js'
 
-import { world } from '../../main'
+import { world } from '../../world_state'
 import { chess } from '../../chess_mechanism'
 
 // For handling animation of pieces on the board when relevant

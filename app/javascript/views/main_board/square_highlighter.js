@@ -2,7 +2,7 @@
 
 import Chess from 'chess.js'
 
-import { world } from '../../main'
+import { world } from '../../world_state'
 import { chess } from '../../chess_mechanism'
 
 export default class SquareHighlighter {

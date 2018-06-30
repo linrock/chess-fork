@@ -5,7 +5,7 @@ import Backbone from 'backbone'
 
 import Tooltip from './tooltip'
 import openingState from '../opening_state'
-import { world } from '../main'
+import { world } from '../world_state'
 
 export default class SubHeader extends Backbone.View {
 
@@ -15,8 +15,8 @@ export default class SubHeader extends Backbone.View {
 
   get events() {
     return {
-      "click .reset-board" : "_resetBoard",
-      "click .undo"        : "_undo"
+      "click .reset-board" : () => world.reset(),
+      "click .undo"        : () => world.rewind(),
     }
   }
 
@@ -40,13 +40,5 @@ export default class SubHeader extends Backbone.View {
 
   initSubviews() {
     this.$("[data-tooltip]").each((i, el) => new Tooltip({ el }))
-  }
-
-  _resetBoard() {
-    world.trigger("reset")
-  }
-
-  _undo() {
-    world.rewind()
   }
 }

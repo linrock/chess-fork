@@ -27,7 +27,6 @@
   import { FEN } from '../types'
   import store from '../store'
   import { chess } from '../chess_mechanism'
-  import { world } from '../main'
   import { defaultAnalysisOptions } from '../analysis/options'
   import analysisCache from '../analysis/cache'
 
@@ -107,7 +106,7 @@
           const polarity = (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
           const { color, evaluation } = getFormattedEvaluation(variation.score, polarity)
           data.push({
-            move: `${chess.getMovePrefix(world.get("i"))} ${variation.firstMove}`,
+            move: `${chess.getMovePrefix(store.positionIndex)} ${variation.firstMove}`,
             engine: analysis.engine,
             depth: variation.depth,
             evaluation,
