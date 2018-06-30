@@ -33,26 +33,36 @@ interface AnalysisOptions {
 }
 
 class StockfishEngine {
-  private stockfish: Worker
+  private readonly debug = false
+  private readonly stockfish: Worker
 
   constructor() {
     this.stockfish = new Worker(`/assets/stockfish${wasmSupported ? '.wasm' : ''}.js`)
-    this.stockfish.postMessage('uci')
-    // this.debugMessages()
+    this.sendToStockfish('uci')
+    if (this.debug) {
+      this.debugMessages()
+    }
   }
 
   public analyze(fen: FEN, options: AnalysisOptions): Promise<PositionAnalysis> {
     options.depth = options.depth
     const { depth, multipv } = options
-    this.stockfish.postMessage('position fen ' + fen)
-    this.stockfish.postMessage('setoption name MultiPV value ' + multipv)
+    this.sendToStockfish('position fen ' + fen)
+    this.sendToStockfish('setoption name MultiPV value ' + multipv)
     return new Promise((resolve, reject) => {
       this.emitEvaluationWhenDone(fen, options, resolve)
-      this.stockfish.postMessage('go depth ' + depth)
+      this.sendToStockfish('go depth ' + depth)
     })
   }
 
-  private debugMessages() {
+  private sendToStockfish(message: string): void {
+    this.stockfish.postMessage(message)
+    if (this.debug) {
+      console.warn(message)
+    }
+  }
+
+  private debugMessages(): void {
     this.stockfish.addEventListener('message', e => console.log(e.data))
   }
 

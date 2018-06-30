@@ -8,7 +8,7 @@ import { world } from '../main'
 import { uciToMove } from '../utils'
 import { FEN } from '../types'
 
-import { AnalysisOptions } from './options'
+import { AnalysisOptions, defaultAnalysisOptions } from './options'
 import Analysis from './models/analysis'
 import stockfish from './stockfish_worker'
 import analysisCache from './cache'
@@ -64,9 +64,10 @@ export default class AnalysisEngine extends Backbone.Model {
 
   // analysis from local stockfish in browser
   private stockfishAnalyze(fen: FEN, options: AnalysisOptions = {}): Promise<Analysis> {
-    return stockfish.analyze(fen, options).then(analysisData => {
+    const analysisOptions: AnalysisOptions = Object.assign({}, defaultAnalysisOptions, options)
+    return stockfish.analyze(fen, analysisOptions).then(analysisData => {
       const analysis = new Analysis(analysisData)
-      analysisCache.set(fen, options, analysis)
+      analysisCache.set(fen, analysisOptions, analysis)
       return analysis
     })
   }
