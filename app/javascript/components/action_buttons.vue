@@ -1,24 +1,18 @@
-<template>
-  <div class="actions">
-    <button class="action flip-board" @click="chess.trigger('polarity:flip')">
-      <i class="fa fa-retweet"></i>
-    </button>
+<template lang="pug">
+  .actions
+    button.action.flip-board(@click="chess.trigger('polarity:flip')")
+      i.fa.fa-retweet
+    .move-actions(:class="[{ invisible: store.moves.length === 0 }]")
+      button.action(@click="chess.firstMove()")
+        ||
+        i.fa.fa-chevron-left
+      button.action(@click="chess.prevMove()")
+        i.fa.fa-chevron-left
+      button.action.next-move(@click="chess.nextMove()")
+        i.fa.fa-chevron-right
+      button.action.last-move(@click="chess.lastMove()")
+        i.fa.fa-chevron-right
 
-    <div class="move-actions" :class="[{ invisible: store.moves.length === 0 }]">
-      <button class="action" @click="chess.firstMove()">
-        |<i class="fa fa-chevron-left"></i>
-      </button>
-      <button class="action" @click="chess.prevMove()">
-        <i class="fa fa-chevron-left"></i>
-      </button>
-      <button class="action next-move" @click="chess.nextMove()">
-        <i class="fa fa-chevron-right"></i>
-      </button>
-      <button class="action last-move" @click="chess.lastMove()">
-        <i class="fa fa-chevron-right"></i>|
-      </button>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">

@@ -1,35 +1,25 @@
-<template>
-  <div class="suggested-moves" :class="[{ invisible: store.positionIndex === 0 }]">
-    <div class="engine-actions">
-      <a href="javascript:" class="more-moves" @click="showMoreMoves">
-        {{ movesButtonText }}
-      </a>
-      <a href="javascript:" class="more-depth" @click="higherDepth">
-        {{ depthButtonText }}
-      </a>
-    </div>
+<template lang="pug">
+  .suggested-moves(:class="[{ invisible: store.positionIndex === 0 }]")
+    .engine-actions
+      a.more-moves(href="javascript:" @click="showMoreMoves")
+        | {{ movesButtonText }}
+      a.more-depth(href="javascript:" @click="higherDepth")
+        | {{ depthButtonText }}
+    .titles
+      .response Response
+      .eval Score
+      .depth Depth
+    .moves(v-if="analysisData")
+      .move-row(v-for="variation in analysisData")
+        .move.engine-move(
+          :data-fen="store.currentAnalysis.fen"
+          :data-k="variation.variationIndex"
+          @click="enterAnalysisMode"
+        )
+          | {{ variation.move }}
+        .evaluation {{ variation.evaluation }}
+        .depth {{ variation.depth }}
 
-    <div class="titles">
-      <div class="response">Response</div>
-      <div class="eval">Score</div>
-      <div class="depth">Depth</div>
-    </div>
-
-    <div class="moves" v-if="analysisData">
-      <div class="move-row"v-for="variation in analysisData">
-        <div class="move engine-move"
-             :data-fen="store.currentAnalysis.fen"
-             :data-k="variation.variationIndex"
-             @click="enterAnalysisMode">
-          {{ variation.move }}
-        </div>
-        <div class="evaluation">{{ variation.evaluation }}</div>
-        <div class="depth">
-          {{ variation.depth }}
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">

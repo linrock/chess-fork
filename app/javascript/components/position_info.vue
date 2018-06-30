@@ -1,14 +1,11 @@
-<template>
-  <div class="position-info" :class="[{ invisible: store.positionIndex <= 0 }]">
-    <a class="action show-fen" href="javascript:" @click="toggleFen">
-      <div class="name">{{ showingFen ? `Hide` : `Show` }} FEN</div>
-    </a>
+<template lang="pug">
+  .position-info(:class="[{ invisible: store.positionIndex <= 0 }]")
+    a.action.show-fen(href="javascript:" @click="toggleFen")
+      .name {{ showingFen ? `Hide` : `Show` }} FEN
+    .position-description
+      .fen(v-if="showingFen") {{ currentFen }}
+      div(v-if="!showingFen") {{ positionInfoText }}
 
-    <div class="position-description">
-      <div class="fen" v-if="showingFen">{{ currentFen }}</div>
-      <div v-if="!showingFen">{{ positionInfoText }}</div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">

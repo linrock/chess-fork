@@ -1,11 +1,12 @@
-<template>
-  <div class="move-list">
-    <template v-for="(sanMove, i) in moves">
-      <div class="move-num" v-if="i % 2 === 0">{{ ~~(i / 2) + 1 }}. </div>
-      <div class="move" @click="gotoMove(i + 1)"
-           :class="[{ current: store.positionIndex === i + 1 }]">{{ sanMove }}</div>
-    </template>
-  </div>
+<template lang="pug">
+  .move-list
+    template(v-for="(sanMove, i) in moves")
+      .move-num(v-if="i % 2 === 0") {{ ~~(i / 2) + 1 }}.
+      .move(
+        @click="gotoMove(i + 1)"
+        :class="[{ current: store.positionIndex === i + 1 }]"
+      ) {{ sanMove }}
+
 </template>
 
 <script lang="ts">

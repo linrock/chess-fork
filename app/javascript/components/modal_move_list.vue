@@ -1,32 +1,22 @@
-<template>
-  <div class="modal-move-list" :class="[{ invisible: store.mode === `normal` }]">
-    <div class="modal-bg" @click="closeModal"></div>
+<template lang="pug">
+  .modal-move-list(:class="[{ invisible: store.mode === `normal` }]")
+    .modal-bg(@click="closeModal")
+    .modal(v-if="currentAnalysis")
+      header.modal-header
+        .engine-name {{ currentAnalysis.engine }}
+        .close-modal(@click="closeModal") x
+      .move-list
+        template(v-if="startPlyNum % 2 === 1")
+          .move-num {{ startMoveNum }}
+          .move ...
+        template(v-for="(move, i) in analysisMoves")
+          .move-num(v-if="(startPlyNum + i) % 2 === 0") {{ startMoveNum + i }}.
+          .move(
+            :data-ply="startPlyNum + i"
+            :class="[{ current: store.variationIndex === i }]"
+            @click="gotoMove(i)"
+          ) {{ move }}
 
-    <div class="modal" v-if="currentAnalysis">
-      <header class="modal-header">
-        <div class="engine-name">{{ currentAnalysis.engine }}</div>
-        <div class="close-modal" @click="closeModal">x</div>
-      </header>
-
-      <div class="move-list">
-        <template v-if="startPlyNum % 2 === 1">
-          <div class="move-num">{{ startMoveNum }}</div>
-          <div class="move">...</div>
-        </template>
-        <template v-for="(move, i) in analysisMoves">
-          <div class="move-num"
-               v-if="(startPlyNum + i) % 2 === 0">
-            {{ startMoveNum + i }}.
-          </div>
-          <div class="move" :data-ply="startPlyNum + i"
-               :class="[{ current: store.variationIndex === i }]"
-               @click="gotoMove(i)">
-            {{ move }}
-          </div>
-        </template>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">
