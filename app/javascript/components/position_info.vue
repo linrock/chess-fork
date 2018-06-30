@@ -59,6 +59,7 @@
     position relative
     transition opacity 0.2s ease
     display flex
+    float left
 
     &.invisible 
       opacity 0

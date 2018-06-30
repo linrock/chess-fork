@@ -1,6 +1,6 @@
 import Backbone from 'backbone'
 
-import { FEN } from '../types'
+import { FEN, SanMove } from '../types'
 import { chess } from '../chess_mechanism'
 import { world } from '../main'
 import Analysis from '../analysis/models/analysis'
@@ -9,6 +9,7 @@ import { defaultAnalysisOptions } from '../analysis/options'
 
 interface Store {
   mode: string
+  moves: Array<SanMove>
   positionIndex: number
   variationIndex: number
   variationPositionIndex: number
@@ -19,6 +20,7 @@ interface Store {
 
 const store: Store = Object.assign({}, defaultAnalysisOptions, {
   mode: `normal`,
+  moves: [],
   positionIndex: 0,
   variationIndex: null,
   variationPositionIndex: null,
@@ -55,6 +57,10 @@ listener.listenTo(chess, "analysis:options:change", () => {
   const fen = currentFen()
   const { multipv, depth } = store
   chess.trigger("analysis:enqueue", fen, { multipv, depth })
+})
+
+listener.listenTo(world, "change:moves", (_, moves) => {
+  store.moves = moves.toArray()
 })
 
 export default store

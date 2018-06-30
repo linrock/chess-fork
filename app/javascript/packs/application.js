@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 import MainBoard from '../views/main_board'
 import PgnImporter from '../views/pgn_importer'
-import MoveList from '../views/move_list'
 import ActionButtons from '../views/action_buttons'
 import IntroMessage from '../views/intro_message'
 import EvaluationGraph from '../views/evaluation_graph'
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // interface views
   window.chessboard = new MainBoard
   new PgnImporter
-  new MoveList
   new ActionButtons
   new IntroMessage
   new EvaluationGraph
@@ -50,5 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
   new Vue({
     el: positionInfoEl.appendChild(document.createElement('div')),
     render: h => h(PositionInfo)
+  })
+
+  const moveListEl = document.querySelector(`.vue-move-list`)
+  new Vue({
+    el: moveListEl.appendChild(document.createElement('div')),
+    render: h => h(MoveList)
   })
 })

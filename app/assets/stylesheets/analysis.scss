@@ -213,7 +213,7 @@
   position: relative;
 }
 
-.game-move-list {
+.vue-move-list {
   border: 1px solid #eee;
   position: absolute;
   top: 0;
@@ -224,33 +224,6 @@
   padding: 10px 0;
   overflow-y: scroll;
   @include simple-scrollbar;
-}
-
-.move-list {
-  font-size: 14px;
-  width: 100%;
-  height: 100%;
-
-  .move-num {
-    float: left;
-    width: 45px;
-    padding: 7px 0 7px 15px;
-  }
-
-  .move {
-    float: left;
-    width: 70px;
-    padding: 7px 0 7px 12px;
-    transition: background 0.12s ease;
-
-    &:hover {
-      cursor: pointer;
-    }
-
-    &.current {
-      background: yellow;
-    }
-  }
 }
 
 .pgn-importer {
