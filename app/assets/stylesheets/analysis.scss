@@ -286,48 +286,6 @@
   }
 }
 
-.actions {
-  margin-top: 9px;
-  margin-left: 20px;
-  width: 204px;
-  float: left;
-  @include clearfix;
-
-  .action {
-    color: #cbcbcb;
-    font-size: 14px;
-    float: left;
-    padding: 7px 13px;
-    background: #eee;
-    text-align: center;
-
-    &:hover {
-      background: #e5e5e5;
-    }
-
-  }
-
-  .flip-board {
-    width: 41px;
-    font-size: 15px;
-    margin-right: 9px;
-    padding: 7px 0;
-    border-radius: 2px;
-  }
-
-  .move-actions {
-    float: left;
-    border-radius: 2px;
-    overflow: hidden;
-    transition: opacity 0.2s ease;
-
-    &.invisible {
-      opacity: 0;
-      pointer-events: none;
-    }
-  }
-}
-
 .bottom-area {
   float: left;
   position: relative;
