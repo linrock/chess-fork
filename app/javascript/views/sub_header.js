@@ -22,6 +22,7 @@ export default class SubHeader extends Backbone.View {
 
   initialize() {
     this.$title = this.$(".sub-header-title")
+    this.initialText = this.$title.text()
     this.listenForEvents()
     this.initSubviews()
   }
@@ -32,7 +33,7 @@ export default class SubHeader extends Backbone.View {
     })
     this.listenTo(world, "change:moves", (model, moves) => {
       if (moves.size === 0) {
-        this.$title.text("Welcome to the analysis board!")
+        this.$title.text(this.initialText)
       }
     })
   }

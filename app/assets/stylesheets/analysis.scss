@@ -94,16 +94,17 @@
   line-height: 45px;
   color: white;
   background: #333;
-  @include clearfix;
+
+  .container {
+    display: flex;
+  }
 
   .title {
     font-size: 20px;
-    float: left;
   }
 
-  .menu-actions {
-    float: left;
-    margin-left: 45px;
+  .header-links {
+    margin-left: auto;
 
     a {
       color: inherit;

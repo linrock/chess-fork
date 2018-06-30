@@ -1,4 +1,4 @@
-// The analysis view under the board
+// The intro message under the board before user makes an action
 
 import $ from 'jquery'
 import Backbone from 'backbone'
