@@ -127,12 +127,26 @@
 
     .move-list 
       height auto
+      font-size 14px
+      width 100%
+      height 100%
       padding 10px 0
       background white
       overflow hidden
 
+      .move-num
+        float left
+        width 45px
+        padding 7px 0 7px 15px
+
       .move 
+        float left
         width 60px
+        padding 7px 0 7px 12px
+        transition background 0.12s ease
+
+        &:hover
+          cursor pointer
 
         &.current 
           background #CFF
