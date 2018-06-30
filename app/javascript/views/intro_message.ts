@@ -5,7 +5,7 @@ import Backbone from 'backbone'
 
 import { world } from '../world_state'
 
-export default class IntroMessage extends Backbone.View {
+export default class IntroMessage extends Backbone.View<Backbone.Model> {
 
   get el() {
     return ".intro-message"

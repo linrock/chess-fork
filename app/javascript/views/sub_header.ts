@@ -7,13 +7,15 @@ import Tooltip from './tooltip'
 import openingState from '../opening_state'
 import { world } from '../world_state'
 
-export default class SubHeader extends Backbone.View {
+export default class SubHeader extends Backbone.View<Backbone.Model> {
+  private $title: JQuery
+  private initialText: string
 
   get el() {
     return ".sub-header"
   }
 
-  get events() {
+  events(): Backbone.EventsHash {
     return {
       "click .reset-board" : () => world.reset(),
       "click .undo"        : () => world.rewind(),
@@ -27,7 +29,7 @@ export default class SubHeader extends Backbone.View {
     this.initSubviews()
   }
 
-  listenForEvents() {
+  private listenForEvents() {
     this.listenTo(openingState, "change:opening", (model, opening) => {
       this.$title.text(opening)
     })
@@ -38,7 +40,7 @@ export default class SubHeader extends Backbone.View {
     })
   }
 
-  initSubviews() {
-    this.$("[data-tooltip]").each((i, el) => new Tooltip({ el }))
+  private initSubviews() {
+    [].forEach.call(this.$("[data-tooltip]"), el => new Tooltip({ el }))
   }
 }
