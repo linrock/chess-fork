@@ -95,7 +95,7 @@
           return
         }
         const variations = analysis.variations
-        if (!variations[0].moves[0]) {
+        if (!variations[0].firstMove) {
           return
         }
         if (this.currentFen !== analysis.fen) {
@@ -107,7 +107,7 @@
           const polarity = (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
           const { color, evaluation } = getFormattedEvaluation(variation.score, polarity)
           data.push({
-            move: `${chess.getMovePrefix(world.get("i"))} ${variation.moves[0]}`,
+            move: `${chess.getMovePrefix(world.get("i"))} ${variation.firstMove}`,
             engine: analysis.engine,
             depth: variation.depth,
             evaluation,

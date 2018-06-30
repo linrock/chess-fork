@@ -14,7 +14,7 @@
   import { chess } from '../chess_mechanism'
 
   const firstVariationMove = (k: number): SanMove => {
-    return chess.get("analysis").variations[k].moves[0]
+    return store.currentAnalysis.variations[k].firstMove
   }
 
   export default {

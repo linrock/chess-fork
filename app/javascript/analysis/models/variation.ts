@@ -23,6 +23,11 @@ export default class Variation {
     this.sequence = data.sequence
   }
 
+  public get firstMove(): SanMove {
+    const cjs = new Chess(this.fen)
+    return cjs.move(uciToMove(this.sequence[0])).san
+  }
+
   public get moves(): Array<SanMove> {
     return this.movesAndPositions.moves
   }

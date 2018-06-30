@@ -34,7 +34,7 @@ export default class SquareHighlighter {
       this.clearHighlights()
       const fen = chess.get("analysis").variations[k].positions[0]
       const c = new Chess(fen)
-      const move = c.move(chess.get("analysis").variations[k].moves[0])
+      const move = c.move(chess.get("analysis").variations[k].firstMove)
       this.highlightMove(move, "blue")
     })
     this.board.listenTo(chess, "change:mode", (model, mode) => {
