@@ -61,7 +61,7 @@ export default class SquareHighlighter {
     }
     const fen = chess.getPosition(i - 1)
     const c = new Chess(fen)
-    const move = c.move(chess.getMoves(i - 1))
+    const move = c.move(chess.getMove(i - 1))
     this.highlightMove(move, "yellow")
   }
 }

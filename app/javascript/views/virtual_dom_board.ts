@@ -43,7 +43,7 @@ export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
       return
     }
     this.position.load(chess.getPosition(i - 1))
-    return this.position.move(chess.getMoves(i - 1))
+    return this.position.move(chess.getMove(i - 1))
   }
 
   getPiece(piece): m.Component {

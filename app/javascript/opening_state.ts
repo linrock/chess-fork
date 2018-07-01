@@ -51,7 +51,7 @@ class OpeningState extends Backbone.Model {
     })
   }
 
-  remoteGetOpeningForMoves(moves): Promise<OpeningResponse> {
+  private remoteGetOpeningForMoves(moves): Promise<OpeningResponse> {
     return new Promise((resolve, reject) => {
       $.ajax({
         url: "/openings",
@@ -73,7 +73,7 @@ class OpeningState extends Backbone.Model {
     })
   }
 
-  processRemoteResponse(moves, response): OpeningResponse {
+  private processRemoteResponse(moves, response): OpeningResponse {
     let opening = response.opening
     if (response.search_done) {
       this.set({ length: moves.size })
@@ -82,7 +82,7 @@ class OpeningState extends Backbone.Model {
     return opening
   }
 
-  getOpeningForMoves(moves): Promise<OpeningResponse> {
+  private getOpeningForMoves(moves): Promise<OpeningResponse> {
     return new Promise((resolve, reject) => {
       let opening = this.cache.getOpening(moves)
       if (opening) {

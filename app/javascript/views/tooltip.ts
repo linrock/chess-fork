@@ -1,10 +1,8 @@
 import Backbone from 'backbone'
 
-import { HTML } from '../types'
-
 export default class Tooltip extends Backbone.View<Backbone.Model> {
   private $tooltip: JQuery
-  private text: string
+  private tooltipText: string
 
   events(): Backbone.EventsHash {
     return {
@@ -13,7 +11,7 @@ export default class Tooltip extends Backbone.View<Backbone.Model> {
     }
   }
 
-  private template(text): HTML {
+  private template(text): string {
     return `
       <div class="tooltip invisible">
         <div class="content">${text}</div>
@@ -22,13 +20,13 @@ export default class Tooltip extends Backbone.View<Backbone.Model> {
   }
 
   initialize() {
-    this.text = this.$el.data("tooltip")
+    this.tooltipText = this.$el.data("tooltip")
     this.render()
   }
 
   render() {
     this.$el.css({ position: "relative" })
-    this.$el.append(this.template(this.text))
+    this.$el.append(this.template(this.tooltipText))
     this.$tooltip = this.$(".tooltip")
     this.$tooltip.css({
       "margin-left" : -Math.round(this.$tooltip.width() / 2)

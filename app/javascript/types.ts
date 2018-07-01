@@ -1,5 +1,3 @@
-export type HTML = string
-
 export type PGN = string
 export type FEN = string
 export type SanMove = string  // e3, h4, Nf6

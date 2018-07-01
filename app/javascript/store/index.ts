@@ -36,6 +36,10 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
 const store = new Vuex.Store({
   state,
   getters: {
+    position(state: GlobalState): (number) => FEN {
+      return i => (i < 0) ? state.positions[0] : state.positions[i]
+    },
+
     currentFen(state: GlobalState): FEN {
       return state.positions[state.positionIndex]
       if (state.mode === `normal`) {

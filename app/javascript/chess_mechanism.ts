@@ -5,25 +5,20 @@ import Backbone from 'backbone'
 import Immutable from 'immutable'
 import Chess from 'chess.js'
 
-import { FEN } from './types'
+import { FEN, ChessMove, SanMove } from './types'
 import { world } from './world_state'
 import analysisCache from './analysis/cache'
 
 export default class ChessMechanism extends Backbone.Model {
-  public mechanism: Chess
+  public mechanism = new Chess
 
   constructor() {
     super()
-    this.mechanism = new Chess
     this.set({
       j: -1,
       mode: "normal",
       polarity: 1
     })
-    this.listenForEvents()
-  }
-
-  listenForEvents() {
     this.listenTo(world, "change:i", () => {
       if (this.get("j") >= 0) {
         this.set({ mode: "normal" })
@@ -42,15 +37,15 @@ export default class ChessMechanism extends Backbone.Model {
     })
   }
 
-  setFen(fen) {
-    this.set({ fen: fen })
+  public setFen(fen): void {
+    this.set({ fen })
   }
 
-  start() {
+  public start(): void {
     this.setFen(this.mechanism.fen())
   }
 
-  move(move) {
+  public move(move: ChessMove): void {
     let i = world.get("i")
     let c = new Chess(this.getPosition(i))
     let moveAttempt = c.move(move)
@@ -69,37 +64,11 @@ export default class ChessMechanism extends Backbone.Model {
     })
   }
 
-  loadGameHistory(moves) {
-    let c = new Chess
-    let positions = [c.fen()]
-    for (let move of moves) {
-      c.move(move)
-      positions.push(c.fen())
-    }
-    world.set({
-      moves: Immutable.List(moves),
-      positions: Immutable.List(positions)
-    })
-    this.trigger("game:loaded")
-  }
-
-  getPosition(i): FEN {
+  public getPosition(i: number): FEN {
     return world.get("positions").get(i)
   }
 
-  getCurrentPosition(): FEN {
-    return world.get("positions").get(world.get("i"))
-  }
-
-  getPositions(): Immutable.List<FEN> {
-    return world.get("positions")
-  }
-
-  nPositions(): number {
-    return this.getPositions().size
-  }
-
-  analyzePosition(fen, k) {
+  public analyzePosition(fen: FEN, k: number): void {
     k = k || 0 // multipv index
     let analysis
     if (k > 0) {
@@ -113,19 +82,19 @@ export default class ChessMechanism extends Backbone.Model {
     this.set({ j: 0, analysis, mode: "analysis", k })
   }
 
-  getMoves(i, end = false) {
-    if (end !== false) {
-      if (end > i) {
-        return world.get("moves").slice(i, end)
-      } else {
-        return Immutable.List()
-      }
+  public getMoves(i: number, end: number): Immutable.List<SanMove> {
+    if (end > i) {
+      return world.get("moves").slice(i, end)
     } else {
-      return world.get("moves").get(i)
+      return Immutable.List()
     }
   }
 
-  loadPgn(pgn) {
+  public getMove(i: number): SanMove {
+    return world.get("moves").get(i)
+  }
+
+  public loadPgn(pgn): boolean {
     if (!this.mechanism.load_pgn(pgn)) {
       return false
     }
@@ -134,23 +103,23 @@ export default class ChessMechanism extends Backbone.Model {
     return true
   }
 
-  firstMove() {
+  public firstMove(): void {
     this.setPositionIndex(0)
   }
 
-  prevMove() {
+  public prevMove(): void {
     this.setPositionIndex(world.get("i") - 1)
   }
 
-  nextMove() {
+  public nextMove(): void {
     this.setPositionIndex(world.get("i") + 1)
   }
 
-  lastMove() {
+  public lastMove(): void {
     this.setPositionIndex(this.nPositions() - 1)
   }
 
-  setPositionIndex(i) {
+  public setPositionIndex(i): void {
     if (this.get("mode") === "analysis") {
       this.set({ mode: "normal" })
       return
@@ -164,15 +133,41 @@ export default class ChessMechanism extends Backbone.Model {
     world.set({ i })
   }
 
-  prevEngineMove() {
+  public prevEngineMove(): void {
     this.setEnginePositionIndex(this.get("j") - 1)
   }
 
-  nextEngineMove() {
+  public nextEngineMove(): void {
     this.setEnginePositionIndex(this.get("j") + 1)
   }
 
-  setEnginePositionIndex(j) {
+  private loadGameHistory(moves: Array<SanMove>): void {
+    const c = new Chess
+    const positions = [c.fen()]
+    for (let move of moves) {
+      c.move(move)
+      positions.push(c.fen())
+    }
+    world.set({
+      moves: Immutable.List(moves),
+      positions: Immutable.List(positions)
+    })
+    this.trigger("game:loaded")
+  }
+
+  private getCurrentPosition(): FEN {
+    return world.get("positions").get(world.get("i"))
+  }
+
+  private getPositions(): Immutable.List<FEN> {
+    return world.get("positions")
+  }
+
+  private nPositions(): number {
+    return this.getPositions().size
+  }
+
+  private setEnginePositionIndex(j): void {
     let fen = this.getCurrentPosition()
     if (this.get("mode") === "normal" && j >= 0) {
       this.analyzePosition(fen, 0)
@@ -189,7 +184,7 @@ export default class ChessMechanism extends Backbone.Model {
     if ((<any>window).chessboard.isAnimating()) {
       return
     }
-    this.set({ j: j })
+    this.set({ j })
   }
 }
 
