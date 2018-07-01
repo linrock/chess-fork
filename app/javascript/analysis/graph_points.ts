@@ -5,7 +5,7 @@ import _ from 'underscore'
 import Chess from 'chess.js'
 
 import { FEN } from '../types'
-import { chess } from '../chess_mechanism'
+import store from '../store'
 import analysisCache from './cache'
 
 type Score = number // -10 to 10
@@ -26,7 +26,7 @@ const getGameOverScore = (fen: FEN): Score => {
 
 const getNormalizedScore = (fen: FEN): Score => {
   let polarity = /\sw\s/.test(fen) ? 1 : -1
-  polarity *= chess.get("polarity")
+  polarity *= store.state.boardPolarity
   let score = analysisCache.getScore(fen)
   if (typeof score === `undefined`) {
     return 0

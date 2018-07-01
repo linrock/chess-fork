@@ -5,6 +5,7 @@ import Backbone from 'backbone'
 import Immutable from 'immutable'
 import Chess from 'chess.js'
 
+import { FEN } from './types'
 import { world } from './world_state'
 import analysisCache from './analysis/cache'
 
@@ -82,15 +83,15 @@ export default class ChessMechanism extends Backbone.Model {
     this.trigger("game:loaded")
   }
 
-  getPosition(i) {
+  getPosition(i): FEN {
     return world.get("positions").get(i)
   }
 
-  getCurrentPosition() {
+  getCurrentPosition(): FEN {
     return world.get("positions").get(world.get("i"))
   }
 
-  getPositions() {
+  getPositions(): Immutable.List<FEN> {
     return world.get("positions")
   }
 
@@ -110,11 +111,6 @@ export default class ChessMechanism extends Backbone.Model {
       return
     }
     this.set({ j: 0, analysis, mode: "analysis", k })
-  }
-
-  getMovePrefix(i) {
-    let moveNum = 1 + ~~(i / 2)
-    return moveNum + (i % 2 == 0 ? "." : "...")
   }
 
   getMoves(i, end = false) {

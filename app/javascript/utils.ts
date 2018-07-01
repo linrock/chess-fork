@@ -10,3 +10,8 @@ export const uciToMove = (uciMove: UciMove): ChessMove => {
   }
   return move
 }
+
+export const getMovePrefix = (i: number): string => {
+  const moveNum = 1 + ~~(i / 2)
+  return moveNum + (i % 2 == 0 ? "." : "...")
+}

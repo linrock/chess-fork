@@ -39,6 +39,7 @@ const initBackboneBridge = state => {
     const { multipv, depth } = state
     chess.trigger("analysis:enqueue", fen, { multipv, depth })
   })
+  listener.listenTo(chess, "polarity:flip", () => state.boardPolarity *= -1)
 
   listener.listenTo(world, "change:moves", (_, moves) => {
     state.moves = moves.toArray()

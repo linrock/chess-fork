@@ -26,10 +26,20 @@
   import _ from 'underscore'
   import { FEN } from '../types'
   import { chess } from '../chess_mechanism'
+  import { getMovePrefix } from '../utils'
   import { defaultAnalysisOptions } from '../analysis/options'
   import analysisCache from '../analysis/cache'
 
   type Evaluation = string|number
+
+  interface AnalysisData {
+    move: string
+    engine: string
+    depth: number
+    evaluation: number
+    color: string
+    variationIndex: number
+  }
 
   const getFormattedEvaluation = (evaluation: Evaluation, polarity: number) => {
     let color = ''
@@ -71,10 +81,6 @@
     },
 
     computed: {
-      currentFen(): FEN {
-        return chess.getPosition(this.$store.state.positionIndex)
-      },
-
       movesButtonText(): string {
         return this.$store.state.multipv === 1 ? '+ show more moves' : '- show less moves'
       },
@@ -83,7 +89,7 @@
         return this.$store.state.depth === 12 ? '+ higher depth' : '- lower depth'
       },
 
-      analysisData() {
+      analysisData(): Array<AnalysisData> {
         const analysis = this.$store.state.currentAnalysis
         if (!analysis) {
           return
@@ -92,16 +98,16 @@
         if (!variations[0].firstMove) {
           return
         }
-        if (this.currentFen !== analysis.fen) {
+        if (this.$store.getters.currentFen !== analysis.fen) {
           return
         }
         const data = []
         for (let k = 0; k < variations.length; k++) {
           const variation = variations[k]
-          const polarity = (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
+          const polarity = (/ w /.test(analysis.fen) ? 1 : -1) * this.$store.state.boardPolarity
           const { color, evaluation } = getFormattedEvaluation(variation.score, polarity)
           data.push({
-            move: `${chess.getMovePrefix(this.$store.state.positionIndex)} ${variation.firstMove}`,
+            move: `${getMovePrefix(this.$store.state.positionIndex)} ${variation.firstMove}`,
             engine: analysis.engine,
             depth: variation.depth,
             evaluation,

@@ -3,8 +3,8 @@
     a.action.show-fen(href="javascript:" @click="toggleFen")
       .name {{ showingFen ? `Hide` : `Show` }} FEN
     .position-description
-      .fen(v-if="showingFen") {{ currentFen }}
-      div(v-if="!showingFen") {{ positionInfoText }}
+      .fen(v-if="showingFen") {{ $store.getters.currentFen }}
+      div(v-if="!showingFen") {{ $store.getters.positionInfoText }}
 
 </template>
 
@@ -19,34 +19,10 @@
       }
     },
 
-    computed: {
-      currentFen(): FEN {
-        if (this.$store.state.mode === `normal`) {
-          return chess.getPosition(this.$store.state.positionIndex)
-        } else if (this.$store.state.mode === `analysis`) {
-          const j = this.$store.state.variationIndex + 1
-          const k = this.$store.state.variationPositionIndex
-          return this.$store.state.currentAnalysis.variations[k].positions[j]
-        }
-      },
-      positionInfoText(): string {
-        const i = this.$store.state.positionIndex - 1
-        if (this.$store.state.mode === `normal`) {
-          return `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
-        } else if (this.$store.state.mode === `analysis`) {
-          const k = this.$store.state.variationPositionIndex
-          return `Variation after ${chess.getMovePrefix(i)} ${this.firstVariationMove(k)}`
-        }
-      }
-    },
-
     methods: {
       toggleFen() {
         this.showingFen = !this.showingFen
       },
-      firstVariationMove(k: number): SanMove {
-        return this.$store.state.currentAnalysis.variations[k].firstMove
-      }
     }
   }
 </script>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { FEN, SanMove } from '../types'
+import { getMovePrefix } from '../utils'
 import Analysis from '../analysis/models/analysis'
 import { defaultAnalysisOptions } from '../analysis/options'
 import initBackboneBridge from './bridge'
@@ -16,6 +17,7 @@ interface GlobalState {
   variationIndex: number
   variationPositionIndex: number
   currentAnalysis: Analysis
+  boardPolarity: number // 1 or -1
   multipv?: number
   depth?: number
 }
@@ -28,13 +30,32 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   variationIndex: null,
   variationPositionIndex: null,
   currentAnalysis: null,
+  boardPolarity: 1,
 })
 
 const store = new Vuex.Store({
   state,
   getters: {
-    currentFen(state): FEN {
+    currentFen(state: GlobalState): FEN {
       return state.positions[state.positionIndex]
+      if (state.mode === `normal`) {
+        return state.positions[state.positionIndex]
+      } else if (state.mode === `analysis`) {
+        const j = state.variationIndex + 1
+        const k = state.variationPositionIndex
+        return state.currentAnalysis.variations[k].positions[j]
+      }
+    },
+
+    positionInfoText(state: GlobalState): string {
+      const i = state.positionIndex - 1
+      if (state.mode === `normal`) {
+        return `${getMovePrefix(i)} ${state.moves[i]}`
+      } else if (state.mode === `analysis`) {
+        const k = state.variationPositionIndex
+        const firstVariationMove = state.currentAnalysis.variations[k].firstMove
+        return `Variation after ${getMovePrefix(i)} ${firstVariationMove}`
+      }
     }
   }
 })
