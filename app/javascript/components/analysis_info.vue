@@ -1,5 +1,5 @@
 <template lang="pug">
-  .suggested-moves(:class="[{ invisible: store.positionIndex === 0 }]")
+  .suggested-moves(:class="[{ invisible: $store.state.positionIndex === 0 }]")
     .engine-actions
       a.more-moves(href="javascript:" @click="showMoreMoves")
         | {{ movesButtonText }}
@@ -12,7 +12,7 @@
     .moves(v-if="analysisData")
       .move-row(v-for="variation in analysisData")
         .move.engine-move(
-          :data-fen="store.currentAnalysis.fen"
+          :data-fen="$store.state.currentAnalysis.fen"
           :data-k="variation.variationIndex"
           @click="enterAnalysisMode"
         )
@@ -25,7 +25,6 @@
 <script lang="ts">
   import _ from 'underscore'
   import { FEN } from '../types'
-  import store from '../store'
   import { chess } from '../chess_mechanism'
   import { defaultAnalysisOptions } from '../analysis/options'
   import analysisCache from '../analysis/cache'
@@ -56,17 +55,13 @@
   }
 
   export default {
-    data() {
-      return { store }
-    },
-
     methods: {
       showMoreMoves() {
-        this.store.multipv = this.store.multipv === 1 ? 3 : 1
+        this.$store.state.multipv = this.$store.state.multipv === 1 ? 3 : 1
         chess.trigger("analysis:options:change")
       },
       higherDepth() {
-        this.store.depth = this.store.depth === 12 ? 16 : 12
+        this.$store.state.depth = this.$store.state.depth === 12 ? 16 : 12
         chess.trigger("analysis:options:change")
       },
       enterAnalysisMode(event) {
@@ -77,19 +72,19 @@
 
     computed: {
       currentFen(): FEN {
-        return chess.getPosition(this.store.positionIndex)
+        return chess.getPosition(this.$store.state.positionIndex)
       },
 
       movesButtonText(): string {
-        return this.store.multipv === 1 ? '+ show more moves' : '- show less moves'
+        return this.$store.state.multipv === 1 ? '+ show more moves' : '- show less moves'
       },
 
       depthButtonText(): string {
-        return this.store.depth === 12 ? '+ higher depth' : '- lower depth'
+        return this.$store.state.depth === 12 ? '+ higher depth' : '- lower depth'
       },
 
       analysisData() {
-        const analysis = this.store.currentAnalysis
+        const analysis = this.$store.state.currentAnalysis
         if (!analysis) {
           return
         }
@@ -106,7 +101,7 @@
           const polarity = (/ w /.test(analysis.fen) ? 1 : -1) * chess.get("polarity")
           const { color, evaluation } = getFormattedEvaluation(variation.score, polarity)
           data.push({
-            move: `${chess.getMovePrefix(store.positionIndex)} ${variation.firstMove}`,
+            move: `${chess.getMovePrefix(this.$store.state.positionIndex)} ${variation.firstMove}`,
             engine: analysis.engine,
             depth: variation.depth,
             evaluation,

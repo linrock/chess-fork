@@ -4,7 +4,7 @@
       .move-num(v-if="i % 2 === 0") {{ ~~(i / 2) + 1 }}.
       .move(
         @click="chess.setPositionIndex(i + 1)"
-        :class="[{ current: store.positionIndex === i + 1 }]"
+        :class="[{ current: $store.state.positionIndex === i + 1 }]"
       ) {{ sanMove }}
 
 </template>
@@ -12,25 +12,29 @@
 <script lang="ts">
   import { SanMove } from '../types'
   import { chess } from '../chess_mechanism'
-  import store from '../store'
 
   export default {
     data() {
-      return { store }
+      return { chess }
     },
 
     computed: {
-      moves: (): Array<SanMove> => store.moves
+      moves(): Array<SanMove> {
+        return this.$store.state.moves
+      }
     }
   }
 </script>
 
 <style lang="stylus" scoped>
   .move-list 
+    border 1px solid #eee
     font-size 14px
     width 100%
     height 100%
     overflow hidden
+    padding-top 10px
+    position absolute
 
     .move-num 
       float left

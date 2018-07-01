@@ -2,7 +2,7 @@
   .actions
     button.action.flip-board(@click="chess.trigger('polarity:flip')")
       i.fa.fa-retweet
-    .move-actions(:class="[{ invisible: store.moves.length === 0 }]")
+    .move-actions(:class="[{ invisible: $store.state.moves.length === 0 }]")
       button.action(@click="chess.firstMove()")
         ||
         i.fa.fa-chevron-left
@@ -19,11 +19,10 @@
 <script lang="ts">
   import { SanMove } from '../types'
   import { chess } from '../chess_mechanism'
-  import store from '../store'
 
   export default {
     data() {
-      return { chess, store }
+      return { chess }
     }
   }
 </script>

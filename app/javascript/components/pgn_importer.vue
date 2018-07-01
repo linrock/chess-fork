@@ -1,5 +1,5 @@
 <template lang="pug">
-  .pgn-importer(v-if="store.moves.length === 0")
+  .pgn-importer(v-if="$store.state.moves.length === 0")
     textarea(
       ref="pgnInput"
       :placeholder="placeholderText"
@@ -17,7 +17,6 @@
   import Chess from 'chess.js'
   import { PGN } from '../types'
   import { chess } from '../chess_mechanism'
-  import store from '../store'
 
   const placeholderText = `Enter or paste a PGN here to import your game
 
@@ -38,7 +37,6 @@
         showPgnInputButton: false,
         pgnIsValid: false,
         placeholderText,
-        store
       }
     },
 

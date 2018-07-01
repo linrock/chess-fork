@@ -38,7 +38,6 @@
   import HoverIndicator from './evaluation_graph/hover_indicator'
   import { getNormalizedScores } from '../analysis/graph_points'
   import { chess } from '../chess_mechanism'
-  import store from '../store'
 
   export default {
     data() {
@@ -67,13 +66,13 @@
 
     computed: {
       positionIndex() {
-        return store.positionIndex
+        return this.$store.state.positionIndex
       },
       positions() {
-        return store.positions
+        return this.$store.state.positions
       },
       graphPoints() {
-        store.currentAnalysis
+        this.$store.state.currentAnalysis
         return getNormalizedScores(this.positions)
       },
       positionIndicatorX() {

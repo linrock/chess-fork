@@ -1,5 +1,5 @@
 <template lang="pug">
-  .modal-move-list(:class="[{ invisible: store.mode === `normal` }]")
+  .modal-move-list(:class="[{ invisible: $store.state.mode === `normal` }]")
     .modal-bg(@click="closeModal")
     .modal(v-if="currentAnalysis")
       header.modal-header
@@ -13,7 +13,7 @@
           .move-num(v-if="(startPlyNum + i) % 2 === 0") {{ startMoveNum + i }}.
           .move(
             :data-ply="startPlyNum + i"
-            :class="[{ current: store.variationIndex === i }]"
+            :class="[{ current: $store.state.variationIndex === i }]"
             @click="gotoMove(i)"
           ) {{ move }}
 
@@ -22,18 +22,13 @@
 <script lang="ts">
   import { SanMove } from '../types'
   import Analysis from '../analysis/models/analysis'
-  import store from '../store'
   import { chess } from '../chess_mechanism'
 
   export default {
-    data() {
-      return { store }
-    },
-
     methods: {
       closeModal() {
         chess.set({ mode: `normal` })
-        store.mode = `normal`
+        this.$store.state.mode = `normal`
       },
       gotoMove(variationIndex: number) {
         chess.set({ j: variationIndex })
@@ -42,16 +37,16 @@
 
     computed: {
       currentAnalysis(): Analysis {
-        return store.currentAnalysis
+        return this.$store.state.currentAnalysis
       },
       analysisMoves(): Array<SanMove> {
-        if (!this.currentAnalysis || (store.variationPositionIndex === null)) {
+        if (!this.currentAnalysis || (this.$store.state.variationPositionIndex === null)) {
           return []
         }
-        return this.currentAnalysis.variations[store.variationPositionIndex].moves
+        return this.currentAnalysis.variations[this.$store.state.variationPositionIndex].moves
       },
       startPlyNum(): number {
-        return store.positionIndex
+        return this.$store.state.positionIndex
       },
       startMoveNum(): number {
         return Math.round( this.startPlyNum / 2)

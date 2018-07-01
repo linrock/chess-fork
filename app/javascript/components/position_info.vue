@@ -1,5 +1,5 @@
 <template lang="pug">
-  .position-info(:class="[{ invisible: store.positionIndex <= 0 }]")
+  .position-info(:class="[{ invisible: $store.state.positionIndex <= 0 }]")
     a.action.show-fen(href="javascript:" @click="toggleFen")
       .name {{ showingFen ? `Hide` : `Show` }} FEN
     .position-description
@@ -10,38 +10,32 @@
 
 <script lang="ts">
   import { FEN, SanMove } from '../types'
-  import store from '../store'
   import { chess } from '../chess_mechanism'
-
-  const firstVariationMove = (k: number): SanMove => {
-    return store.currentAnalysis.variations[k].firstMove
-  }
 
   export default {
     data() {
       return {
         showingFen: false,
-        store
       }
     },
 
     computed: {
       currentFen(): FEN {
-        if (store.mode === `normal`) {
-          return chess.getPosition(store.positionIndex)
-        } else if (store.mode === `analysis`) {
-          const j = store.variationIndex + 1
-          const k = store.variationPositionIndex
-          return store.currentAnalysis.variations[k].positions[j]
+        if (this.$store.state.mode === `normal`) {
+          return chess.getPosition(this.$store.state.positionIndex)
+        } else if (this.$store.state.mode === `analysis`) {
+          const j = this.$store.state.variationIndex + 1
+          const k = this.$store.state.variationPositionIndex
+          return this.$store.state.currentAnalysis.variations[k].positions[j]
         }
       },
       positionInfoText(): string {
-        const i = store.positionIndex - 1
-        if (store.mode === `normal`) {
+        const i = this.$store.state.positionIndex - 1
+        if (this.$store.state.mode === `normal`) {
           return `${chess.getMovePrefix(i)} ${chess.getMoves(i)}`
-        } else if (store.mode === `analysis`) {
-          const k = store.variationPositionIndex
-          return `Variation after ${chess.getMovePrefix(i)} ${firstVariationMove(k)}`
+        } else if (this.$store.state.mode === `analysis`) {
+          const k = this.$store.state.variationPositionIndex
+          return `Variation after ${chess.getMovePrefix(i)} ${this.firstVariationMove(k)}`
         }
       }
     },
@@ -49,6 +43,9 @@
     methods: {
       toggleFen() {
         this.showingFen = !this.showingFen
+      },
+      firstVariationMove(k: number): SanMove {
+        return this.$store.state.currentAnalysis.variations[k].firstMove
       }
     }
   }
