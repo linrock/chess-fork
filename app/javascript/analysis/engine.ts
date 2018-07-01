@@ -12,25 +12,15 @@ import stockfish from './stockfish_worker'
 import analysisCache from './cache'
 import store from '../store'
 
-export default class AnalysisEngine extends Backbone.Model {
-  private workQueue: Array<[FEN, AnalysisOptions]> = []
+type Work = [FEN, AnalysisOptions]
+
+class AnalysisEngine extends Backbone.Model {
+  private workQueue: Array<Work> = []
   private isAnalyzing = false
 
-  initialize() {
-    this.listenForEvents()
-  }
-
-  private listenForEvents(): void {
-    this.listenTo(chess, "game:loaded", () => {
-      store.state.positions.forEach(fen => {
-        this.workQueue.push([fen, {}])
-      })
-      this.analyzeNextPosition()
-    })
-    this.listenTo(chess, "analysis:enqueue", (fen, options) => {
-      this.workQueue.push([fen, options])
-      this.analyzeNextPosition()
-    })
+  public enqueueWork(fen: FEN, options: AnalysisOptions): void {
+    this.workQueue.push([fen, options])
+    this.analyzeNextPosition()
   }
 
   private analyzeNextPosition(): void {
@@ -69,3 +59,7 @@ export default class AnalysisEngine extends Backbone.Model {
     })
   }
 }
+
+const analysisEngine = new AnalysisEngine
+
+export default analysisEngine

@@ -3,7 +3,7 @@
     template(v-for="(sanMove, i) in moves")
       .move-num(v-if="i % 2 === 0") {{ ~~(i / 2) + 1 }}.
       .move(
-        @click="chess.setPositionIndex(i + 1)"
+        @click="$store.dispatch(`setPositionIndex`, i + 1)"
         :class="[{ current: $store.state.positionIndex === i + 1 }]"
       ) {{ sanMove }}
 

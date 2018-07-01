@@ -67,12 +67,16 @@
   export default {
     methods: {
       showMoreMoves() {
-        this.$store.state.multipv = this.$store.state.multipv === 1 ? 3 : 1
-        chess.trigger("analysis:options:change")
+        const multipv = this.$store.state.multipv === 1 ? 3 : 1
+        this.$store.dispatch(`setAnalysisOptions`, Object.assign(
+          {}, this.$store.getters.analysisOptions, { multipv }
+        ))
       },
       higherDepth() {
-        this.$store.state.depth = this.$store.state.depth === 12 ? 16 : 12
-        chess.trigger("analysis:options:change")
+        const depth = this.$store.state.depth === 12 ? 16 : 12
+        this.$store.dispatch(`setAnalysisOptions`, Object.assign(
+          {}, this.$store.getters.analysisOptions, { depth }
+        ))
       },
       enterAnalysisMode(event) {
         const { fen, k } = event.currentTarget.dataset

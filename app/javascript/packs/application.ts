@@ -15,11 +15,9 @@ import EvaluationGraph from '../components/evaluation_graph'
 
 import { chess } from '../chess_mechanism'
 import store from '../store'
-import AnalysisEngine from '../analysis/engine'
 import HotKeys from '../hotkeys'
 
 document.addEventListener('DOMContentLoaded', () => {
-  new AnalysisEngine
   chess.start()
 
   new HotKeys

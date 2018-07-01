@@ -62,7 +62,7 @@ export default class SquareHighlighter {
     }
     const fen = world.getPosition(i - 1)
     const c = new Chess(fen)
-    const move = c.move(chess.getMove(i - 1))
+    const move = c.move(store.state.moves[i - 1])
     this.highlightMove(move, "yellow")
   }
 }

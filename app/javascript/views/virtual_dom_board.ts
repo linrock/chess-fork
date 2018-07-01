@@ -5,6 +5,7 @@ import Chess from 'chess.js'
 import { ChessMove } from '../types'
 import { chess } from '../chess_mechanism'
 import { world } from '../world_state'
+import store from '../store'
 
 export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
   private ROWS = [8, 7, 6, 5, 4, 3, 2, 1]
@@ -44,7 +45,7 @@ export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
       return
     }
     this.position.load(world.getPosition(i - 1))
-    return this.position.move(chess.getMove(i - 1))
+    return this.position.move(store.state.moves[i - 1])
   }
 
   getPiece(piece): m.Component {

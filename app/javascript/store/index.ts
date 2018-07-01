@@ -5,6 +5,7 @@ import Immutable from 'immutable'
 
 import { FEN, SanMove, ChessMove } from '../types'
 import { getMovePrefix } from '../utils'
+import analysisEngine from '../analysis/engine'
 import Analysis from '../analysis/models/analysis'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import initBackboneBridge from './bridge'
@@ -40,6 +41,10 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
 const mutations = {
   setMode(state, mode) {
     state.mode = mode
+  },
+  setAnalysisOptions(state, { depth, multipv }) {
+    state.depth = depth
+    state.multipv = multipv
   },
   setPositionIndex(state, positionIndex) {
     state.positionIndex = positionIndex
@@ -86,9 +91,9 @@ const actions = {
       return
     }
     commit(`setPositionIndex`, positionIndex)
-    chess.trigger("analysis:enqueue", getters.currentFen, getters.analysisOptions)
+    analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
   },
-  loadPgn({ dispatch, commit }, pgn: string) {
+  loadPgn({ dispatch, commit, getters }, pgn: string) {
     let cjs = new Chess
     if (!cjs.load_pgn(pgn)) {
       return false
@@ -102,9 +107,14 @@ const actions = {
       positions.push(cjs.fen())
     }
     commit(`setWorldState`, { moves, positions, i: 1 })
-    positions.forEach(fen => chess.trigger("analysis:enqueue", fen, getters.analysisOptions))
-    chess.trigger(`game:loaded`)
+    positions.forEach(fen => {
+      analysisEngine.enqueueWork(fen, getters.analysisOptions)
+    })
     return true
+  },
+  setAnalysisOptions({ commit, getters }, analysisOptions: AnalysisOptions) {
+    commit(`setAnalysisOptions`, analysisOptions)
+    analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
   },
   makeMove({ dispatch, commit, state, getters }, move: ChessMove) {
     const i = state.positionIndex
@@ -119,8 +129,8 @@ const actions = {
     const ind = i < 1 ? 1 : i + 1
     const positions = state.positions.slice(0, ind)
     positions.push(newFen)
-    chess.trigger("analysis:enqueue", newFen, getters.analysisOptions)
     commit(`setWorldState`, { moves, positions, i: (i < 0) ? 1 : i + 1 })
+    analysisEngine.enqueueWork(newFen, getters.analysisOptions)
   },
   firstMove({ dispatch }) {
     dispatch(`setPositionIndex`, 0)
