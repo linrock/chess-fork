@@ -58,8 +58,7 @@
       },
       handleClick(e) {
         const positionIndex = this.positionIndexFromOffsetX(e.offsetX)
-        // this.$store.dispatch('setPositionIndex', positionIndex)
-        chess.setPositionIndex(positionIndex)
+        this.$store.dispatch(`setPositionIndex`, positionIndex)
       },
     },
 

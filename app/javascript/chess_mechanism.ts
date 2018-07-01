@@ -41,25 +41,6 @@ export default class ChessMechanism extends Backbone.Model {
     this.setFen(this.mechanism.fen())
   }
 
-  public move(move: ChessMove): void {
-    let i = world.get("i")
-    let c = new Chess(world.getPosition(i))
-    let moveAttempt = c.move(move)
-    if (!moveAttempt) {
-      return
-    }
-    let moves = this.getMoves(0, i).push(moveAttempt.san)
-    let newFen = c.fen()
-    let ind = i < 1 ? 1 : i + 1
-    let positions = Immutable.List(world.getPositions().slice(0, ind))
-    this.mechanism = c
-    world.set({
-      moves: Immutable.List(moves),
-      positions: positions.push(newFen),
-      i: (i < 0) ? 1 : i + 1
-    })
-  }
-
   public analyzePosition(fen: FEN, k: number): void {
     k = k || 0 // multipv index
     let analysis
@@ -86,15 +67,6 @@ export default class ChessMechanism extends Backbone.Model {
     return world.get("moves").get(i)
   }
 
-  public loadPgn(pgn): boolean {
-    if (!this.mechanism.load_pgn(pgn)) {
-      return false
-    }
-    this.loadGameHistory(this.mechanism.history())
-    this.setPositionIndex(1)
-    return true
-  }
-
   public firstMove(): void {
     this.setPositionIndex(0)
   }
@@ -111,6 +83,53 @@ export default class ChessMechanism extends Backbone.Model {
     this.setPositionIndex(world.nPositions() - 1)
   }
 
+  public prevEngineMove(): void {
+    this.setEnginePositionIndex(this.get("j") - 1)
+  }
+
+  public nextEngineMove(): void {
+    this.setEnginePositionIndex(this.get("j") + 1)
+  }
+
+  public move(move: ChessMove): void {
+    let i = world.get("i")
+    let c = new Chess(world.getPosition(i))
+    let moveAttempt = c.move(move)
+    if (!moveAttempt) {
+      return
+    }
+    let moves = this.getMoves(0, i).push(moveAttempt.san)
+    let newFen = c.fen()
+    let ind = i < 1 ? 1 : i + 1
+    let positions = Immutable.List(world.getPositions().slice(0, ind))
+    this.mechanism = c
+    world.set({
+      moves: Immutable.List(moves),
+      positions: positions.push(newFen),
+      i: (i < 0) ? 1 : i + 1
+    })
+  }
+
+  public loadPgn(pgn): boolean {
+    if (!this.mechanism.load_pgn(pgn)) {
+      return false
+    }
+    const moves: Array<SanMove> = this.mechanism.history()
+    const c = new Chess
+    const positions = [c.fen()]
+    for (let move of moves) {
+      c.move(move)
+      positions.push(c.fen())
+    }
+    world.set({
+      moves: Immutable.List(moves),
+      positions: Immutable.List(positions)
+    })
+    this.trigger("game:loaded")
+    this.setPositionIndex(1)
+    return true
+  }
+
   public setPositionIndex(i): void {
     if (this.get("mode") === "analysis") {
       this.set({ mode: "normal" })
@@ -123,28 +142,6 @@ export default class ChessMechanism extends Backbone.Model {
       return
     }
     world.set({ i })
-  }
-
-  public prevEngineMove(): void {
-    this.setEnginePositionIndex(this.get("j") - 1)
-  }
-
-  public nextEngineMove(): void {
-    this.setEnginePositionIndex(this.get("j") + 1)
-  }
-
-  private loadGameHistory(moves: Array<SanMove>): void {
-    const c = new Chess
-    const positions = [c.fen()]
-    for (let move of moves) {
-      c.move(move)
-      positions.push(c.fen())
-    }
-    world.set({
-      moves: Immutable.List(moves),
-      positions: Immutable.List(positions)
-    })
-    this.trigger("game:loaded")
   }
 
   private setEnginePositionIndex(j): void {

@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Chess from 'chess.js'
+import Immutable from 'immutable'
 
-import { FEN, SanMove } from '../types'
+import { FEN, SanMove, ChessMove } from '../types'
 import { getMovePrefix } from '../utils'
 import Analysis from '../analysis/models/analysis'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import initBackboneBridge from './bridge'
+import { world } from '../world_state'
+import { chess } from '../chess_mechanism'
 
 Vue.use(Vuex)
 
@@ -32,6 +36,108 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   currentAnalysis: null,
   boardPolarity: 1,
 })
+
+const mutations = {
+  setMode(state, mode) {
+    state.mode = mode
+  },
+  setPositionIndex(state, positionIndex) {
+    state.positionIndex = positionIndex
+    world.set({ i: positionIndex })
+  },
+  setMovesAndPositions(state, { moves, positions }) {
+    state.moves = moves
+    state.positions = positions
+    world.set({
+      moves: Immutable.List(moves),
+      positions: Immutable.List(positions)
+    })
+  },
+  setWorldState(state, { moves, positions, i }) {
+    state.positionIndex = i
+    state.moves = moves
+    state.positions = positions
+    world.set({
+      moves: Immutable.List(moves),
+      positions: Immutable.List(positions),
+      i
+    })
+  },
+  loadWorldState(state, { moves, positions, i }) {
+    state.positionIndex = i
+    state.moves = moves
+    state.positions = positions
+  }
+}
+
+const actions = {
+  setMode({ commit }, mode: string) {
+    commit(`setMode`, mode)
+  },
+  setPositionIndex({ commit, getters, state }, positionIndex: number) {
+    if (state.mode === `analysis`) {
+      commit(`setMode`, `normal`)
+      return
+    }
+    if (positionIndex < 0 || positionIndex >= state.positions.length) {
+      return
+    }
+    if ((<any>window).chessboard.isAnimating()) {
+      return
+    }
+    commit(`setPositionIndex`, positionIndex)
+    chess.trigger("analysis:enqueue", getters.currentFen, getters.analysisOptions)
+  },
+  loadPgn({ dispatch, commit }, pgn: string) {
+    let cjs = new Chess
+    if (!cjs.load_pgn(pgn)) {
+      return false
+    }
+    console.log(`loading pgn`)
+    const moves: Array<SanMove> = cjs.history()
+    cjs = new Chess
+    const positions = [cjs.fen()]
+    for (let move of moves) {
+      cjs.move(move)
+      positions.push(cjs.fen())
+    }
+    commit(`setWorldState`, { moves, positions, i: 1 })
+    positions.forEach(fen => chess.trigger("analysis:enqueue", fen, getters.analysisOptions))
+    chess.trigger(`game:loaded`)
+    return true
+  },
+  makeMove({ dispatch, commit, state, getters }, move: ChessMove) {
+    const i = state.positionIndex
+    const cjs = new Chess(getters.currentFen)
+    const moveAttempt = cjs.move(move)
+    if (!moveAttempt) {
+      return
+    }
+    const moves: Array<SanMove> = this.state.moves.slice(0, i)
+    moves.push(moveAttempt.san)
+    const newFen = cjs.fen()
+    const ind = i < 1 ? 1 : i + 1
+    const positions = state.positions.slice(0, ind)
+    positions.push(newFen)
+    chess.trigger("analysis:enqueue", newFen, getters.analysisOptions)
+    commit(`setWorldState`, { moves, positions, i: (i < 0) ? 1 : i + 1 })
+  },
+  firstMove({ dispatch }) {
+    dispatch(`setPositionIndex`, 0)
+  },
+  prevMove({ dispatch, state }) {
+    dispatch(`setPositionIndex`, state.positionIndex - 1)
+  },
+  nextMove({ dispatch, state }) {
+    dispatch(`setPositionIndex`, state.positionIndex + 1)
+  },
+  lastMove({ dispatch, state }) {
+    dispatch(`setPositionIndex`, state.positions.length - 1)
+  },
+  loadWorldState({ commit }, worldState) {
+    commit(`loadWorldState`, worldState)
+  },
+}
 
 const getters = {
   position(state: GlobalState): (number) => FEN {
@@ -63,7 +169,7 @@ const getters = {
   }
 }
 
-const store = new Vuex.Store({ state, getters })
+const store = new Vuex.Store({ state, mutations, actions, getters })
 
 initBackboneBridge(state, getters)
 

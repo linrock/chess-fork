@@ -3,21 +3,20 @@
     button.action.flip-board(@click="chess.trigger('polarity:flip')")
       i.fa.fa-retweet
     .move-actions(:class="[{ invisible: $store.state.moves.length === 0 }]")
-      button.action(@click="chess.firstMove()")
+      button.action(@click="$store.dispatch(`firstMove`)")
         ||
         i.fa.fa-chevron-left
-      button.action(@click="chess.prevMove()")
+      button.action(@click="$store.dispatch(`prevMove`)")
         i.fa.fa-chevron-left
-      button.action(@click="chess.nextMove()")
+      button.action(@click="$store.dispatch(`nextMove`)")
         i.fa.fa-chevron-right
-      button.action(@click="chess.lastMove()")
+      button.action(@click="$store.dispatch(`lastMove`)")
         i.fa.fa-chevron-right
         ||
 
 </template>
 
 <script lang="ts">
-  import { SanMove } from '../types'
   import { chess } from '../chess_mechanism'
 
   export default {

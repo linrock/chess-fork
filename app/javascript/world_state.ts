@@ -7,6 +7,7 @@ import Immutable from 'immutable'
 import Chess from 'chess.js'
 
 import { FEN, SanMove } from './types'
+import store from './store'
 
 interface WorldStateSnapshot {
   i: number,
@@ -29,6 +30,31 @@ export default class WorldState extends Backbone.Model {
       moves: Immutable.List(),
       positions: Immutable.List([ new Chess().fen() ])
     })
+    store.dispatch(`loadWorldState`, {
+      i: -1,
+      moves: [],
+      positions: [ new Chess().fen() ]
+    })
+  }
+
+  public rewind(): void {
+    if (this.states.size <= 1) {
+      return
+    }
+    this.states = this.states.pop()
+    this.set(this.states.first().toObject())
+    this.states = this.states.pop()
+    const worldState = this.states.first().toObject()
+    console.dir({
+      i: worldState.i,
+      moves: worldState.moves.toArray(),
+      positions: worldState.positions.toArray()
+    })
+    store.dispatch(`loadWorldState`, {
+      i: worldState.i,
+      moves: worldState.moves.toArray(),
+      positions: worldState.positions.toArray()
+    })
   }
 
   public getPositions(): Immutable.List<FEN> {
@@ -45,15 +71,6 @@ export default class WorldState extends Backbone.Model {
 
   public getCurrentPosition(): FEN {
     return this.getPosition(this.get("i"))
-  }
-
-  public rewind(): void {
-    if (this.states.size <= 1) {
-      return
-    }
-    this.states = this.states.pop()
-    this.set(this.states.first().toObject())
-    this.states = this.states.pop()
   }
 
   private recordState(state: WorldState) {

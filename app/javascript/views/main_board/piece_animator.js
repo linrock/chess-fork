@@ -17,8 +17,8 @@ export default class PieceAnimator {
   listenForEvents() {
     this.board.listenTo(world, "change:i", (model, i) => {
       const iPrev = model.previous("i")
-      const prevFen = chess.getPosition(iPrev)
-      const newFen = chess.getPosition(i)
+      const prevFen = world.getPosition(iPrev)
+      const newFen = world.getPosition(i)
       if (prevFen === newFen) {
         chess.setFen(newFen)
         return

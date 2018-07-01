@@ -60,7 +60,7 @@
 
       loadPgn() {
         if (this.pgnIsValid) {
-          chess.loadPgn(this.pgnInput())
+          this.$store.dispatch(`loadPgn`, this.pgnInput())
         } else {
           this.showError = true
         }

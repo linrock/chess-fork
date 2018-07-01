@@ -8,6 +8,7 @@ import DragAndDrop from './main_board/drag_and_drop'
 import Chessboard from './chessboard'
 import { ChessMove } from '../types'
 import { chess } from '../chess_mechanism'
+import store from '../store'
 
 // Base chessboard class with position rendering behavior
 // and more behaviors built through composition
@@ -45,7 +46,7 @@ export default class MainBoard extends Chessboard {
   public move(move: ChessMove, ignoreNextAnimation = false) {
     this.ignoreNextAnimation = ignoreNextAnimation
     move.promotion = move.promotion || "q"
-    chess.move(move)
+    store.dispatch(`makeMove`, move)
   }
 
   private flip() {

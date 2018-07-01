@@ -13,7 +13,7 @@ import analysisCache from './cache'
 import store from '../store'
 
 export default class AnalysisEngine extends Backbone.Model {
-  private positionQueue: Array<[FEN, AnalysisOptions]> = []
+  private workQueue: Array<[FEN, AnalysisOptions]> = []
   private isAnalyzing = false
 
   initialize() {
@@ -23,12 +23,12 @@ export default class AnalysisEngine extends Backbone.Model {
   private listenForEvents(): void {
     this.listenTo(chess, "game:loaded", () => {
       store.state.positions.forEach(fen => {
-        this.positionQueue.push([fen, {}])
+        this.workQueue.push([fen, {}])
       })
       this.analyzeNextPosition()
     })
     this.listenTo(chess, "analysis:enqueue", (fen, options) => {
-      this.positionQueue.push([fen, options])
+      this.workQueue.push([fen, options])
       this.analyzeNextPosition()
     })
   }
@@ -37,7 +37,7 @@ export default class AnalysisEngine extends Backbone.Model {
     if (this.isAnalyzing) {
       return
     }
-    const work = this.positionQueue.shift()
+    const work = this.workQueue.shift()
     if (!work) {
       return
     }
