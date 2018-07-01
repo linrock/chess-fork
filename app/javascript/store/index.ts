@@ -10,6 +10,7 @@ import { defaultAnalysisOptions } from '../analysis/options'
 interface Store {
   mode: string
   moves: Array<SanMove>
+  positions: Array<FEN>
   positionIndex: number
   variationIndex: number
   variationPositionIndex: number
@@ -21,6 +22,7 @@ interface Store {
 const store: Store = Object.assign({}, defaultAnalysisOptions, {
   mode: `normal`,
   moves: [],
+  positions: [`rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`],
   positionIndex: 0,
   variationIndex: null,
   variationPositionIndex: null,
@@ -61,6 +63,9 @@ listener.listenTo(chess, "analysis:options:change", () => {
 
 listener.listenTo(world, "change:moves", (_, moves) => {
   store.moves = moves.toArray()
+})
+listener.listenTo(world, "change:positions", (_, positions) => {
+  store.positions = positions.toArray()
 })
 
 export default store
