@@ -6,7 +6,7 @@ import { world } from '../world_state'
 import analysisCache from '../analysis/cache'
 
 // temporary bridge between backbone events and vuex store
-const initBackboneBridge = state => {
+const initBackboneBridge = (state, getters) => {
   const currentFen = (): FEN => state.positions[state.positionIndex]
 
   const listener = <any>Object.assign({}, Backbone.Events)
@@ -16,19 +16,13 @@ const initBackboneBridge = state => {
   listener.listenTo(chess, "change:k", (_, k) => state.variationPositionIndex = k)
   listener.listenTo(chess, "change:mode", (_, mode) => state.mode = mode)
   listener.listenTo(chess, "analysis:complete", fen => {
-    const analysisOptions = {
-      multipv: state.multipv,
-      depth: state.depth
-    }
-    const analysis = analysisCache.get(fen, analysisOptions)
     if (fen === currentFen()) {
-      state.currentAnalysis = analysis
+      state.currentAnalysis = analysisCache.get(fen, getters.analysisOptions)
     }
   })
   listener.listenTo(chess, "analysis:options:change", () => {
     const fen = currentFen()
-    const { multipv, depth } = state
-    chess.trigger("analysis:enqueue", fen, { multipv, depth })
+    chess.trigger("analysis:enqueue", fen, getters.analysisOptions)
   })
   listener.listenTo(chess, "polarity:flip", () => state.boardPolarity *= -1)
 
@@ -42,11 +36,7 @@ const initBackboneBridge = state => {
   listener.listenTo(world, "change:i", (_, i) => {
     state.positionIndex = i
     const fen = currentFen()
-    const analysisOptions = {
-      multipv: state.multipv,
-      depth: state.depth
-    }
-    chess.trigger("analysis:enqueue", fen, analysisOptions)
+    chess.trigger("analysis:enqueue", fen, getters.analysisOptions)
   })
 }
 

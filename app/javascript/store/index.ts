@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import { FEN, SanMove } from '../types'
 import { getMovePrefix } from '../utils'
 import Analysis from '../analysis/models/analysis'
-import { defaultAnalysisOptions } from '../analysis/options'
+import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import initBackboneBridge from './bridge'
 
 Vue.use(Vuex)
@@ -33,37 +33,38 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   boardPolarity: 1,
 })
 
-const store = new Vuex.Store({
-  state,
-  getters: {
-    position(state: GlobalState): (number) => FEN {
-      return i => (i < 0) ? state.positions[0] : state.positions[i]
-    },
-
-    currentFen(state: GlobalState): FEN {
+const getters = {
+  position(state: GlobalState): (number) => FEN {
+    return i => (i < 0) ? state.positions[0] : state.positions[i]
+  },
+  currentFen(state: GlobalState): FEN {
+    return state.positions[state.positionIndex]
+    if (state.mode === `normal`) {
       return state.positions[state.positionIndex]
-      if (state.mode === `normal`) {
-        return state.positions[state.positionIndex]
-      } else if (state.mode === `analysis`) {
-        const j = state.variationIndex + 1
-        const k = state.variationPositionIndex
-        return state.currentAnalysis.variations[k].positions[j]
-      }
-    },
-
-    positionInfoText(state: GlobalState): string {
-      const i = state.positionIndex - 1
-      if (state.mode === `normal`) {
-        return `${getMovePrefix(i)} ${state.moves[i]}`
-      } else if (state.mode === `analysis`) {
-        const k = state.variationPositionIndex
-        const firstVariationMove = state.currentAnalysis.variations[k].firstMove
-        return `Variation after ${getMovePrefix(i)} ${firstVariationMove}`
-      }
+    } else if (state.mode === `analysis`) {
+      const j = state.variationIndex + 1
+      const k = state.variationPositionIndex
+      return state.currentAnalysis.variations[k].positions[j]
     }
+  },
+  positionInfoText(state: GlobalState): string {
+    const i = state.positionIndex - 1
+    if (state.mode === `normal`) {
+      return `${getMovePrefix(i)} ${state.moves[i]}`
+    } else if (state.mode === `analysis`) {
+      const k = state.variationPositionIndex
+      const firstVariationMove = state.currentAnalysis.variations[k].firstMove
+      return `Variation after ${getMovePrefix(i)} ${firstVariationMove}`
+    }
+  },
+  analysisOptions(state: GlobalState): AnalysisOptions {
+    const { multipv, depth } = state
+    return { multipv, depth }
   }
-})
+}
 
-initBackboneBridge(state)
+const store = new Vuex.Store({ state, getters })
+
+initBackboneBridge(state, getters)
 
 export default store
