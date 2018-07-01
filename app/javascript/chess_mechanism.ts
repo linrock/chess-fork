@@ -55,14 +55,6 @@ export default class ChessMechanism extends Backbone.Model {
     this.set({ j: 0, mode: "analysis", k })
   }
 
-  public getMoves(i: number, end: number): Immutable.List<SanMove> {
-    if (end > i) {
-      return world.get("moves").slice(i, end)
-    } else {
-      return Immutable.List()
-    }
-  }
-
   public prevEngineMove(): void {
     this.setEnginePositionIndex(this.get("j") - 1)
   }

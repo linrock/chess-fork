@@ -1,11 +1,8 @@
 // Interface between the analysis UI and the stockfish worker
 
-import { chess } from '../chess_mechanism'
-import { uciToMove } from '../utils'
 import { FEN } from '../types'
-
-import { AnalysisOptions, defaultAnalysisOptions } from './options'
 import Analysis from './models/analysis'
+import { AnalysisOptions, defaultAnalysisOptions } from './options'
 import stockfish from './stockfish_worker'
 import analysisCache from './cache'
 import store from '../store'

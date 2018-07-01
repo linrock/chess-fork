@@ -5,12 +5,11 @@ import Immutable from 'immutable'
 
 import { FEN, SanMove, ChessMove } from '../types'
 import { getMovePrefix } from '../utils'
-import analysisEngine from '../analysis/engine'
 import Analysis from '../analysis/models/analysis'
+import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
-import initBackboneBridge from './bridge'
 import { world } from '../world_state'
-import { chess } from '../chess_mechanism'
+import initBackboneBridge from './bridge'
 
 Vue.use(Vuex)
 
@@ -96,12 +95,11 @@ const actions = {
     commit(`setPositionIndex`, positionIndex)
     analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
   },
-  loadPgn({ dispatch, commit, getters }, pgn: string) {
+  loadPgn({ dispatch, commit, getters }, pgn: string): boolean {
     let cjs = new Chess
     if (!cjs.load_pgn(pgn)) {
       return false
     }
-    console.log(`loading pgn`)
     const moves: Array<SanMove> = cjs.history()
     cjs = new Chess
     const positions = [cjs.fen()]
@@ -177,7 +175,9 @@ const getters = {
   },
   positionInfoText(state: GlobalState): string {
     const i = state.positionIndex - 1
-    if (state.mode === `normal`) {
+    if (i < 0) {
+      return ``
+    } else if (state.mode === `normal`) {
       return `${getMovePrefix(i)} ${state.moves[i]}`
     } else if (state.mode === `analysis`) {
       const k = state.variationPositionIndex
