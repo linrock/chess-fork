@@ -4,6 +4,7 @@ import Chess from 'chess.js'
 
 import { ChessMove } from '../types'
 import { chess } from '../chess_mechanism'
+import { world } from '../world_state'
 
 export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
   private ROWS = [8, 7, 6, 5, 4, 3, 2, 1]
@@ -23,7 +24,7 @@ export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
 
   listenForEvents() {
     this.listenTo(chess, "preview:i", (i) => {
-      let fen = chess.getPosition(i)
+      let fen = world.getPosition(i)
       if (!fen) {
         return
       }
@@ -42,7 +43,7 @@ export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
     if (i === 0) {
       return
     }
-    this.position.load(chess.getPosition(i - 1))
+    this.position.load(world.getPosition(i - 1))
     return this.position.move(chess.getMove(i - 1))
   }
 

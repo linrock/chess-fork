@@ -6,10 +6,12 @@ import Backbone from 'backbone'
 import Immutable from 'immutable'
 import Chess from 'chess.js'
 
+import { FEN, SanMove } from './types'
+
 interface WorldStateSnapshot {
   i: number,
-  moves: Immutable.List<string>,
-  positions: Immutable.List<string>,
+  moves: Immutable.List<SanMove>,
+  positions: Immutable.List<FEN>,
 }
 
 export default class WorldState extends Backbone.Model {
@@ -17,24 +19,32 @@ export default class WorldState extends Backbone.Model {
 
   initialize() {
     this.states = Immutable.Stack()
-    this.listenForEvents()
-    this.reset()
-  }
-
-  private listenForEvents(): void {
     this.listenTo(this, "change", this.recordState)
-  }
-
-  private recordState(state: WorldState) {
-    this.states = this.states.push(Immutable.Map(<WorldStateSnapshot>state.attributes))
+    this.reset()
   }
 
   public reset(): void {
     this.set({
+      i: -1,
       moves: Immutable.List(),
-      positions: Immutable.List([ new Chess().fen() ]),
-      i: -1
+      positions: Immutable.List([ new Chess().fen() ])
     })
+  }
+
+  public getPositions(): Immutable.List<FEN> {
+    return this.get("positions")
+  }
+
+  public nPositions(): number {
+    return this.getPositions().size
+  }
+
+  public getPosition(i: number): FEN {
+    return this.getPositions().get(i)
+  }
+
+  public getCurrentPosition(): FEN {
+    return this.getPosition(this.get("i"))
   }
 
   public rewind(): void {
@@ -44,6 +54,10 @@ export default class WorldState extends Backbone.Model {
     this.states = this.states.pop()
     this.set(this.states.first().toObject())
     this.states = this.states.pop()
+  }
+
+  private recordState(state: WorldState) {
+    this.states = this.states.push(Immutable.Map(<WorldStateSnapshot>state.attributes))
   }
 }
 
