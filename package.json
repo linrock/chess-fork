@@ -13,7 +13,6 @@
     "mousetrap": "^1.6.2",
     "pug": "^2.0.3",
     "pug-loader": "^2.4.0",
-    "rickshaw": "^1.6.6",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "ts-loader": "3.5.0",

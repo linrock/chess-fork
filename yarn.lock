@@ -1862,10 +1862,6 @@ d3-zoom@1:
     d3-selection "1"
     d3-transition "1"
 
-d3@^3.5.16:
-  version "3.5.17"
-  resolved "https://registry.yarnpkg.com/d3/-/d3-3.5.17.tgz#bc46748004378b21a360c9fc7cf5231790762fb8"
-
 d3@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/d3/-/d3-5.5.0.tgz#948413b91b988a6597f3e4c3e941d3b530bfee63"
@@ -5417,12 +5413,6 @@ rgb-hex@^2.1.0:
 rgb@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/rgb/-/rgb-0.1.0.tgz#be27b291e8feffeac1bd99729721bfa40fc037b5"
-
-rickshaw@^1.6.6:
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/rickshaw/-/rickshaw-1.6.6.tgz#041a2c05d8dc08783450a457b4d62419094b5c52"
-  dependencies:
-    d3 "^3.5.16"
 
 right-align@^0.1.1:
   version "0.1.3"
