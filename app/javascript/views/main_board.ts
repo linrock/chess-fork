@@ -6,12 +6,18 @@ import SquareHighlighter from './main_board/square_highlighter'
 import PointAndClick from './main_board/point_and_click'
 import DragAndDrop from './main_board/drag_and_drop'
 import Chessboard from './chessboard'
+import { ChessMove } from '../types'
 import { chess } from '../chess_mechanism'
 
 // Base chessboard class with position rendering behavior
 // and more behaviors built through composition
 //
 export default class MainBoard extends Chessboard {
+  private animator: PieceAnimator
+  private highlighter: SquareHighlighter
+  private pointAndClick: PointAndClick
+  private dragAndDrop: DragAndDrop
+  private ignoreNextAnimation: boolean
 
   get el() {
     return ".main-board"
@@ -31,18 +37,18 @@ export default class MainBoard extends Chessboard {
     this.dragAndDrop.init()
   }
 
-  listenForEvents() {
+  private listenForEvents() {
     this.listenTo(chess, "change:fen", (model, fen) => this.renderFen(fen))
     this.listenTo(chess, "polarity:flip", this.flip)
   }
 
-  move(move, ignoreNextAnimation = false) {
+  public move(move: ChessMove, ignoreNextAnimation = false) {
     this.ignoreNextAnimation = ignoreNextAnimation
     move.promotion = move.promotion || "q"
     chess.move(move)
   }
 
-  flip() {
-    this.$(".square").each((i,sq) => this.$el.prepend(sq))
+  private flip() {
+    [].forEach.call(this.$(".square"), sq => this.$el.prepend(sq))
   }
 }

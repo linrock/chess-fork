@@ -30,7 +30,7 @@
         )
 </template>
 
-<script>
+<script lang="ts">
   import Backbone from 'backbone'
   import D3LineGraph from './evaluation_graph/d3_line_graph'
   import D3AreaGraph from './evaluation_graph/d3_area_graph'

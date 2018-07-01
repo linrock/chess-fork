@@ -25,14 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
   new HotKeys
 
   // backbone views
-  window.chessboard = new MainBoard
+  const chessboardView = new MainBoard;
+  (<any>window).chessboard = chessboardView
+
   new IntroMessage
   // new VirtualDomBoard
   new SubHeader
 
   // vue components
-  const initVueComponent = (selector, component) => {
-    const el = document.querySelector(selector)
+  const initVueComponent = (selector: string, component) => {
+    const el: HTMLElement = document.querySelector(selector)
     new Vue({ el, store, render: h => h(component) })
   }
 

@@ -4,7 +4,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
   import { scaleTime, scaleLinear, line, select, extent } from 'd3'
 
   export default {

@@ -4,8 +4,13 @@
 
 </template>
 
-<script>
+<script lang="ts">
   import { scaleTime, scaleLinear, area, select, extent } from 'd3'
+
+  interface GraphPoint {
+    x: number
+    y: number
+  }
 
   export default {
     props: {
@@ -46,17 +51,17 @@
       yValues() {
         return scaleLinear().range([this.height, 0]).domain(this.yRange)
       },
-      svgStyle() {
+      svgStyle(): string {
         return `width: ${this.width}px; height: ${this.height}px;`
       },
-      pathStyle() {
+      pathStyle(): string {
         return `fill: ${this.color}; stroke-width: 0;`
       },
-      normalizedPoints() {
+      normalizedPoints(): Array<number> {
         const [yMin, yMax] = this.yRange
         return this.points.map(y => y > yMax ? yMax : y < yMin ? yMin : y)
       },
-      dataPoints() {
+      dataPoints(): Array<GraphPoint> {
         return this.normalizedPoints.map((y,x) => ({ x, y }))
       }
     },

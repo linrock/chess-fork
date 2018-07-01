@@ -5,7 +5,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
   import D3VerticalLine from './d3_vertical_line'
   import D3Dot from './d3_dot'
 
@@ -18,10 +18,10 @@
     },
 
     computed: {
-      x() {
+      x(): number {
         return this.i / (this.n - 1) * this.width
       },
-      n() {
+      n(): number {
         return this.points.length
       }
     },
