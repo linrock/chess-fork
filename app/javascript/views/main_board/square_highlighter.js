@@ -40,7 +40,7 @@ export default class SquareHighlighter {
     })
     this.board.listenTo(chess, "change:mode", (model, mode) => {
       if (mode === "normal") {
-        this.highlightGameMoveIndex(world.get("i"))
+        this.highlightGameMoveIndex(store.state.positionIndex)
       }
     })
   }

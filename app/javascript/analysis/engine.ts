@@ -1,10 +1,8 @@
 // Interface between the analysis UI and the stockfish worker
 
 import Backbone from 'backbone'
-import Chess from 'chess.js'
 
 import { chess } from '../chess_mechanism'
-import { world } from '../world_state'
 import { uciToMove } from '../utils'
 import { FEN } from '../types'
 
@@ -12,9 +10,9 @@ import { AnalysisOptions, defaultAnalysisOptions } from './options'
 import Analysis from './models/analysis'
 import stockfish from './stockfish_worker'
 import analysisCache from './cache'
+import store from '../store'
 
 export default class AnalysisEngine extends Backbone.Model {
-  private calculator: Chess = new Chess
   private positionQueue: Array<[FEN, AnalysisOptions]> = []
   private isAnalyzing = false
 
@@ -24,7 +22,7 @@ export default class AnalysisEngine extends Backbone.Model {
 
   private listenForEvents(): void {
     this.listenTo(chess, "game:loaded", () => {
-      world.get("positions").toArray().forEach(fen => {
+      store.state.positions.forEach(fen => {
         this.positionQueue.push([fen, {}])
       })
       this.analyzeNextPosition()
