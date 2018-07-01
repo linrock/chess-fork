@@ -36,7 +36,7 @@
   import D3AreaGraph from './evaluation_graph/d3_area_graph'
   import D3VerticalLine from './evaluation_graph/d3_vertical_line'
   import HoverIndicator from './evaluation_graph/hover_indicator'
-  import { getNormalizedScores } from '../views/evaluation_graph/points_normalizer'
+  import { getNormalizedScores } from '../analysis/graph_points'
   import { chess } from '../chess_mechanism'
   import store from '../store'
 

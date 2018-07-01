@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 import MainBoard from '../views/main_board'
 import IntroMessage from '../views/intro_message'
-// import EvaluationGraph from '../views/evaluation_graph'
 // import VirtualDomBoard from '../views/virtual_dom_board'
 import SubHeader from '../views/sub_header'
 
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // interface views
   window.chessboard = new MainBoard
   new IntroMessage
-  // new EvaluationGraph
   // new VirtualDomBoard
   new SubHeader
 

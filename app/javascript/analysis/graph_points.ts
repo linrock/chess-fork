@@ -4,9 +4,9 @@
 import _ from 'underscore'
 import Chess from 'chess.js'
 
-import { FEN } from '../../types'
-import { chess } from '../../chess_mechanism'
-import analysisCache from '../../analysis/cache'
+import { FEN } from '../types'
+import { chess } from '../chess_mechanism'
+import analysisCache from './cache'
 
 type Score = number // -10 to 10
 
