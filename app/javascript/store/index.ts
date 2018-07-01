@@ -68,6 +68,9 @@ const mutations = {
       i
     })
   },
+  setCurrentAnalysis(state, analysis: Analysis) {
+    state.currentAnalysis = analysis
+  },
   loadWorldState(state, { moves, positions, i }) {
     state.positionIndex = i
     state.moves = moves
@@ -115,6 +118,15 @@ const actions = {
   setAnalysisOptions({ commit, getters }, analysisOptions: AnalysisOptions) {
     commit(`setAnalysisOptions`, analysisOptions)
     analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
+  },
+  analysisComplete({ commit, getters }, payload) {
+    const { fen, options, analysis } = payload
+    const { multipv, depth } = getters.analysisOptions
+    if (fen === getters.currentFen
+        && options.multipv === multipv
+        && options.depth === depth) {
+      commit(`setCurrentAnalysis`, analysis)
+    }
   },
   makeMove({ dispatch, commit, state, getters }, move: ChessMove) {
     const i = state.positionIndex

@@ -1,7 +1,5 @@
 // Interface between the analysis UI and the stockfish worker
 
-import Backbone from 'backbone'
-
 import { chess } from '../chess_mechanism'
 import { uciToMove } from '../utils'
 import { FEN } from '../types'
@@ -14,7 +12,7 @@ import store from '../store'
 
 type Work = [FEN, AnalysisOptions]
 
-class AnalysisEngine extends Backbone.Model {
+class AnalysisEngine {
   private workQueue: Array<Work> = []
   private isAnalyzing = false
 
@@ -33,19 +31,20 @@ class AnalysisEngine extends Backbone.Model {
     }
     const [fen, options] = work
     this.isAnalyzing = true
-    if (analysisCache.get(fen, options)) {
-      this.analysisComplete(fen, options)
+    let analysis = analysisCache.get(fen, options)
+    if (analysis) {
+      this.analysisComplete(fen, options, analysis)
     } else {
       this.stockfishAnalyze(fen, options).then(analysis => {
         analysisCache.set(fen, options, analysis)
-        this.analysisComplete(fen, options)
+        this.analysisComplete(fen, options, analysis)
       })
     }
   }
 
-  private analysisComplete(fen: FEN, options: AnalysisOptions): void {
-    chess.trigger("analysis:complete", fen, options)
+  private analysisComplete(fen: FEN, options: AnalysisOptions, analysis: Analysis): void {
     this.isAnalyzing = false
+    store.dispatch(`analysisComplete`, { fen, options, analysis })
     this.analyzeNextPosition()
   }
 
