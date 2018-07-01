@@ -9,6 +9,7 @@ import Analysis from '../analysis/models/analysis'
 import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import { world } from '../world_state'
+import { chess } from '../chess_mechanism'
 import initBackboneBridge from './bridge'
 
 Vue.use(Vuex)
@@ -31,8 +32,8 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   moves: [],
   positions: [`rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`],
   positionIndex: 0,
-  variationIndex: null,
-  variationPositionIndex: null,
+  variationIndex: 0,
+  variationPositionIndex: 0,
   currentAnalysis: null,
   boardPolarity: 1,
 })
@@ -48,6 +49,12 @@ const mutations = {
   setPositionIndex(state, positionIndex) {
     state.positionIndex = positionIndex
     world.set({ i: positionIndex })
+  },
+  setVariationIndex(state, variationIndex) {
+    state.variationIndex = variationIndex
+  },
+  setVariationPositionIndex(state, variationPositionIndex) {
+    state.variationPositionIndex = variationPositionIndex
   },
   setMovesAndPositions(state, { moves, positions }) {
     state.moves = moves
@@ -74,16 +81,17 @@ const mutations = {
     state.positionIndex = i
     state.moves = moves
     state.positions = positions
+  },
+  flipBoard(state) {
+    state.boardPolarity *= -1
   }
 }
 
 const actions = {
-  setMode({ commit }, mode: string) {
-    commit(`setMode`, mode)
-  },
-  setPositionIndex({ commit, getters, state }, positionIndex: number) {
+  setPositionIndex({ dispatch, commit, getters, state }, positionIndex: number) {
     if (state.mode === `analysis`) {
-      commit(`setMode`, `normal`)
+      dispatch(`setMode`, `normal`)
+      commit(`setVariationPositionIndex`, 0)
       return
     }
     if (positionIndex < 0 || positionIndex >= state.positions.length) {
@@ -157,6 +165,48 @@ const actions = {
   loadWorldState({ commit }, worldState) {
     commit(`loadWorldState`, worldState)
   },
+
+  prevVariationMove({ dispatch, state }) {
+    dispatch(`setVariationPositionIndex`, state.variationPositionIndex - 1)
+  },
+  nextVariationMove({ dispatch, state }) {
+    dispatch(`setVariationPositionIndex`, state.variationPositionIndex + 1)
+  },
+  setVariationPositionIndex({ dispatch, commit, getters, state }, variationPositionIndex) {
+    if (variationPositionIndex < 0) {
+      dispatch(`setMode`, `normal`)
+      return
+    }
+    if (state.mode === `normal` && state.variationPositionIndex >= 0) {
+      dispatch(`analyzeCurrentPosition`, 0)
+      return
+    }
+    const analysis = state.currentAnalysis
+    if (!analysis ||
+        variationPositionIndex >= analysis.variations[state.variationIndex].length) {
+      return
+    }
+    if ((<any>window).chessboard.isAnimating()) {
+      return
+    }
+    const fen = analysis.variations[state.variationIndex].positions[state.variationPositionIndex + 1]
+    commit(`setVariationPositionIndex`, variationPositionIndex)
+    chess.set({ j: variationPositionIndex, fen })
+  },
+  analyzeCurrentPosition({ dispatch, commit }, variationIndex) {
+    dispatch(`setMode`, `analysis`)
+    commit(`setVariationIndex`, variationIndex)
+    commit(`setVariationPositionIndex`, 0)
+    chess.set({ j: 0, k: variationIndex })
+  },
+  setMode({ commit }, mode: string) {
+    commit(`setMode`, mode)
+    chess.set({ mode })
+  },
+  flipBoard({ commit }) {
+    commit(`flipBoard`)
+    chess.trigger(`polarity:flip`)
+  }
 }
 
 const getters = {
@@ -179,8 +229,8 @@ const getters = {
       return ``
     } else if (state.mode === `normal`) {
       return `${getMovePrefix(i)} ${state.moves[i]}`
-    } else if (state.mode === `analysis`) {
-      const k = state.variationPositionIndex
+    } else if (state.currentAnalysis && state.mode === `analysis`) {
+      const k = state.variationIndex
       const firstVariationMove = state.currentAnalysis.variations[k].firstMove
       return `Variation after ${getMovePrefix(i)} ${firstVariationMove}`
     }

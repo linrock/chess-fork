@@ -18,8 +18,6 @@ import store from '../store'
 import HotKeys from '../hotkeys'
 
 document.addEventListener('DOMContentLoaded', () => {
-  chess.start()
-
   new HotKeys
 
   // backbone views

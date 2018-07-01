@@ -59,7 +59,9 @@ export default class PieceAnimator {
 
   currentAnalysisPosition() {
     const currentAnalysis = store.state.currentAnalysis
-    return currentAnalysis.variations[chess.get("k")].positions[chess.get("j") + 1]
+    const j = store.state.variationPositionIndex
+    const k = store.state.variationIndex
+    return currentAnalysis.variations[k].positions[j + 1]
   }
 
   // For figuring out what pieces on squares to move

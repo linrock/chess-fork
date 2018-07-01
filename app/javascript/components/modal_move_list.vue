@@ -13,7 +13,7 @@
           .move-num(v-if="(startPlyNum + i) % 2 === 0") {{ startMoveNum + i }}.
           .move(
             :data-ply="startPlyNum + i"
-            :class="[{ current: $store.state.variationIndex === i }]"
+            :class="[{ current: $store.state.variationPositionIndex === i }]"
             @click="gotoMove(i)"
           ) {{ move }}
 
@@ -27,11 +27,10 @@
   export default {
     methods: {
       closeModal() {
-        chess.set({ mode: `normal` })
-        this.$store.state.mode = `normal`
+        this.$store.dispatch(`setMode`, `normal`)
       },
-      gotoMove(variationIndex: number) {
-        chess.set({ j: variationIndex })
+      gotoMove(variationPositionIndex: number) {
+        this.$store.dispatch(`setVariationPositionIndex`, variationPositionIndex)
       }
     },
 
@@ -40,10 +39,10 @@
         return this.$store.state.currentAnalysis
       },
       analysisMoves(): Array<SanMove> {
-        if (!this.currentAnalysis || (this.$store.state.variationPositionIndex === null)) {
+        if (!this.currentAnalysis) {
           return []
         }
-        return this.currentAnalysis.variations[this.$store.state.variationPositionIndex].moves
+        return this.currentAnalysis.variations[this.$store.state.variationIndex].moves
       },
       startPlyNum(): number {
         return this.$store.state.positionIndex

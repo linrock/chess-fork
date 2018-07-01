@@ -80,7 +80,7 @@
       },
       enterAnalysisMode(event) {
         const { fen, k } = event.currentTarget.dataset
-        chess.analyzePosition(fen, k)
+        this.$store.dispatch(`analyzeCurrentPosition`, k)
       }
     },
 

@@ -37,10 +37,6 @@ export default class ChessMechanism extends Backbone.Model {
     this.set({ fen })
   }
 
-  public start(): void {
-    this.setFen(this.mechanism.fen())
-  }
-
   public analyzePosition(fen: FEN, k: number): void {
     k = k || 0 // multipv index
     let analysis

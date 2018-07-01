@@ -10,11 +10,11 @@ export default class HotKeys {
     Mousetrap.bind(["right"], () => store.dispatch(`nextMove`))
     Mousetrap.bind(["up"], e => {
       e.preventDefault()
-      chess.prevEngineMove()
+      store.dispatch(`prevVariationMove`)
     })
     Mousetrap.bind(["down"], e => {
       e.preventDefault()
-      chess.nextEngineMove()
+      store.dispatch(`nextVariationMove`)
     })
     Mousetrap.bind(["esc"], () => store.dispatch(`setMode`, `normal`))
     Mousetrap.bind(["command+z", "ctrl+z"], () => world.rewind())

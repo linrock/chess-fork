@@ -1,6 +1,6 @@
 <template lang="pug">
   .actions
-    button.action.flip-board(@click="chess.trigger('polarity:flip')")
+    button.action.flip-board(@click="$store.dispatch(`flipBoard`)")
       i.fa.fa-retweet
     .move-actions(:class="[{ invisible: $store.state.moves.length === 0 }]")
       button.action(@click="$store.dispatch(`firstMove`)")
@@ -17,13 +17,7 @@
 </template>
 
 <script lang="ts">
-  import { chess } from '../chess_mechanism'
-
-  export default {
-    data() {
-      return { chess }
-    }
-  }
+  export default {}
 </script>
 
 <style lang="stylus" scoped>
