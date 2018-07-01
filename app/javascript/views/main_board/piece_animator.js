@@ -3,6 +3,7 @@ import Chess from 'chess.js'
 
 import { world } from '../../world_state'
 import { chess } from '../../chess_mechanism'
+import store from '../../store'
 
 // For handling animation of pieces on the board when relevant
 //
@@ -57,7 +58,8 @@ export default class PieceAnimator {
   }
 
   currentAnalysisPosition() {
-    return chess.get("analysis").variations[chess.get("k")].positions[chess.get("j") + 1]
+    const currentAnalysis = store.state.currentAnalysis
+    return currentAnalysis.variations[chess.get("k")].positions[chess.get("j") + 1]
   }
 
   // For figuring out what pieces on squares to move

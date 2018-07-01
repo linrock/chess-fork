@@ -79,7 +79,7 @@ export default class ChessMechanism extends Backbone.Model {
     if (!analysis) {
       return
     }
-    this.set({ j: 0, analysis, mode: "analysis", k })
+    this.set({ j: 0, mode: "analysis", k })
   }
 
   public getMoves(i: number, end: number): Immutable.List<SanMove> {

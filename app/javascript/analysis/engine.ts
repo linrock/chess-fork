@@ -50,7 +50,6 @@ export default class AnalysisEngine extends Backbone.Model {
     } else {
       this.stockfishAnalyze(fen, options).then(analysis => {
         analysisCache.set(fen, options, analysis)
-        chess.trigger("change:analysis", analysis)
         this.analysisComplete(fen, options)
       })
     }

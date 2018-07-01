@@ -4,6 +4,7 @@ import Chess from 'chess.js'
 
 import { world } from '../../world_state'
 import { chess } from '../../chess_mechanism'
+import store from '../../store'
 
 export default class SquareHighlighter {
 
@@ -25,16 +26,16 @@ export default class SquareHighlighter {
         return
       }
       this.clearHighlights()
-      const fen = chess.get("analysis").variations[chess.get("k")].positions[j]
+      const fen = store.state.currentAnalysis.variations[chess.get("k")].positions[j]
       const c = new Chess(fen)
-      const move = c.move(chess.get("analysis").variations[chess.get("k")].moves[j])
+      const move = c.move(store.state.currentAnalysis.variations[chess.get("k")].moves[j])
       this.highlightMove(move, "blue")
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
       this.clearHighlights()
-      const fen = chess.get("analysis").variations[k].positions[0]
+      const fen = store.state.currentAnalysis.variations[k].positions[0]
       const c = new Chess(fen)
-      const move = c.move(chess.get("analysis").variations[k].firstMove)
+      const move = c.move(store.state.currentAnalysis.variations[k].firstMove)
       this.highlightMove(move, "blue")
     })
     this.board.listenTo(chess, "change:mode", (model, mode) => {
