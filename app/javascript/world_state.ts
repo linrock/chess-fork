@@ -1,6 +1,6 @@
 // Reflects the state of the analysis board (board + move list)
 // For undo'ing moves and state changes
-// state - i, fen, moves, position
+// state - i, moves, positions
 
 import Backbone from 'backbone'
 import Immutable from 'immutable'

@@ -17,7 +17,6 @@ export default class ChessMechanism extends Backbone.Model {
     this.set({
       j: -1,
       mode: "normal",
-      polarity: 1
     })
     this.listenTo(world, "change:i", () => {
       if (this.get("j") >= 0) {
@@ -26,14 +25,11 @@ export default class ChessMechanism extends Backbone.Model {
     })
     this.listenTo(this, "change:mode", (model, mode) => {
       if (mode === "normal") {
-        this.setFen(this.getPosition(world.get("i")))
+        this.setFen(this.getCurrentPosition())
         this.set({ j: -1, k: 0 })
       } else if (mode === "analysis") {
         this.set({ j: 0 })
       }
-    })
-    this.listenTo(this, "polarity:flip", () => {
-      this.set({ polarity: -1 * this.get("polarity") })
     })
   }
 
@@ -62,10 +58,6 @@ export default class ChessMechanism extends Backbone.Model {
       positions: positions.push(newFen),
       i: (i < 0) ? 1 : i + 1
     })
-  }
-
-  public getPosition(i: number): FEN {
-    return world.get("positions").get(i)
   }
 
   public analyzePosition(fen: FEN, k: number): void {
@@ -139,6 +131,10 @@ export default class ChessMechanism extends Backbone.Model {
 
   public nextEngineMove(): void {
     this.setEnginePositionIndex(this.get("j") + 1)
+  }
+
+  public getPosition(i: number): FEN {
+    return world.get("positions").get(i)
   }
 
   private loadGameHistory(moves: Array<SanMove>): void {
