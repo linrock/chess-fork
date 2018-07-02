@@ -2,7 +2,6 @@
 
 import Chess from 'chess.js'
 
-import { world } from '../../world_state'
 import { chess } from '../../chess_mechanism'
 import store from '../../store'
 
@@ -18,8 +17,8 @@ export default class SquareHighlighter {
   }
 
   listenForEvents() {
-    this.board.listenTo(world, "change:i", (model, i) => {
-      this.highlightGameMoveIndex(i)
+    store.watch(state => state.positionIndex, positionIndex => {
+      this.highlightGameMoveIndex(positionIndex)
     })
     this.board.listenTo(chess, "change:j", (model, j) => {
       if (j === -1) {

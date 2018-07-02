@@ -1,6 +1,6 @@
 // Point and click pieces to select and move them
 
-import { world } from '../../world_state'
+import store from '../../store'
 
 export default class PointAndClick {
 
@@ -15,7 +15,9 @@ export default class PointAndClick {
       const squareId = event.currentTarget.dataset.square
       this.selectSquare(squareId)
     })
-    this.board.listenTo(world, "change:i", () => this.clearSelected())
+    store.subscribe(mutation => {
+      mutation.type === `setPositionIndex` && this.clearSelected()
+    })
   }
 
   selectSquare(square) {

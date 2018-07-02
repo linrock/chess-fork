@@ -6,6 +6,7 @@ import Backbone from 'backbone'
 import Tooltip from './tooltip'
 import openingState from '../opening_state'
 import { world } from '../world_state'
+import store from '../store'
 
 export default class SubHeader extends Backbone.View<Backbone.Model> {
   private $title: JQuery
@@ -33,8 +34,8 @@ export default class SubHeader extends Backbone.View<Backbone.Model> {
     this.listenTo(openingState, "change:opening", (model, opening) => {
       this.$title.text(opening)
     })
-    this.listenTo(world, "change:moves", (model, moves) => {
-      if (moves.size === 0) {
+    store.watch(state => state.moves, moves => {
+      if (moves.length === 0) {
         this.$title.text(this.initialText)
       }
     })

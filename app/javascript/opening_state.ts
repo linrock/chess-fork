@@ -5,7 +5,7 @@ import $ from 'jquery'
 import Backbone from 'backbone'
 import Immutable from 'immutable'
 
-import { world } from './world_state'
+import store from './store'
 
 interface OpeningResponse {
   eco: string,
@@ -38,8 +38,8 @@ class OpeningState extends Backbone.Model {
   }
 
   listenForEvents() {
-    this.listenTo(world, "change:moves", (model, moves) => {
-      if (this.get("length") && moves.size > this.get("length")) {
+    store.watch(state => state.moves, moves => {
+      if (this.get("length") && moves.length > this.get("length")) {
         return
       } else {
         this.set({ length: 0 })
@@ -56,7 +56,7 @@ class OpeningState extends Backbone.Model {
       $.ajax({
         url: "/openings",
         type: "POST",
-        data: { moves: moves.toArray() },
+        data: { moves },
         dataType: "json",
         context: this,
         success: (data, status, xhr) => {

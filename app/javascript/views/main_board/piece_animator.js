@@ -19,10 +19,9 @@ export default class PieceAnimator {
   }
 
   listenForEvents() {
-    this.board.listenTo(world, "change:i", (model, i) => {
-      const iPrev = model.previous("i")
-      const prevFen = store.getters.position(iPrev)
-      const newFen = store.getters.position(i)
+    store.watch(state => state.positionIndex, (positionIndex, prevI) => {
+      const prevFen = store.getters.position(prevI)
+      const newFen = store.getters.position(positionIndex)
       if (prevFen === newFen) {
         this.setFen(newFen)
         return
@@ -32,7 +31,7 @@ export default class PieceAnimator {
         this.setFen(newFen)
         return
       }
-      if (Math.abs(iPrev - i) === 1) {
+      if (Math.abs(prevI - positionIndex) === 1) {
         this.animatePositions(prevFen, newFen)
       } else {
         this.setFen(newFen)
