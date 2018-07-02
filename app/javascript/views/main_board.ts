@@ -16,8 +16,8 @@ export default class MainBoard extends Chessboard {
   private highlighter: SquareHighlighter
   private pointAndClick: PointAndClick
   private dragAndDrop: DragAndDrop
-  private ignoreNextAnimation: boolean
-  private prevFen: FEN
+  public ignoreNextAnimation: boolean
+  public prevFen: FEN
 
   get el() {
     return ".main-board"

@@ -2,20 +2,23 @@
 
 import Chess from 'chess.js'
 
+import { ChessMove } from '../../types'
+import MainBoard from '../main_board'
 import store from '../../store'
 
 export default class SquareHighlighter {
+  private board: MainBoard
+  private colors = {
+    "yellow":  ["#ffffcc", "#ffff66"], // game moves
+    "blue":    ["#eeffff", "#bbffff"]  // analysis moves
+  }
 
-  constructor(board) {
+  constructor(board: MainBoard) {
     this.board = board
-    this.colors = {
-      "yellow":  ["#ffffcc", "#ffff66"],     // game moves
-      "blue":    ["#eeffff", "#bbffff"]      // analysis moves
-    }
     this.listenForEvents()
   }
 
-  listenForEvents() {
+  private listenForEvents() {
     store.watch(state => state.positionIndex, positionIndex => {
       this.highlightGameMoveIndex(positionIndex)
     })
@@ -40,11 +43,11 @@ export default class SquareHighlighter {
     })
   }
 
-  highlightVariationMove(analysisVariation, variationPositionIndex) {
+  private highlightVariationMove(analysisVariation, variationPositionIndex: number) {
     this.clearHighlights()
     const fen = analysisVariation.positions[variationPositionIndex]
     const cjs = new Chess(fen)
-    let move
+    let move: ChessMove
     if (variationPositionIndex === 0) {
       move = cjs.move(analysisVariation.firstMove)
     } else {
@@ -53,17 +56,17 @@ export default class SquareHighlighter {
     this.highlightMove(move, "blue")
   }
 
-  clearHighlights() {
+  private clearHighlights() {
     this.board.$(".square[style]").removeAttr("style")
   }
 
-  highlightMove(move, color) {
+  private highlightMove(move: ChessMove, color: string) {
     const colorCodes = this.colors[color]
     this.board.$getSquare(move.from).css({ background: colorCodes[0] })
     this.board.$getSquare(move.to).css({ background: colorCodes[1] })
   }
 
-  highlightGameMoveIndex(i) {
+  private highlightGameMoveIndex(i: number) {
     this.clearHighlights()
     if (i <= 0) {
       return

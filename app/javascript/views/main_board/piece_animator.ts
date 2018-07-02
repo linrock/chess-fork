@@ -2,22 +2,25 @@ import _ from 'underscore'
 import Chess from 'chess.js'
 
 import { world } from '../../world_state'
+import { FEN } from '../../types'
 import store from '../../store'
+import MainBoard from '../main_board'
 
 // For handling animation of pieces on the board when relevant
 //
 export default class PieceAnimator {
+  private board: MainBoard
 
-  constructor(board) {
+  constructor(board: MainBoard) {
     this.board = board
     this.listenForEvents()
   }
 
-  setFen(fen) {
+  private setFen(fen: FEN) {
     store.dispatch(`setFen`, fen)
   }
 
-  listenForEvents() {
+  private listenForEvents() {
     store.watch(state => state.positionIndex, (positionIndex, prevI) => {
       const prevFen = store.getters.position(prevI)
       const newFen = store.getters.position(positionIndex)
@@ -63,7 +66,7 @@ export default class PieceAnimator {
     })
   }
 
-  currentAnalysisPosition() {
+  private currentAnalysisPosition(): FEN {
     const currentAnalysis = store.state.currentAnalysis
     const j = store.state.variationPositionIndex
     const k = store.state.variationIndex
@@ -72,7 +75,7 @@ export default class PieceAnimator {
 
   // For figuring out what pieces on squares to move
   //
-  positionDiffs(fen0, fen1) {
+  private positionDiffs(fen0, fen1): Array<[string, string]> {
     let c0 = new Chess(fen0)
     let c1 = new Chess(fen1)
     let from = {}
@@ -99,7 +102,7 @@ export default class PieceAnimator {
     return moves
   }
 
-  animatePositions(...positions) {
+  private animatePositions(...positions): void {
     store.dispatch(`setBoardIsAnimating`, true)
     let fen0 = positions[0]
     let fen1 = positions[1]
@@ -113,7 +116,7 @@ export default class PieceAnimator {
       let top = o1.top - o0.top
       let left = o1.left - o0.left
       let $piece = this.board.$getSquare(from).find(".piece")
-      this.animatePiece($piece, { left: left, top: top })
+      this.animatePiece($piece, { left, top })
       pieces.push($piece)
     }
     this.board.$(".piece:animated").promise().done(() => {
@@ -130,10 +133,10 @@ export default class PieceAnimator {
     })
   }
 
-  animatePiece($piece, position) {
-    let movement = {
-      left: (position.left > 0) ? `+=${position.left}px` : `-=${-position.left}px`,
-      top: (position.top > 0) ? `+=${position.top}px` : `-=${-position.top}px`
+  private animatePiece($piece, { left, top }) {
+    const movement = {
+      left: (left > 0) ? `+=${left}px` : `-=${-left}px`,
+      top: (top > 0) ? `+=${top}px` : `-=${-top}px`
     }
     $piece.animate(movement, 120)
   }

@@ -1,10 +1,14 @@
 // Point and click pieces to select and move them
 
+import { ChessMove } from '../../types'
+import MainBoard from '../main_board'
 import store from '../../store'
 
 export default class PointAndClick {
+  private board: MainBoard
+  private selectedSquare: boolean|string = false
 
-  constructor(board) {
+  constructor(board: MainBoard) {
     this.board = board
     this.selectedSquare = false
     this.listenForEvents()
@@ -20,9 +24,13 @@ export default class PointAndClick {
     })
   }
 
-  selectSquare(square) {
-    if (this.selectedSquare && square != this.selectedSquare) {
-      this.board.move({ from: this.selectedSquare, to: square })
+  selectSquare(square: string) {
+    if (this.selectedSquare && square !== this.selectedSquare) {
+      const move: ChessMove = {
+        from: <string>this.selectedSquare,
+        to: square
+      }
+      this.board.move(move)
       this.clearSelected()
     } else {
       this.selectedSquare = square

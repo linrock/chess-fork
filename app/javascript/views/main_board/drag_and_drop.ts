@@ -1,14 +1,19 @@
 // Drag and drop pieces to move them
 
+declare var require: any
+
 import $ from 'jquery'
 require("jquery-ui/ui/widgets/draggable")
 require("jquery-ui/ui/widgets/droppable")
 
-export default class DragAndDrop {
+import MainBoard from '../main_board'
 
-  constructor(board) {
+export default class DragAndDrop {
+  private board: MainBoard
+  private initialized = false
+
+  constructor(board: MainBoard) {
     this.board = board
-    this.initialized = false
   }
 
   init() {
@@ -21,7 +26,7 @@ export default class DragAndDrop {
   }
 
   initDraggable() {
-    this.board.$(".piece").draggable({
+    (<any>this.board.$(".piece")).draggable({
       stack: ".piece",
       distance: 5,
       revert: true,
@@ -30,7 +35,7 @@ export default class DragAndDrop {
   }
 
   initDroppable() {
-    this.board.$(".square").droppable({
+    (<any>this.board.$(".square")).droppable({
       accept: ".piece",
       tolerance: "pointer",
       drop: (event, ui) => {
