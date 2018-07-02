@@ -22,6 +22,7 @@
 <script lang="ts">
   import { SanMove } from '../types'
   import Analysis from '../analysis/models/analysis'
+  import Variation from '../analysis/models/variation'
 
   export default {
     methods: {
@@ -37,11 +38,14 @@
       currentAnalysis(): Analysis {
         return this.$store.state.currentAnalysis
       },
+      currentAnalysisVariation(): Variation {
+        return this.$store.getters.currentAnalysisVariation
+      },
       analysisMoves(): Array<SanMove> {
-        if (!this.currentAnalysis) {
+        if (!this.currentAnalysis || !this.currentAnalysisVariation) {
           return []
         }
-        return this.$store.getters.currentAnalysisVariation.moves
+        return this.currentAnalysisVariation.moves
       },
       startPlyNum(): number {
         return this.$store.state.positionIndex

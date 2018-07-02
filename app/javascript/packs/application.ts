@@ -13,8 +13,8 @@ import MoveList from '../components/move_list'
 import PgnImporter from '../components/pgn_importer'
 import EvaluationGraph from '../components/evaluation_graph'
 
-import store from '../store'
 import HotKeys from '../hotkeys'
+import store from '../store'
 
 const initVueComponent = (selector: string, component) => {
   const el: HTMLElement = document.querySelector(selector)

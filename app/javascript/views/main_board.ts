@@ -1,5 +1,4 @@
-// The chessboard, which reflects the current state of the
-// chess mechanism
+// The main chessboard view with interactive functionality
 
 import PieceAnimator from './main_board/piece_animator'
 import SquareHighlighter from './main_board/square_highlighter'
@@ -7,10 +6,9 @@ import PointAndClick from './main_board/point_and_click'
 import DragAndDrop from './main_board/drag_and_drop'
 import Chessboard from './chessboard'
 import { FEN, ChessMove } from '../types'
-import { chess } from '../chess_mechanism'
 import store from '../store'
 
-// Base chessboard class with position rendering behavior
+// Base chessboard class + position rendering behavior
 // and more behaviors built through composition
 //
 export default class MainBoard extends Chessboard {

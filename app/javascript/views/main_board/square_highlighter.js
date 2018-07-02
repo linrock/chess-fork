@@ -2,7 +2,6 @@
 
 import Chess from 'chess.js'
 
-import { chess } from '../../chess_mechanism'
 import store from '../../store'
 
 export default class SquareHighlighter {
@@ -20,8 +19,8 @@ export default class SquareHighlighter {
     store.watch(state => state.positionIndex, positionIndex => {
       this.highlightGameMoveIndex(positionIndex)
     })
-    this.board.listenTo(chess, "change:j", (model, j) => {
-      if (j === -1) {
+    store.watch(state => state.variationPositionIndex, variationPositionIndex => {
+      if (variationPositionIndex === -1) {
         return
       }
       this.highlightVariationMove(
@@ -29,14 +28,14 @@ export default class SquareHighlighter {
         store.state.variationPositionIndex
       )
     })
-    this.board.listenTo(chess, "change:k", (model, k) => {
+    store.watch(state => state.variationIndex, k => {
       this.highlightVariationMove(store.state.currentAnalysis.variations[k], 0)
     })
-    this.board.listenTo(chess, "change:mode", (model, mode) => {
+    store.watch(state => state.mode, mode => {
       if (mode === "normal") {
         this.highlightGameMoveIndex(store.state.positionIndex)
       } else if (mode === "analysis") {
-        this.highlightVariationMove(store.getters.currentAnalysisVariation ,0)
+        this.highlightVariationMove(store.getters.currentAnalysisVariation, 0)
       }
     })
   }

@@ -2,7 +2,6 @@ import _ from 'underscore'
 import Chess from 'chess.js'
 
 import { world } from '../../world_state'
-import { chess } from '../../chess_mechanism'
 import store from '../../store'
 
 // For handling animation of pieces on the board when relevant
@@ -37,8 +36,8 @@ export default class PieceAnimator {
         this.setFen(newFen)
       }
     })
-    this.board.listenTo(chess, "change:j", (model, j) => {
-      if (j === -1) {
+    store.watch(state => state.variationPositionIndex, variationPositionIndex => {
+      if (variationPositionIndex === -1) {
         return
       }
       const prevFen = this.board.prevFen
@@ -50,12 +49,12 @@ export default class PieceAnimator {
         this.setFen(newFen)
       }
     })
-    this.board.listenTo(chess, "change:k", (model, k) => {
+    store.watch(state => state.variationIndex, variationIndex => {
       const prevFen = this.board.prevFen
       const newFen = this.currentAnalysisPosition()
       this.setFen(newFen)
     })
-    this.board.listenTo(chess, "change:mode", (model, mode) => {
+    store.watch(state => state.mode, mode => {
       if (mode === "normal") {
         this.setFen(store.getters.currentFen)
       } else if (mode === "analysis") {

@@ -10,7 +10,6 @@ import Variation from '../analysis/models/variation'
 import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import { world } from '../world_state'
-import { chess } from '../chess_mechanism'
 
 Vue.use(Vuex)
 
@@ -194,17 +193,14 @@ const actions = {
       return
     }
     commit(`setVariationPositionIndex`, variationPositionIndex)
-    chess.set({ j: variationPositionIndex })
   },
   analyzeCurrentPosition({ dispatch, commit }, variationIndex) {
     dispatch(`setMode`, `analysis`)
     commit(`setVariationIndex`, variationIndex)
     commit(`setVariationPositionIndex`, 0)
-    chess.set({ j: 0, k: variationIndex, mode: `analysis` })
   },
   setMode({ commit, state, getters }, mode: string) {
     commit(`setMode`, mode)
-    chess.set({ j: 0, k: 0, mode })
   },
   setFen({ commit }, fen: FEN) {
     commit(`setCurrentFen`, fen)
