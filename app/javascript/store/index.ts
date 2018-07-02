@@ -127,15 +127,18 @@ const actions = {
   },
   setAnalysisOptions({ commit, getters }, analysisOptions: AnalysisOptions) {
     commit(`setAnalysisOptions`, analysisOptions)
-    analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
+    analysisEngine.enqueueWork(getters.currentFen, analysisOptions)
   },
-  analysisComplete({ commit, getters }, payload) {
+  analysisComplete({ commit, state, getters }, payload) {
     const { fen, options, analysis } = payload
     const { multipv, depth } = getters.analysisOptions
     if (fen === getters.currentFen
         && options.multipv === multipv
         && options.depth === depth) {
       commit(`setCurrentAnalysis`, analysis)
+      if (state.variationIndex > multipv) {
+        commit(`setVariationIndex`, 0)
+      }
     }
   },
   makeMove({ dispatch, commit, state, getters }, move: ChessMove) {
@@ -238,8 +241,12 @@ const getters = {
       return `${getMovePrefix(i)} ${state.moves[i]}`
     } else if (state.currentAnalysis && state.mode === `analysis`) {
       const k = state.variationIndex
-      const firstVariationMove = state.currentAnalysis.variations[k].firstMove
-      return `Variation after ${getMovePrefix(i + 1)} ${firstVariationMove}`
+      if (state.currentAnalysis.variations[k]) {
+        const firstVariationMove = state.currentAnalysis.variations[k].firstMove
+        return `Variation after ${getMovePrefix(i + 1)} ${firstVariationMove}`
+      } else {
+        return ``
+      }
     }
   },
   analysisOptions(state: GlobalState): AnalysisOptions {

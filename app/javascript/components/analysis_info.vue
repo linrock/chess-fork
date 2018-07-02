@@ -75,10 +75,6 @@
           {}, this.$store.getters.analysisOptions, { depth }
         ))
       },
-      enterAnalysisMode(event) {
-        const { fen, k } = event.currentTarget.dataset
-        this.$store.dispatch(`analyzeCurrentPosition`, k)
-      }
     },
 
     computed: {
