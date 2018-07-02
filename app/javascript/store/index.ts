@@ -21,6 +21,7 @@ interface GlobalState {
   positionIndex: number
   variationIndex: number
   variationPositionIndex: number
+  currentFen: FEN
   currentAnalysis: Analysis
   boardPolarity: number // 1 or -1
   boardIsAnimating: boolean
@@ -36,6 +37,7 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   variationIndex: 0,
   variationPositionIndex: 0,
   currentAnalysis: null,
+  currentFen: `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`,
   boardPolarity: 1,
   boardIsAnimating: false,
 })
@@ -65,6 +67,9 @@ const mutations = {
       moves: Immutable.List(moves),
       positions: Immutable.List(positions)
     })
+  },
+  setCurrentFen(state, fen: FEN) {
+    state.currentFen = fen
   },
   setCurrentAnalysis(state, analysis: Analysis) {
     state.currentAnalysis = analysis
@@ -207,7 +212,7 @@ const actions = {
     chess.set({ j: 0, k: 0, mode })
   },
   setFen({ commit }, fen: FEN) {
-    chess.set({ fen })
+    commit(`setCurrentFen`, fen)
   },
   flipBoard({ commit }) {
     commit(`flipBoard`)

@@ -40,11 +40,14 @@ export default class MainBoard extends Chessboard {
   }
 
   private listenForEvents() {
-    this.listenTo(chess, "change:fen", (_, fen: FEN) => {
-      this.prevFen = this.fen
-      this.renderFen(fen)
+    store.subscribe((mutation, state) => {
+      if (mutation.type === `flipBoard`) {
+        this.flip()
+      } else if (mutation.type === `setCurrentFen`) {
+        this.prevFen = this.fen
+        this.renderFen(state.currentFen)
+      }
     })
-    store.subscribe(mutation => mutation.type === `flipBoard` && this.flip())
   }
 
   public move(move: ChessMove, ignoreNextAnimation = false) {
