@@ -13,6 +13,7 @@ import PgnImporter from '../components/pgn_importer'
 import EvaluationGraph from '../components/evaluation_graph'
 
 import HotKeys from '../hotkeys'
+import OpeningState from '../opening_state'
 import store from '../store'
 
 const initVueComponent = (selector: string, component) => {
@@ -22,6 +23,7 @@ const initVueComponent = (selector: string, component) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   new HotKeys
+  new OpeningState
 
   // backbone views
   new MainBoard

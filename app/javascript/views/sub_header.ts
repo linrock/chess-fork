@@ -4,7 +4,6 @@
 import Backbone from 'backbone'
 
 import Tooltip from './tooltip'
-import openingState from '../opening_state'
 import { world } from '../world_state'
 import store from '../store'
 
@@ -31,8 +30,8 @@ export default class SubHeader extends Backbone.View<Backbone.Model> {
   }
 
   private listenForEvents() {
-    this.listenTo(openingState, "change:opening", (model, opening) => {
-      this.$title.text(opening)
+    store.watch(state => state.openingText, openingText => {
+      this.$title.text(openingText)
     })
     store.watch(state => state.moves, moves => {
       if (moves.length === 0) {

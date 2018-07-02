@@ -2,7 +2,6 @@
 // in the current move list
 
 import $ from 'jquery'
-import Backbone from 'backbone'
 
 import { SanMove } from './types'
 import store from './store'
@@ -16,18 +15,13 @@ interface OpeningCache {
   [moves: string]: OpeningData
 }
 
-class OpeningState extends Backbone.Model {
+export default class OpeningState {
   private cache: OpeningCache = {}
 
-  initialize() {
-    this.listenForEvents()
-  }
-
-  listenForEvents() {
+  constructor() {
     store.watch(state => state.moves, async moves => {
       const opening = await this.getOpeningForMoves(moves)
-      const openingText = `${opening.eco} – ${opening.full_name}`
-      this.set({ opening: openingText })
+      store.dispatch(`setOpeningText`, `${opening.eco} – ${opening.full_name}`)
     })
   }
 
@@ -59,7 +53,3 @@ class OpeningState extends Backbone.Model {
     })
   }
 }
-
-const openingState = new OpeningState
-
-export default openingState

@@ -24,6 +24,7 @@ interface GlobalState {
   currentAnalysis: Analysis
   boardPolarity: number // 1 or -1
   boardIsAnimating: boolean
+  openingText: string
   multipv?: number
   depth?: number
 }
@@ -39,6 +40,7 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   currentFen: `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`,
   boardPolarity: 1,
   boardIsAnimating: false,
+  openingText: null
 })
 
 const mutations = {
@@ -78,6 +80,9 @@ const mutations = {
   },
   setBoardIsAnimating(state, isAnimating: boolean) {
     state.boardIsAnimating = isAnimating
+  },
+  setOpeningText(state, openingText: string) {
+    state.openingText = openingText
   }
 }
 
@@ -213,6 +218,9 @@ const actions = {
   },
   setBoardIsAnimating({ commit }, isAnimating: boolean) {
     commit(`setBoardIsAnimating`, isAnimating)
+  },
+  setOpeningText({ commit }, openingText: string) {
+    commit(`setOpeningText`, openingText)
   }
 }
 
