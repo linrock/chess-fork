@@ -25,9 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   new HotKeys
 
   // backbone views
-  const chessboardView = new MainBoard;
-  (<any>window).chessboard = chessboardView
-
+  new MainBoard
   new IntroMessage
   // new VirtualDomBoard
   new SubHeader
