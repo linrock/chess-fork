@@ -24,26 +24,20 @@ class OpeningState extends Backbone.Model {
   }
 
   listenForEvents() {
-    store.watch(state => state.moves, moves => {
-      this.getOpeningForMoves(moves).then(opening => {
-        let openingText = `${opening.eco} – ${opening.full_name}`
-        this.set({ opening: openingText })
-      })
+    store.watch(state => state.moves, async moves => {
+      const opening = await this.getOpeningForMoves(moves)
+      const openingText = `${opening.eco} – ${opening.full_name}`
+      this.set({ opening: openingText })
     })
   }
 
-  private getOpeningForMoves(moves: Array<SanMove>): Promise<OpeningData> {
-    return new Promise((resolve, reject) => {
-      const opening = this.cache[moves.toString()]
-      if (opening) {
-        resolve(opening)
-      } else {
-        return this.remoteGetOpeningForMoves(moves).then(opening => {
-          this.cache[moves.toString()] = opening
-          resolve(opening)
-        })
-      }
-    })
+  private async getOpeningForMoves(moves: Array<SanMove>): Promise<OpeningData> {
+    let opening = this.cache[moves.toString()]
+    if (!opening) {
+      opening = await this.remoteGetOpeningForMoves(moves)
+      this.cache[moves.toString()] = opening
+    }
+    return opening
   }
 
   private remoteGetOpeningForMoves(moves: Array<SanMove>): Promise<OpeningData> {
