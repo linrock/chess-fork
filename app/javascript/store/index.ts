@@ -52,7 +52,6 @@ const mutations = {
   },
   setPositionIndex(state, positionIndex) {
     state.positionIndex = positionIndex
-    world.set({ i: positionIndex })
   },
   setVariationIndex(state, variationIndex) {
     state.variationIndex = variationIndex
@@ -63,26 +62,12 @@ const mutations = {
   setMovesAndPositions(state, { moves, positions }) {
     state.moves = moves
     state.positions = positions
-    world.set({
-      moves: Immutable.List(moves),
-      positions: Immutable.List(positions)
-    })
   },
   setCurrentFen(state, fen: FEN) {
     state.currentFen = fen
   },
   setCurrentAnalysis(state, analysis: Analysis) {
     state.currentAnalysis = analysis
-  },
-  setWorldState(state, { moves, positions, i }) {
-    state.positionIndex = i
-    state.moves = moves
-    state.positions = positions
-    world.set({
-      moves: Immutable.List(moves),
-      positions: Immutable.List(positions),
-      i
-    })
   },
   loadWorldState(state, { moves, positions, i }) {
     state.positionIndex = i
@@ -111,7 +96,17 @@ const actions = {
       return
     }
     commit(`setPositionIndex`, positionIndex)
+    world.set({ i: positionIndex })
     analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
+  },
+  setWorldState({ commit }, { moves, positions, i }) {
+    commit(`setMovesAndPositions`, { moves, positions })
+    commit(`setPositionIndex`, i)
+    world.set({
+      moves: Immutable.List(moves),
+      positions: Immutable.List(positions),
+      i
+    })
   },
   loadPgn({ dispatch, commit, getters }, pgn: string): boolean {
     let cjs = new Chess
@@ -125,7 +120,7 @@ const actions = {
       cjs.move(move)
       positions.push(cjs.fen())
     }
-    commit(`setWorldState`, { moves, positions, i: 1 })
+    dispatch(`setWorldState`, { moves, positions, i: 1 })
     positions.forEach(fen => {
       analysisEngine.enqueueWork(fen, getters.analysisOptions)
     })
@@ -157,7 +152,7 @@ const actions = {
     const ind = i < 1 ? 1 : i + 1
     const positions = state.positions.slice(0, ind)
     positions.push(newFen)
-    commit(`setWorldState`, { moves, positions, i: (i < 0) ? 1 : i + 1 })
+    dispatch(`setWorldState`, { moves, positions, i: (i < 0) ? 1 : i + 1 })
     analysisEngine.enqueueWork(newFen, getters.analysisOptions)
   },
   firstMove({ dispatch }) {

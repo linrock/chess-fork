@@ -1,6 +1,5 @@
 // Point and click pieces to select and move them
 
-import $ from 'jquery'
 import { world } from '../../world_state'
 
 export default class PointAndClick {
@@ -12,11 +11,11 @@ export default class PointAndClick {
   }
 
   listenForEvents() {
-    this.board.$el.on("click", ".square", (event) => {
-      let square = $(event.currentTarget).data("square")
-      this.selectSquare(square)
+    this.board.$el.on("click", ".square", event => {
+      const squareId = event.currentTarget.dataset.square
+      this.selectSquare(squareId)
     })
-    this.board.listenTo(world, "change:i", () => { this.clearSelected() })
+    this.board.listenTo(world, "change:i", () => this.clearSelected())
   }
 
   selectSquare(square) {

@@ -3,7 +3,7 @@
 import $ from 'jquery'
 import Backbone from 'backbone'
 
-import { world } from '../world_state'
+import store from '../store'
 
 export default class IntroMessage extends Backbone.View<Backbone.Model> {
 
@@ -13,6 +13,8 @@ export default class IntroMessage extends Backbone.View<Backbone.Model> {
 
   initialize() {
     $(() => this.$el.removeClass("invisible"))
-    this.listenTo(world, "change:i", () => this.$el.fadeOut(50))
+    store.subscribe(mutation => {
+      mutation.type === `setPositionIndex` && this.$el.fadeOut(50)
+    })
   }
 }
