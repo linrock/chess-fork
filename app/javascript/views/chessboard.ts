@@ -35,8 +35,8 @@ class Pieces {
 
 export default class Chessboard extends Backbone.View<Backbone.Model> {
   protected readonly sqPrefix: string
+  protected fen: FEN
   private pieces: Pieces
-  private fen: FEN
 
   initialize() {
     this.pieces = new Pieces(this)

@@ -42,7 +42,7 @@ export default class PieceAnimator {
       if (j === -1) {
         return
       }
-      const prevFen = window.chessboard.fen
+      const prevFen = this.board.prevFen
       const newFen = this.currentAnalysisPosition()
       const moves = this.positionDiffs(prevFen, newFen)
       if (moves.length <= 2) {
@@ -52,7 +52,7 @@ export default class PieceAnimator {
       }
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
-      const prevFen = window.chessboard.fen
+      const prevFen = this.board.prevFen
       const newFen = this.currentAnalysisPosition()
       this.setFen(newFen)
     })

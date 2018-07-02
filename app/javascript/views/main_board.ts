@@ -6,7 +6,7 @@ import SquareHighlighter from './main_board/square_highlighter'
 import PointAndClick from './main_board/point_and_click'
 import DragAndDrop from './main_board/drag_and_drop'
 import Chessboard from './chessboard'
-import { ChessMove } from '../types'
+import { FEN, ChessMove } from '../types'
 import { chess } from '../chess_mechanism'
 import store from '../store'
 
@@ -19,6 +19,7 @@ export default class MainBoard extends Chessboard {
   private pointAndClick: PointAndClick
   private dragAndDrop: DragAndDrop
   private ignoreNextAnimation: boolean
+  private prevFen: FEN
 
   get el() {
     return ".main-board"
@@ -39,7 +40,10 @@ export default class MainBoard extends Chessboard {
   }
 
   private listenForEvents() {
-    this.listenTo(chess, "change:fen", (model, fen) => this.renderFen(fen))
+    this.listenTo(chess, "change:fen", (_, fen: FEN) => {
+      this.prevFen = this.fen
+      this.renderFen(fen)
+    })
     this.listenTo(chess, "polarity:flip", this.flip)
   }
 
