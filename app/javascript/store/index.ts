@@ -211,7 +211,6 @@ const actions = {
   },
   flipBoard({ commit }) {
     commit(`flipBoard`)
-    chess.trigger(`polarity:flip`)
   },
   setBoardIsAnimating({ commit }, isAnimating: boolean) {
     commit(`setBoardIsAnimating`, isAnimating)

@@ -44,7 +44,7 @@ export default class MainBoard extends Chessboard {
       this.prevFen = this.fen
       this.renderFen(fen)
     })
-    this.listenTo(chess, "polarity:flip", this.flip)
+    store.subscribe(mutation => mutation.type === `flipBoard` && this.flip())
   }
 
   public move(move: ChessMove, ignoreNextAnimation = false) {
