@@ -44,7 +44,7 @@ export default class Chessboard extends Backbone.View<Backbone.Model> {
     this.showPieces()
   }
 
-  protected renderFen(fen): void {
+  protected renderFen(fen: FEN): void {
     if (fen.split(" ").length === 4) {
       fen += " 0 1"
     }

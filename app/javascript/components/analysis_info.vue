@@ -1,20 +1,18 @@
 <template lang="pug">
-  .suggested-moves(:class="[{ invisible: $store.state.positionIndex === 0 }]")
+  .suggested-moves(:class="[{ invisible: $store.state.positionIndex <= 0 }]")
     .engine-actions
       a.more-moves(href="javascript:" @click="showMoreMoves")
         | {{ movesButtonText }}
       a.more-depth(href="javascript:" @click="higherDepth")
         | {{ depthButtonText }}
     .titles
-      .response Response
-      .eval Score
+      .response-move Response
+      .evaluation Score
       .depth Depth
     .moves(v-if="analysisData")
       .move-row(v-for="variation in analysisData")
-        .move.engine-move(
-          :data-fen="$store.state.currentAnalysis.fen"
-          :data-k="variation.variationIndex"
-          @click="enterAnalysisMode"
+        .response-move(
+          @click="$store.dispatch(`analyzeCurrentPosition`, variation.index)"
         )
           | {{ variation.move }}
         .evaluation(:class="variation.color") {{ variation.evaluation }}
@@ -115,7 +113,7 @@
             depth: variation.depth,
             evaluation,
             color,
-            variationIndex: k,
+            index: k,
           })
         }
         return data
@@ -156,15 +154,16 @@
       text-transform uppercase
       display flex
 
-      .response
-        width 80px
+    // 3 columns
+    .response-move
+      width 85px
 
-      .eval
-        width 80px
+    .evaluation
+      width 75px
 
-      .depth
-        width 45px
-        text-align right
+    .depth
+      width 45px
+      text-align right
 
     // List of candidate moves under the board
     .moves
@@ -172,29 +171,18 @@
       font-weight 600
       transition opacity 0.2s ease
 
-      &.faded
-        opacity 0.5
-        transition opacity 0.05s ease
-
-      &.invisible
-        opacity 0
-        pointer-events none
-        transition opacity 0.05s ease
-
     .move-row
       margin-bottom 12px
       display flex
 
-      .engine-move
+      .response-move
         transition color 0.15s ease
-        width 80px
 
         &:hover
           cursor pointer
           color #0bf
 
       .evaluation
-        width 80px
         color rgba(100,100,100,0.9)
 
         &.green
@@ -202,10 +190,5 @@
 
         &.red
           color red
-
-      .depth
-        float left
-        width 45px
-        text-align right
 
 </style>
