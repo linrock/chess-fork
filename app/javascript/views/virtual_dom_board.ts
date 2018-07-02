@@ -25,7 +25,7 @@ export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
 
   listenForEvents() {
     this.listenTo(chess, "preview:i", (i) => {
-      let fen = world.getPosition(i)
+      let fen = store.getters.position(i)
       if (!fen) {
         return
       }
@@ -44,7 +44,7 @@ export default class VirtualDomBoard extends Backbone.View<Backbone.Model> {
     if (i === 0) {
       return
     }
-    this.position.load(world.getPosition(i - 1))
+    this.position.load(store.getters.position(i - 1))
     return this.position.move(store.state.moves[i - 1])
   }
 

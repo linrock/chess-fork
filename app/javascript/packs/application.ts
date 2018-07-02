@@ -13,7 +13,6 @@ import MoveList from '../components/move_list'
 import PgnImporter from '../components/pgn_importer'
 import EvaluationGraph from '../components/evaluation_graph'
 
-import { chess } from '../chess_mechanism'
 import store from '../store'
 import HotKeys from '../hotkeys'
 

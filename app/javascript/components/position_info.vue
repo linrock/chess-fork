@@ -9,9 +9,6 @@
 </template>
 
 <script lang="ts">
-  import { FEN, SanMove } from '../types'
-  import { chess } from '../chess_mechanism'
-
   export default {
     data() {
       return {

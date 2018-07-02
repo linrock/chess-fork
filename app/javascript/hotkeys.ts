@@ -1,5 +1,4 @@
 import Mousetrap from 'mousetrap'
-import { chess } from './chess_mechanism'
 import { world } from './world_state'
 import store from './store'
 

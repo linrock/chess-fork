@@ -6,6 +6,7 @@ import Immutable from 'immutable'
 import { FEN, SanMove, ChessMove } from '../types'
 import { getMovePrefix } from '../utils'
 import Analysis from '../analysis/models/analysis'
+import Variation from '../analysis/models/variation'
 import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import { world } from '../world_state'
@@ -223,6 +224,9 @@ const getters = {
       const k = state.variationPositionIndex
       return state.currentAnalysis.variations[k].positions[j]
     }
+  },
+  currentAnalysisVariation(state: GlobalState): Variation {
+    return state.currentAnalysis.variations[store.state.variationIndex]
   },
   positionInfoText(state: GlobalState): string {
     const i = state.positionIndex - 1

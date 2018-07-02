@@ -11,13 +11,8 @@
 
 <script lang="ts">
   import { SanMove } from '../types'
-  import { chess } from '../chess_mechanism'
 
   export default {
-    data() {
-      return { chess }
-    },
-
     computed: {
       moves(): Array<SanMove> {
         return this.$store.state.moves

@@ -1,11 +1,6 @@
 // local cache for stockfish engine outputs
 
-import $ from 'jquery'
-import Chess from 'chess.js'
-
 import { FEN } from '../types'
-import { chess } from '../chess_mechanism'
-
 import Analysis from './models/analysis'
 import { AnalysisOptions, defaultAnalysisOptions } from './options'
 

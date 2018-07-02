@@ -21,8 +21,8 @@ export default class PieceAnimator {
   listenForEvents() {
     this.board.listenTo(world, "change:i", (model, i) => {
       const iPrev = model.previous("i")
-      const prevFen = world.getPosition(iPrev)
-      const newFen = world.getPosition(i)
+      const prevFen = store.getters.position(iPrev)
+      const newFen = store.getters.position(i)
       if (prevFen === newFen) {
         this.setFen(newFen)
         return

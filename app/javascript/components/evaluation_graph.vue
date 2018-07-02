@@ -36,7 +36,6 @@
   import D3VerticalLine from './evaluation_graph/d3_vertical_line'
   import HoverIndicator from './evaluation_graph/hover_indicator'
   import { getNormalizedScores } from '../analysis/graph_points'
-  import { chess } from '../chess_mechanism'
 
   export default {
     data() {

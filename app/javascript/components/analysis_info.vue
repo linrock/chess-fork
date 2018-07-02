@@ -25,7 +25,6 @@
 <script lang="ts">
   import _ from 'underscore'
   import { FEN } from '../types'
-  import { chess } from '../chess_mechanism'
   import { getMovePrefix } from '../utils'
   import { defaultAnalysisOptions } from '../analysis/options'
   import analysisCache from '../analysis/cache'

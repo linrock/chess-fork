@@ -26,16 +26,17 @@ export default class SquareHighlighter {
         return
       }
       this.clearHighlights()
-      const fen = store.state.currentAnalysis.variations[store.state.variationIndex].positions[store.state.variationPositionIndex]
-      const c = new Chess(fen)
-      const move = c.move(store.state.currentAnalysis.variations[store.state.variationIndex].moves[store.state.variationPositionIndex])
+      const currentVariation = store.getters.currentAnalysisVariation
+      const fen = currentVariation.positions[store.state.variationPositionIndex]
+      const cjs = new Chess(fen)
+      const move = cjs.move(currentVariation.moves[store.state.variationPositionIndex])
       this.highlightMove(move, "blue")
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
       this.clearHighlights()
       const fen = store.state.currentAnalysis.variations[k].positions[0]
-      const c = new Chess(fen)
-      const move = c.move(store.state.currentAnalysis.variations[k].firstMove)
+      const cjs = new Chess(fen)
+      const move = cjs.move(store.state.currentAnalysis.variations[k].firstMove)
       this.highlightMove(move, "blue")
     })
     this.board.listenTo(chess, "change:mode", (model, mode) => {
@@ -60,7 +61,7 @@ export default class SquareHighlighter {
     if (i <= 0) {
       return
     }
-    const fen = world.getPosition(i - 1)
+    const fen = store.getters.position(i - 1)
     const c = new Chess(fen)
     const move = c.move(store.state.moves[i - 1])
     this.highlightMove(move, "yellow")

@@ -16,7 +16,6 @@
 <script lang="ts">
   import Chess from 'chess.js'
   import { PGN } from '../types'
-  import { chess } from '../chess_mechanism'
 
   const placeholderText = `Enter or paste a PGN here to import your game
 

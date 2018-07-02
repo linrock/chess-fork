@@ -22,7 +22,6 @@
 <script lang="ts">
   import { SanMove } from '../types'
   import Analysis from '../analysis/models/analysis'
-  import { chess } from '../chess_mechanism'
 
   export default {
     methods: {
