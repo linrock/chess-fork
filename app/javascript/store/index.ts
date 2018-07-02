@@ -10,7 +10,6 @@ import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import { world } from '../world_state'
 import { chess } from '../chess_mechanism'
-import initBackboneBridge from './bridge'
 
 Vue.use(Vuex)
 
@@ -189,9 +188,8 @@ const actions = {
     if ((<any>window).chessboard.isAnimating()) {
       return
     }
-    const fen = analysis.variations[state.variationIndex].positions[state.variationPositionIndex + 1]
     commit(`setVariationPositionIndex`, variationPositionIndex)
-    chess.set({ j: variationPositionIndex, fen })
+    chess.set({ j: variationPositionIndex })
   },
   analyzeCurrentPosition({ dispatch, commit }, variationIndex) {
     dispatch(`setMode`, `analysis`)
@@ -199,9 +197,12 @@ const actions = {
     commit(`setVariationPositionIndex`, 0)
     chess.set({ j: 0, k: variationIndex })
   },
-  setMode({ commit }, mode: string) {
+  setMode({ commit, state, getters }, mode: string) {
     commit(`setMode`, mode)
-    chess.set({ mode })
+    chess.set({ i: state.positionIndex, j: 0, k: 0, mode })
+  },
+  setFen({ commit }, fen: FEN) {
+    chess.set({ fen })
   },
   flipBoard({ commit }) {
     commit(`flipBoard`)
@@ -242,7 +243,5 @@ const getters = {
 }
 
 const store = new Vuex.Store({ state, mutations, actions, getters })
-
-initBackboneBridge(state, getters)
 
 export default store

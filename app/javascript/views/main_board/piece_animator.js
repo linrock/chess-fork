@@ -14,24 +14,28 @@ export default class PieceAnimator {
     this.listenForEvents()
   }
 
+  setFen(fen) {
+    store.dispatch(`setFen`, fen)
+  }
+
   listenForEvents() {
     this.board.listenTo(world, "change:i", (model, i) => {
       const iPrev = model.previous("i")
       const prevFen = world.getPosition(iPrev)
       const newFen = world.getPosition(i)
       if (prevFen === newFen) {
-        chess.setFen(newFen)
+        this.setFen(newFen)
         return
       }
       if (this.board.ignoreNextAnimation) {
         this.board.ignoreNextAnimation = false
-        chess.setFen(newFen)
+        this.setFen(newFen)
         return
       }
       if (Math.abs(iPrev - i) === 1) {
         this.animatePositions(prevFen, newFen)
       } else {
-        chess.setFen(newFen)
+        this.setFen(newFen)
       }
     })
     this.board.listenTo(chess, "change:j", (model, j) => {
@@ -44,7 +48,7 @@ export default class PieceAnimator {
       if (moves.length <= 2) {
         this.animatePositions(prevFen, newFen)
       } else {
-        chess.setFen(newFen)
+        this.setFen(newFen)
       }
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
@@ -53,7 +57,12 @@ export default class PieceAnimator {
       }
       const prevFen = window.chessboard.fen
       const newFen = this.currentAnalysisPosition()
-      chess.setFen(newFen)
+      this.setFen(newFen)
+    })
+    this.board.listenTo(chess, "change:mode", (model, mode) => {
+      if (mode === "normal") {
+        this.setFen(store.getters.currentFen)
+      }
     })
   }
 
@@ -114,10 +123,10 @@ export default class PieceAnimator {
         $piece.removeAttr("style")
       }
       if (positions.length > 2) {
-        chess.setFen(fen1)
+        this.setFen(fen1)
         this.animatePositions(positions.slice(1))
       } else {
-        chess.setFen(fen1)
+        this.setFen(fen1)
       }
     })
   }
