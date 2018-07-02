@@ -25,16 +25,13 @@ export default class WorldState extends Backbone.Model {
   }
 
   public reset(): void {
-    this.set({
+    const worldState = {
       i: -1,
-      moves: Immutable.List(),
+      moves: <Immutable.List<SanMove>>Immutable.List(),
       positions: Immutable.List([ new Chess().fen() ])
-    })
-    store.dispatch(`loadWorldState`, {
-      i: -1,
-      moves: [],
-      positions: [ new Chess().fen() ]
-    })
+    }
+    this.set(worldState)
+    this.dispatchWorldState(worldState)
   }
 
   public rewind(): void {
@@ -42,39 +39,24 @@ export default class WorldState extends Backbone.Model {
       return
     }
     this.states = this.states.pop()
-    this.set(this.states.first().toObject())
+    const prevState = <WorldStateSnapshot>this.states.first().toObject()
+    this.dispatchWorldState(prevState)
+    this.set(prevState)
     this.states = this.states.pop()
-    const worldState = this.states.first().toObject()
-    console.dir({
-      i: worldState.i,
-      moves: worldState.moves.toArray(),
-      positions: worldState.positions.toArray()
-    })
+    const worldState = <WorldStateSnapshot>this.states.first().toObject()
+    this.dispatchWorldState(worldState)
+  }
+
+  private recordState(state: WorldState) {
+    this.states = this.states.push(Immutable.Map(<WorldStateSnapshot>state.attributes))
+  }
+
+  private dispatchWorldState(worldState: WorldStateSnapshot) {
     store.dispatch(`loadWorldState`, {
       i: worldState.i,
       moves: worldState.moves.toArray(),
       positions: worldState.positions.toArray()
     })
-  }
-
-  public getPositions(): Immutable.List<FEN> {
-    return this.get("positions")
-  }
-
-  public nPositions(): number {
-    return this.getPositions().size
-  }
-
-  public getPosition(i: number): FEN {
-    return this.getPositions().get(i)
-  }
-
-  public getCurrentPosition(): FEN {
-    return this.getPosition(this.get("i"))
-  }
-
-  private recordState(state: WorldState) {
-    this.states = this.states.push(Immutable.Map(<WorldStateSnapshot>state.attributes))
   }
 }
 

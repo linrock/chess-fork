@@ -64,6 +64,9 @@ const mutations = {
       positions: Immutable.List(positions)
     })
   },
+  setCurrentAnalysis(state, analysis: Analysis) {
+    state.currentAnalysis = analysis
+  },
   setWorldState(state, { moves, positions, i }) {
     state.positionIndex = i
     state.moves = moves
@@ -73,9 +76,6 @@ const mutations = {
       positions: Immutable.List(positions),
       i
     })
-  },
-  setCurrentAnalysis(state, analysis: Analysis) {
-    state.currentAnalysis = analysis
   },
   loadWorldState(state, { moves, positions, i }) {
     state.positionIndex = i
