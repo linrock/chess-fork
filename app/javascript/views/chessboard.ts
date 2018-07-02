@@ -67,10 +67,6 @@ export default class Chessboard extends Backbone.View<Backbone.Model> {
     setTimeout(() => this.$(".piece").removeClass("invisible"), 100)
   }
 
-  public isAnimating(): boolean {
-    return !!this.$el.find(".piece:animated").length
-  }
-
   public $getSquare(id): JQuery {
     return $(`#${this.sqPrefix}-${id}`)
   }

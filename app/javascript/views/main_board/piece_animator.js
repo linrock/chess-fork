@@ -59,6 +59,8 @@ export default class PieceAnimator {
     this.board.listenTo(chess, "change:mode", (model, mode) => {
       if (mode === "normal") {
         this.setFen(store.getters.currentFen)
+      } else if (mode === "analysis") {
+        this.setFen(this.currentAnalysisPosition())
       }
     })
   }

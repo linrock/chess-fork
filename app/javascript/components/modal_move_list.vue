@@ -10,7 +10,7 @@
           .move-num {{ startMoveNum }}
           .move ...
         template(v-for="(move, i) in analysisMoves")
-          .move-num(v-if="(startPlyNum + i) % 2 === 0") {{ startMoveNum + i }}.
+          .move-num(v-if="(startPlyNum + i) % 2 === 0") {{ startMoveNum + 1 + ~~( i / 2) }}.
           .move(
             :data-ply="startPlyNum + i"
             :class="[{ current: $store.state.variationPositionIndex === i }]"
@@ -41,13 +41,13 @@
         if (!this.currentAnalysis) {
           return []
         }
-        return this.currentAnalysis.variations[this.$store.state.variationIndex].moves
+        return this.$store.getters.currentAnalysisVariation.moves
       },
       startPlyNum(): number {
         return this.$store.state.positionIndex
       },
       startMoveNum(): number {
-        return Math.round( this.startPlyNum / 2)
+        return Math.round( this.startPlyNum / 2 )
       }
     }
   }

@@ -25,25 +25,34 @@ export default class SquareHighlighter {
       if (j === -1) {
         return
       }
-      this.clearHighlights()
-      const currentVariation = store.getters.currentAnalysisVariation
-      const fen = currentVariation.positions[store.state.variationPositionIndex]
-      const cjs = new Chess(fen)
-      const move = cjs.move(currentVariation.moves[store.state.variationPositionIndex])
-      this.highlightMove(move, "blue")
+      this.highlightVariationMove(
+        store.getters.currentAnalysisVariation,
+        store.state.variationPositionIndex
+      )
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
-      this.clearHighlights()
-      const fen = store.state.currentAnalysis.variations[k].positions[0]
-      const cjs = new Chess(fen)
-      const move = cjs.move(store.state.currentAnalysis.variations[k].firstMove)
-      this.highlightMove(move, "blue")
+      this.highlightVariationMove(store.state.currentAnalysis.variations[k], 0)
     })
     this.board.listenTo(chess, "change:mode", (model, mode) => {
       if (mode === "normal") {
         this.highlightGameMoveIndex(store.state.positionIndex)
+      } else if (mode === "analysis") {
+        this.highlightVariationMove(store.getters.currentAnalysisVariation ,0)
       }
     })
+  }
+
+  highlightVariationMove(analysisVariation, variationPositionIndex) {
+    this.clearHighlights()
+    const fen = analysisVariation.positions[variationPositionIndex]
+    const cjs = new Chess(fen)
+    let move
+    if (variationPositionIndex === 0) {
+      move = cjs.move(analysisVariation.firstMove)
+    } else {
+      move = cjs.move(analysisVariation.moves[variationPositionIndex])
+    }
+    this.highlightMove(move, "blue")
   }
 
   clearHighlights() {

@@ -200,11 +200,11 @@ const actions = {
     dispatch(`setMode`, `analysis`)
     commit(`setVariationIndex`, variationIndex)
     commit(`setVariationPositionIndex`, 0)
-    chess.set({ j: 0, k: variationIndex })
+    chess.set({ j: 0, k: variationIndex, mode: `analysis` })
   },
   setMode({ commit, state, getters }, mode: string) {
     commit(`setMode`, mode)
-    chess.set({ i: state.positionIndex, j: 0, k: 0, mode })
+    chess.set({ j: 0, k: 0, mode })
   },
   setFen({ commit }, fen: FEN) {
     chess.set({ fen })
@@ -233,7 +233,7 @@ const getters = {
     }
   },
   currentAnalysisVariation(state: GlobalState): Variation {
-    return state.currentAnalysis.variations[store.state.variationIndex]
+    return state.currentAnalysis.variations[state.variationIndex]
   },
   positionInfoText(state: GlobalState): string {
     const i = state.positionIndex - 1
@@ -244,7 +244,7 @@ const getters = {
     } else if (state.currentAnalysis && state.mode === `analysis`) {
       const k = state.variationIndex
       const firstVariationMove = state.currentAnalysis.variations[k].firstMove
-      return `Variation after ${getMovePrefix(i)} ${firstVariationMove}`
+      return `Variation after ${getMovePrefix(i + 1)} ${firstVariationMove}`
     }
   },
   analysisOptions(state: GlobalState): AnalysisOptions {

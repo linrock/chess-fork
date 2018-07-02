@@ -26,6 +26,16 @@
       }
     },
 
+    mounted() {
+      this.plotPoints()
+    },
+
+    watch: {
+      points() {
+        this.plotPoints()
+      }
+    },
+
     methods: {
       plotPoints() {
         const areaGraph = area()
@@ -35,12 +45,6 @@
         select(this.$refs.path)
           .data([this.dataPoints])
           .attr(`d`, areaGraph)
-      }
-    },
-
-    watch: {
-      points() {
-        this.plotPoints()
       }
     },
 
