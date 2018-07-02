@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 import MainBoard from '../views/main_board'
 import IntroMessage from '../views/intro_message'
-// import VirtualDomBoard from '../views/virtual_dom_board'
 import SubHeader from '../views/sub_header'
 
 import ActionButtons from '../components/action_buttons'
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // backbone views
   new MainBoard
   new IntroMessage
-  // new VirtualDomBoard
   new SubHeader
 
   // vue components
