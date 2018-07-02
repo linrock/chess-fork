@@ -16,6 +16,11 @@ import EvaluationGraph from '../components/evaluation_graph'
 import store from '../store'
 import HotKeys from '../hotkeys'
 
+const initVueComponent = (selector: string, component) => {
+  const el: HTMLElement = document.querySelector(selector)
+  new Vue({ el, store, render: h => h(component) })
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   new HotKeys
 
@@ -28,11 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   new SubHeader
 
   // vue components
-  const initVueComponent = (selector: string, component) => {
-    const el: HTMLElement = document.querySelector(selector)
-    new Vue({ el, store, render: h => h(component) })
-  }
-
   initVueComponent(`.analysis-info`, AnalysisInfo)
   initVueComponent(`.vue-modal-move-list`, ModalMoveList)
   initVueComponent(`.vue-position-info`, PositionInfo)

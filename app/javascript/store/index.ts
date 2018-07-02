@@ -23,6 +23,7 @@ interface GlobalState {
   variationPositionIndex: number
   currentAnalysis: Analysis
   boardPolarity: number // 1 or -1
+  boardIsAnimating: boolean
   multipv?: number
   depth?: number
 }
@@ -36,6 +37,7 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   variationPositionIndex: 0,
   currentAnalysis: null,
   boardPolarity: 1,
+  boardIsAnimating: false,
 })
 
 const mutations = {
@@ -84,6 +86,9 @@ const mutations = {
   },
   flipBoard(state) {
     state.boardPolarity *= -1
+  },
+  setBoardIsAnimating(state, isAnimating: boolean) {
+    state.boardIsAnimating = isAnimating
   }
 }
 
@@ -97,7 +102,7 @@ const actions = {
     if (positionIndex < 0 || positionIndex >= state.positions.length) {
       return
     }
-    if ((<any>window).chessboard.isAnimating()) {
+    if (state.boardIsAnimating) {
       return
     }
     commit(`setPositionIndex`, positionIndex)
@@ -182,11 +187,10 @@ const actions = {
       return
     }
     const analysis = state.currentAnalysis
-    if (!analysis ||
-        variationPositionIndex >= analysis.variations[state.variationIndex].length) {
+    if (!analysis || variationPositionIndex >= getters.currentAnalysisVariation.length) {
       return
     }
-    if ((<any>window).chessboard.isAnimating()) {
+    if (state.boardIsAnimating) {
       return
     }
     commit(`setVariationPositionIndex`, variationPositionIndex)
@@ -208,6 +212,9 @@ const actions = {
   flipBoard({ commit }) {
     commit(`flipBoard`)
     chess.trigger(`polarity:flip`)
+  },
+  setBoardIsAnimating({ commit }, isAnimating: boolean) {
+    commit(`setBoardIsAnimating`, isAnimating)
   }
 }
 

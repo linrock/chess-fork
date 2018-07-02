@@ -52,9 +52,6 @@ export default class PieceAnimator {
       }
     })
     this.board.listenTo(chess, "change:k", (model, k) => {
-      if (this.board.isAnimating()) {
-        return
-      }
       const prevFen = window.chessboard.fen
       const newFen = this.currentAnalysisPosition()
       this.setFen(newFen)
@@ -103,6 +100,7 @@ export default class PieceAnimator {
   }
 
   animatePositions(...positions) {
+    store.dispatch(`setBoardIsAnimating`, true)
     let fen0 = positions[0]
     let fen1 = positions[1]
     let moves = this.positionDiffs(fen0, fen1)
@@ -128,6 +126,7 @@ export default class PieceAnimator {
       } else {
         this.setFen(fen1)
       }
+      store.dispatch(`setBoardIsAnimating`, false)
     })
   }
 
