@@ -20,6 +20,9 @@ export default class OpeningState {
 
   constructor() {
     store.watch(state => state.moves, async moves => {
+      if (moves.length === 0) {
+        return
+      }
       const opening = await this.getOpeningForMoves(moves)
       store.dispatch(`setOpeningText`, `${opening.eco} – ${opening.full_name}`)
     })
