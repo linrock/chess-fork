@@ -26,9 +26,11 @@ class Pieces {
     if ($piece.length) {
       return $piece
     }
-    return $("<img>").
-      attr("src", `/assets/pieces/${className}.png`).
-      addClass(`invisible piece ${className}`)
+    return $(`
+      <svg viewBox="0 0 45 45" class="invisible piece ${className}">
+        <use xlink:href="#${className}" width="100%" height="100%"/>
+      </svg>
+    `)
   }
 }
 

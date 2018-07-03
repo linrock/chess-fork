@@ -10,8 +10,8 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+  <%= yield %>
+  <%= render partial: "snippets/ga" %>
+  <%= render partial: "snippets/chess_piece_svgs" %>
 </body>
 </html>
