@@ -9,7 +9,6 @@ import Analysis from '../analysis/models/analysis'
 import Variation from '../analysis/models/variation'
 import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
-import { getWorldState } from '../world_state'
 import timeTraveler from './modules/time_traveler'
 
 Vue.use(Vuex)
@@ -101,18 +100,12 @@ const actions = {
       return
     }
     commit(`setPositionIndex`, positionIndex)
-    // getWorldState().set({ i: positionIndex })
     dispatch(`recordWorld`, { i: positionIndex })
     analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
   },
   setWorldState({ dispatch, commit }, { moves, positions, i }) {
     commit(`setMovesAndPositions`, { moves, positions })
     commit(`setPositionIndex`, i)
-    // getWorldState().set({
-    //   moves: Immutable.List(moves),
-    //   positions: Immutable.List(positions),
-    //   i
-    // })
     dispatch(`recordWorld`, {
       moves: Immutable.List(moves),
       positions: Immutable.List(positions),
@@ -166,7 +159,6 @@ const actions = {
     const ind = i < 1 ? 1 : i + 1
     const positions = state.positions.slice(0, ind)
     positions.push(newFen)
-    // getWorldState()
     dispatch(`setWorldState`, { moves, positions, i: (i < 0) ? 1 : i + 1 })
     analysisEngine.enqueueWork(newFen, getters.analysisOptions)
   },
@@ -230,12 +222,6 @@ const actions = {
   setOpeningText({ commit }, openingText: string) {
     commit(`setOpeningText`, openingText)
   },
-  rewindWorld() {
-    getWorldState().rewind()
-  },
-  resetWorld() {
-    getWorldState().reset()
-  }
 }
 
 const getters = {
