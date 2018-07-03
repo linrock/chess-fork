@@ -10,6 +10,7 @@ import Variation from '../analysis/models/variation'
 import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
 import timeTraveler from './modules/time_traveler'
+import opening from './modules/opening'
 
 Vue.use(Vuex)
 
@@ -24,7 +25,6 @@ interface GlobalState {
   currentAnalysis: Analysis
   boardPolarity: number // 1 or -1
   boardIsAnimating: boolean
-  openingText: string
   multipv?: number
   depth?: number
 }
@@ -40,7 +40,6 @@ const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
   currentFen: `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`,
   boardPolarity: 1,
   boardIsAnimating: false,
-  openingText: null
 })
 
 const mutations = {
@@ -81,9 +80,6 @@ const mutations = {
   setBoardIsAnimating(state, isAnimating: boolean) {
     state.boardIsAnimating = isAnimating
   },
-  setOpeningText(state, openingText: string) {
-    state.openingText = openingText
-  }
 }
 
 const actions = {
@@ -271,7 +267,14 @@ const store = new Vuex.Store({
   actions,
   getters,
   modules: {
-    timeTraveler
+    timeTraveler,
+    opening
+  }
+})
+
+store.watch(state => state.moves, moves => {
+  if (state.moves.length > 0) {
+    store.dispatch(`getOpeningForMoves`, moves)
   }
 })
 

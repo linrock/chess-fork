@@ -29,13 +29,13 @@ export default class SubHeader extends Backbone.View<Backbone.Model> {
   }
 
   private listenForEvents() {
-    store.watch(state => state.openingText, openingText => {
-      this.$title.text(openingText)
-    })
     store.watch(state => state.moves, moves => {
       if (moves.length === 0) {
         this.$title.text(this.initialText)
       }
+    })
+    store.watch(state => state.opening.fullName, opening => {
+      this.$title.text(store.getters.openingText)
     })
   }
 
