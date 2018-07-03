@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import Chess from 'chess.js'
 import Immutable from 'immutable'
 
+import { Mode } from '../enums'
 import { FEN, SanMove, ChessMove } from '../types'
 import { getMovePrefix } from '../utils'
 import Analysis from '../analysis/models/analysis'
@@ -15,7 +16,7 @@ import opening from './modules/opening'
 Vue.use(Vuex)
 
 interface GlobalState {
-  mode: string
+  mode: Mode
   moves: Array<SanMove>
   positions: Array<FEN>
   positionIndex: number
@@ -30,7 +31,7 @@ interface GlobalState {
 }
 
 const state: GlobalState = Object.assign({}, defaultAnalysisOptions, {
-  mode: `normal`,
+  mode: Mode.Normal,
   moves: [],
   positions: [`rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`],
   positionIndex: 0,
@@ -84,8 +85,8 @@ const mutations = {
 
 const actions = {
   setPositionIndex({ dispatch, commit, getters, state }, positionIndex: number) {
-    if (state.mode === `analysis`) {
-      dispatch(`setMode`, `normal`)
+    if (state.mode === Mode.Analysis) {
+      dispatch(`setMode`, Mode.Normal)
       commit(`setVariationPositionIndex`, 0)
       return
     }
@@ -182,10 +183,10 @@ const actions = {
   },
   setVariationPositionIndex({ dispatch, commit, getters, state }, variationPositionIndex) {
     if (variationPositionIndex < 0) {
-      dispatch(`setMode`, `normal`)
+      dispatch(`setMode`, Mode.Normal)
       return
     }
-    if (state.mode === `normal` && state.variationPositionIndex >= 0) {
+    if (state.mode === Mode.Normal && state.variationPositionIndex >= 0) {
       dispatch(`analyzeCurrentPosition`, 0)
       return
     }
@@ -199,7 +200,7 @@ const actions = {
     commit(`setVariationPositionIndex`, variationPositionIndex)
   },
   analyzeCurrentPosition({ dispatch, commit }, variationIndex) {
-    dispatch(`setMode`, `analysis`)
+    dispatch(`setMode`, Mode.Analysis)
     commit(`setVariationIndex`, variationIndex)
     commit(`setVariationPositionIndex`, 0)
   },
@@ -226,9 +227,9 @@ const getters = {
   },
   currentFen(state: GlobalState): FEN {
     return state.positions[state.positionIndex]
-    if (state.mode === `normal`) {
+    if (state.mode === Mode.Normal) {
       return state.positions[state.positionIndex]
-    } else if (state.mode === `analysis`) {
+    } else if (state.mode === Mode.Analysis) {
       const j = state.variationIndex + 1
       const k = state.variationPositionIndex
       return state.currentAnalysis.variations[k].positions[j]
@@ -243,9 +244,9 @@ const getters = {
     const i = state.positionIndex - 1
     if (i < 0) {
       return ``
-    } else if (state.mode === `normal`) {
+    } else if (state.mode === Mode.Normal) {
       return `${getMovePrefix(i)} ${state.moves[i]}`
-    } else if (state.currentAnalysis && state.mode === `analysis`) {
+    } else if (state.currentAnalysis && state.mode === Mode.Analysis) {
       const k = state.variationIndex
       if (state.currentAnalysis.variations[k]) {
         const firstVariationMove = state.currentAnalysis.variations[k].firstMove

@@ -1,6 +1,7 @@
 import _ from 'underscore'
 import Chess from 'chess.js'
 
+import { Mode } from '../../enums'
 import { FEN } from '../../types'
 import store from '../../store'
 import MainBoard from '../main_board'
@@ -57,9 +58,9 @@ export default class PieceAnimator {
       this.setFen(newFen)
     })
     store.watch(state => state.mode, mode => {
-      if (mode === "normal") {
+      if (mode === Mode.Normal) {
         this.setFen(store.getters.currentFen)
-      } else if (mode === "analysis") {
+      } else if (mode === Mode.Analysis) {
         this.setFen(this.currentAnalysisPosition())
       }
     })

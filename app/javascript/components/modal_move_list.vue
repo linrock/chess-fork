@@ -1,5 +1,5 @@
 <template lang="pug">
-  .modal-move-list(:class="[{ invisible: $store.state.mode === `normal` }]")
+  .modal-move-list(:class="[{ invisible: inNormalMode }]")
     .modal-bg(@click="closeModal")
     .modal(v-if="currentAnalysis")
       header.modal-header
@@ -20,6 +20,7 @@
 </template>
 
 <script lang="ts">
+  import { Mode } from '../enums'
   import { SanMove } from '../types'
   import Analysis from '../analysis/models/analysis'
   import Variation from '../analysis/models/variation'
@@ -27,7 +28,7 @@
   export default {
     methods: {
       closeModal() {
-        this.$store.dispatch(`setMode`, `normal`)
+        this.$store.dispatch(`setMode`, Mode.Normal)
       },
       gotoMove(variationPositionIndex: number) {
         this.$store.dispatch(`setVariationPositionIndex`, variationPositionIndex)
@@ -35,6 +36,9 @@
     },
 
     computed: {
+      inNormalMode(): boolean {
+        return this.$store.state.mode === Mode.Normal
+      },
       currentAnalysis(): Analysis {
         return this.$store.state.currentAnalysis
       },

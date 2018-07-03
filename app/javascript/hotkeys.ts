@@ -1,4 +1,6 @@
 import Mousetrap from 'mousetrap'
+
+import { Mode } from './enums'
 import store from './store'
 
 export default class HotKeys {
@@ -14,7 +16,7 @@ export default class HotKeys {
       e.preventDefault()
       store.dispatch(`nextVariationMove`)
     })
-    Mousetrap.bind(["esc"], () => store.dispatch(`setMode`, `normal`))
+    Mousetrap.bind(["esc"], () => store.dispatch(`setMode`, Mode.Normal))
     Mousetrap.bind(["command+z", "ctrl+z"], () => store.dispatch(`rewindWorld`))
   }
 }

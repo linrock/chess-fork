@@ -2,6 +2,7 @@
 
 import Chess from 'chess.js'
 
+import { Mode } from '../../enums'
 import { ChessMove } from '../../types'
 import MainBoard from '../main_board'
 import store from '../../store'
@@ -35,9 +36,9 @@ export default class SquareHighlighter {
       this.highlightVariationMove(store.state.currentAnalysis.variations[k], 0)
     })
     store.watch(state => state.mode, mode => {
-      if (mode === "normal") {
+      if (mode === Mode.Normal) {
         this.highlightGameMoveIndex(store.state.positionIndex)
-      } else if (mode === "analysis") {
+      } else if (mode === Mode.Analysis) {
         this.highlightVariationMove(store.getters.currentAnalysisVariation, 0)
       }
     })
