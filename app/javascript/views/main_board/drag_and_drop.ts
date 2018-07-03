@@ -6,6 +6,7 @@ import $ from 'jquery'
 require("jquery-ui/ui/widgets/draggable")
 require("jquery-ui/ui/widgets/droppable")
 
+import { ChessMove } from '../../types'
 import MainBoard from '../main_board'
 
 export default class DragAndDrop {
@@ -39,10 +40,11 @@ export default class DragAndDrop {
       accept: ".piece",
       tolerance: "pointer",
       drop: (event, ui) => {
-        this.board.move({
+        const move: ChessMove = {
           from: $(ui.draggable).parents(".square").data("square"),
           to: $(event.target).data("square"),
-        }, true)
+        }
+        this.board.move(move , true)
       }
     })
   }

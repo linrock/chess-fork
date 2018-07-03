@@ -1,7 +1,6 @@
 import _ from 'underscore'
 import Chess from 'chess.js'
 
-import { world } from '../../world_state'
 import { FEN } from '../../types'
 import store from '../../store'
 import MainBoard from '../main_board'

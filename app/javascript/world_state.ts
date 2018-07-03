@@ -15,7 +15,7 @@ interface WorldStateSnapshot {
   positions: Immutable.List<FEN>,
 }
 
-export default class WorldState extends Backbone.Model {
+class WorldState extends Backbone.Model {
   private states: Immutable.Stack<Immutable.Map<string, any>>
 
   initialize() {
@@ -60,4 +60,11 @@ export default class WorldState extends Backbone.Model {
   }
 }
 
-export const world = new WorldState
+let worldState
+
+export const getWorldState = () => {
+  if (!worldState) {
+    worldState = new WorldState
+  }
+  return worldState
+}

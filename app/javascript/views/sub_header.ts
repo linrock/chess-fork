@@ -4,7 +4,6 @@
 import Backbone from 'backbone'
 
 import Tooltip from './tooltip'
-import { world } from '../world_state'
 import store from '../store'
 
 export default class SubHeader extends Backbone.View<Backbone.Model> {
@@ -17,8 +16,8 @@ export default class SubHeader extends Backbone.View<Backbone.Model> {
 
   events(): Backbone.EventsHash {
     return {
-      "click .reset-board" : () => world.reset(),
-      "click .undo"        : () => world.rewind(),
+      "click .reset-board" : () => store.dispatch(`resetWorld`),
+      "click .undo"        : () => store.dispatch(`rewindWorld`),
     }
   }
 

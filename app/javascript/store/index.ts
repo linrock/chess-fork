@@ -9,7 +9,8 @@ import Analysis from '../analysis/models/analysis'
 import Variation from '../analysis/models/variation'
 import analysisEngine from '../analysis/engine'
 import { AnalysisOptions, defaultAnalysisOptions } from '../analysis/options'
-import { world } from '../world_state'
+import { getWorldState } from '../world_state'
+import timeTraveler from './modules/time_traveler'
 
 Vue.use(Vuex)
 
@@ -100,13 +101,19 @@ const actions = {
       return
     }
     commit(`setPositionIndex`, positionIndex)
-    world.set({ i: positionIndex })
+    // getWorldState().set({ i: positionIndex })
+    dispatch(`recordWorld`, { i: positionIndex })
     analysisEngine.enqueueWork(getters.currentFen, getters.analysisOptions)
   },
-  setWorldState({ commit }, { moves, positions, i }) {
+  setWorldState({ dispatch, commit }, { moves, positions, i }) {
     commit(`setMovesAndPositions`, { moves, positions })
     commit(`setPositionIndex`, i)
-    world.set({
+    // getWorldState().set({
+    //   moves: Immutable.List(moves),
+    //   positions: Immutable.List(positions),
+    //   i
+    // })
+    dispatch(`recordWorld`, {
       moves: Immutable.List(moves),
       positions: Immutable.List(positions),
       i
@@ -153,12 +160,13 @@ const actions = {
     if (!moveAttempt) {
       return
     }
-    const moves: Array<SanMove> = this.state.moves.slice(0, i)
+    const moves: Array<SanMove> = state.moves.slice(0, i)
     moves.push(moveAttempt.san)
     const newFen = cjs.fen()
     const ind = i < 1 ? 1 : i + 1
     const positions = state.positions.slice(0, ind)
     positions.push(newFen)
+    // getWorldState()
     dispatch(`setWorldState`, { moves, positions, i: (i < 0) ? 1 : i + 1 })
     analysisEngine.enqueueWork(newFen, getters.analysisOptions)
   },
@@ -221,6 +229,12 @@ const actions = {
   },
   setOpeningText({ commit }, openingText: string) {
     commit(`setOpeningText`, openingText)
+  },
+  rewindWorld() {
+    getWorldState().rewind()
+  },
+  resetWorld() {
+    getWorldState().reset()
   }
 }
 
@@ -239,7 +253,9 @@ const getters = {
     }
   },
   currentAnalysisVariation(state: GlobalState): Variation {
-    return state.currentAnalysis.variations[state.variationIndex]
+    if (state.currentAnalysis) {
+      return state.currentAnalysis.variations[state.variationIndex]
+    }
   },
   positionInfoText(state: GlobalState): string {
     const i = state.positionIndex - 1
@@ -263,6 +279,14 @@ const getters = {
   }
 }
 
-const store = new Vuex.Store({ state, mutations, actions, getters })
+const store = new Vuex.Store({
+  state,
+  mutations,
+  actions,
+  getters,
+  modules: {
+    timeTraveler
+  }
+})
 
 export default store
